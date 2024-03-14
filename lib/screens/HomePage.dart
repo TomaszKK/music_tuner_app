@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:music_tuner/screens/SettingsPage.dart';
+import 'package:music_tuner/widgets/tunerWidget.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key, required this.title});
@@ -42,7 +43,7 @@ class _HomePageState extends State<HomePage> {
           ),
           IconButton(
             icon: Icon(
-              Icons.notifications,
+              Icons.bluetooth_connected,
               color: Theme.of(context).colorScheme.onPrimaryContainer,
               size: 30,
             ),
@@ -93,8 +94,8 @@ class _HomePageState extends State<HomePage> {
                 ),
               ],
             ),
-            const Text(
-              'Home Page',
+            const Expanded(
+              child: TunerWidget(title: 'Tuner'),
             ),
           ],
         ),

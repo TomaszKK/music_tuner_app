@@ -8,5 +8,6 @@ class Assets {
   static const String screensHomePage = 'lib/screens/HomePage.dart';
   static const String screensLoginPage = 'lib/screens/LoginPage.dart';
   static const String screensSettingsPage = 'lib/screens/SettingsPage.dart';
+  static const String widgetsTunerWidget = 'lib/widgets/tunerWidget.dart';
 
 }

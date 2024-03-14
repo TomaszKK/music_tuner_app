@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+
 class ThemeManager with ChangeNotifier {
   ThemeData lightTheme = ThemeData.light().copyWith(
     colorScheme: ColorScheme.fromSeed(
@@ -38,14 +39,13 @@ class ThemeManager with ChangeNotifier {
       background: const Color(0xFF322C2C),
       surface: const Color(0xFF1E1E1E),
       error: const Color(0xFF1E1E1E),
-      onPrimary: const Color(0xFF1E1E1E),
+      onPrimary: const Color(0xFF0AEF05),
       onSecondary: const Color(0xFF1E1E1E),
       onBackground: const Color(0xFF1E1E1E),
       onSurface: const Color(0xFF1E1E1E),
       onError: const Color(0xFF1E1E1E),
     ),
     scaffoldBackgroundColor: const Color(0xFF322C2C),
-
   );
 
   bool _isDark = true;
