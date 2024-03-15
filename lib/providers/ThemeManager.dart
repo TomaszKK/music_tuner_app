@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
 
+enum AppThemeType { light, dark }
+
+class FontManager {
+  static const String poppins = 'Poppins';
+  static const String roboto = 'Roboto';
+}
 
 class ThemeManager with ChangeNotifier {
   ThemeData lightTheme = ThemeData.light().copyWith(

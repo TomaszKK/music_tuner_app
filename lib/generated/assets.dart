@@ -4,10 +4,13 @@ class Assets {
 
   static const String generatedAssets = 'lib/generated/assets.dart';
   static const String libMain = 'lib/main.dart';
+  static const String providersInstrumentProvider = 'lib/providers/InstrumentProvider.dart';
   static const String providersThemeManager = 'lib/providers/ThemeManager.dart';
   static const String screensHomePage = 'lib/screens/HomePage.dart';
   static const String screensLoginPage = 'lib/screens/LoginPage.dart';
   static const String screensSettingsPage = 'lib/screens/SettingsPage.dart';
+  static const String widgetsInstrumentSelectionWidget = 'lib/widgets/InstrumentSelectionWidget.dart';
+  static const String widgetsInstrumentWidget = 'lib/widgets/InstrumentWidget.dart';
   static const String widgetsTunerWidget = 'lib/widgets/tunerWidget.dart';
 
 }
