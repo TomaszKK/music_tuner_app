@@ -1,7 +1,5 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
-
-import 'package:syncfusion_flutter_gauges/gauges.dart';
+import 'package:music_tuner/widgets/guitarWidget.dart';
 
 class InstrumentWidget extends StatefulWidget {
   const InstrumentWidget({super.key, required this.title});
@@ -15,10 +13,8 @@ class InstrumentWidget extends StatefulWidget {
 class _InstrumentWidgetState extends State<InstrumentWidget> {
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Container(
-        color: Colors.blue,
-      ),
+    return const Center(
+      child: GuitarWidget(title: 'Guitar'),
     );
   }
 }
