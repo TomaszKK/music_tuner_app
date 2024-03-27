@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:music_tuner/providers/ThemeManager.dart';
 
 class GuitarWidget extends StatefulWidget {
   const GuitarWidget({super.key, required this.title});
@@ -11,125 +13,94 @@ class GuitarWidget extends StatefulWidget {
 
 class _GuitarWidgetState extends State<GuitarWidget> {
   double circleSize = 50;
+  double topCirclePosition = 55;
+  double rightCirclePosition = 15;
+  double leftCirclePosition = 15;
+  double betweenCircleSpacing = 25;
+  double oldBoxHeight = 0;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      // Ensure the container fills the entire screen
-      width: double.infinity,
-      height: double.infinity,
-      // Use a Stack to layer widgets on top of each other
-      child: Stack(
-        children: [
-          // First, add the image as the background
-          Image.asset(
-            'lib/assets/guitar.png', // Replace 'assets/guitar_image.jpg' with your image path
-            width: double.infinity,
-            height: double.infinity,
-          ),
-          Positioned(
-            left: 15, // Adjust left position as needed
-            top: 55, // Adjust top position as needed
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Container(
-                  alignment: Alignment.center,
-                  height: circleSize,
-                  width: circleSize,
-                  decoration: BoxDecoration(
-                    color: Colors.transparent,
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: Color(0xFFC03BFF),
-                      width: 3,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 25),
-                Container(
-                  alignment: Alignment.center,
-                  height: circleSize,
-                  width: circleSize,
-                  decoration: BoxDecoration(
-                    color: Colors.transparent,
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: Color(0xFFC03BFF),
-                      width: 3,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 25),
-                Container(
-                  alignment: Alignment.center,
-                  height: circleSize,
-                  width: circleSize,
-                  decoration: BoxDecoration(
-                    color: Colors.transparent,
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: Color(0xFFC03BFF),
-                      width: 3,
-                    ),
-                  ),
-                ),
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        double currentBoxWidth = constraints.maxWidth;
+        double currentBoxHeight = constraints.maxHeight;
 
-              ]
-            ),
+        return SizedBox(
+          width: currentBoxWidth,
+          height: currentBoxHeight,
+          child: Stack(
+            children: [
+              Positioned(
+                width: constraints.maxWidth,
+                height: constraints.maxHeight,
+                child: SvgPicture.asset(
+                  'lib/assets/Guitar.svg',
+                  width: constraints.maxWidth,
+                  height: constraints.maxHeight,
+                  color: ThemeManager().currentTheme.colorScheme.onSecondary,
+                ),
+              ),
+              Positioned(
+                left: leftCirclePosition,
+                top: topCirclePosition,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    _buildCircle(),
+                    SizedBox(height: betweenCircleSpacing),
+                    _buildCircle(),
+                    SizedBox(height: betweenCircleSpacing),
+                    _buildCircle(),
+                  ],
+                ),
+              ),
+              Positioned(
+                right: rightCirclePosition,
+                top: topCirclePosition,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    _buildCircle(),
+                    SizedBox(height: betweenCircleSpacing),
+                    _buildCircle(),
+                    SizedBox(height: betweenCircleSpacing),
+                    _buildCircle(),
+                  ],
+                ),
+              ),
+            ],
           ),
-          Positioned(
-            right: 15, // Adjust left position as needed
-            top: 55, // Adjust top position as needed
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Container(
-                  alignment: Alignment.center,
-                  height: circleSize,
-                  width: circleSize,
-                  decoration: BoxDecoration(
-                    color: Colors.transparent,
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: Color(0xFFC03BFF),
-                      width: 3,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 25),
-                Container(
-                  alignment: Alignment.center,
-                  height: circleSize,
-                  width: circleSize,
-                  decoration: BoxDecoration(
-                    color: Colors.transparent,
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: Color(0xFFC03BFF),
-                      width: 3,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 25),
-                Container(
-                  alignment: Alignment.center,
-                  height: circleSize,
-                  width: circleSize,
-                  decoration: BoxDecoration(
-                    color: Colors.transparent,
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: Color(0xFFC03BFF),
-                      width: 3,
-                    ),
-                  ),
-                ),
-              ]
-            ),
-          ),
-        ],
+        );
+      },
+    );
+  }
+
+  Widget _buildCircle(double currentBoxHeight, double oldBoxHeight){
+    return Container(
+      alignment: Alignment.center,
+      height: circleSize * _updateElementSize(currentBoxHeight, );
+      width: circleSize,
+      decoration: BoxDecoration(
+        color: Colors.transparent,
+        shape: BoxShape.circle,
+        border: Border.all(
+          color: ThemeManager().currentTheme.colorScheme.secondaryContainer,
+          width: 3,
+        ),
       ),
     );
+  }
+
+  double _updateElementSize(double currentSize, double oldSize) {
+    if(currentSize < oldSize){
+      return currentSize/oldSize;
+    }
+    else if(currentSize > oldSize){
+      return currentSize*oldSize;
+    }
+    else{
+      return 1;
+    }
   }
 }

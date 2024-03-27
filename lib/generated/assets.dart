@@ -2,14 +2,19 @@
 class Assets {
   Assets._();
 
-  static const String assetsGuitar = 'lib/assets/guitar.jpg';
+  static const String assetsBass = 'lib/assets/Bass.svg';
+  static const String assetsGuitar = 'lib/assets/guitar.png';
   static const String generatedAssets = 'lib/generated/assets.dart';
+  static const String libAssetsBass = 'lib/assets/Bass.svg';
+  static const String libAssetsGuitar = 'lib/assets/Guitar.svg';
   static const String libMain = 'lib/main.dart';
   static const String providersInstrumentProvider = 'lib/providers/InstrumentProvider.dart';
   static const String providersThemeManager = 'lib/providers/ThemeManager.dart';
   static const String screensHomePage = 'lib/screens/HomePage.dart';
   static const String screensLoginPage = 'lib/screens/LoginPage.dart';
   static const String screensSettingsPage = 'lib/screens/SettingsPage.dart';
+  static const String widgetsBassWidget = 'lib/widgets/bassWidget.dart';
+  static const String widgetsBluetoothConnectorWidget = 'lib/widgets/bluetoothConnectorWidget.dart';
   static const String widgetsGuitarWidget = 'lib/widgets/guitarWidget.dart';
   static const String widgetsInstrumentSelectionWidget = 'lib/widgets/InstrumentSelectionWidget.dart';
   static const String widgetsInstrumentWidget = 'lib/widgets/InstrumentWidget.dart';

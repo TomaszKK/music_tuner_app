@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:music_tuner/providers/ThemeManager.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 
 class TunerWidget extends StatefulWidget {
@@ -23,34 +24,33 @@ class _TunerWidgetState extends State<TunerWidget> {
               alignment: Alignment.center,
               height: 50,
               width: 100,
-              child: const Text(
+              child: Text(
                 'Someting',
                 style: TextStyle(
-                  color: Color(0xFF0AEF05),
+                  color: ThemeManager().currentTheme.colorScheme.secondary,
                   fontSize: 20,
                 ),
               )
             ),
             const SizedBox(width: 20),
             Container(
-
               alignment: Alignment.center,
               height: 100,
               width: 100,
-              child: const Column(
+              child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Text(
                     'G',
                     style: TextStyle(
-                      color: Color(0xFF0AEF05),
+                      color: ThemeManager().currentTheme.colorScheme.secondary,
                       fontSize: 40,
                     ),
                   ),
                   Text(
                     'Tuned',
                     style: TextStyle(
-                      color: Color(0xFF0AEF05),
+                      color: ThemeManager().currentTheme.colorScheme.secondary,
                       fontSize: 20,
                     ),
                   ),
@@ -62,10 +62,10 @@ class _TunerWidgetState extends State<TunerWidget> {
               alignment: Alignment.center,
               height: 50,
               width: 100,
-              child: const Text(
+              child: Text(
                   '440 Hz',
                   style: TextStyle(
-                    color: Color(0xFF0AEF05),
+                    color: ThemeManager().currentTheme.colorScheme.secondary,
                     fontSize: 20,
                   ),
                 ),
@@ -80,14 +80,14 @@ class _TunerWidgetState extends State<TunerWidget> {
           minorTicksPerInterval: 3,
           showTicks: true,
           showLabels: false,
-          majorTickStyle: const LinearTickStyle(length: 80, color: Color(0xFF0AEF05), thickness: 2),
-          minorTickStyle: const LinearTickStyle(length: 30, color: Color(0xFF0AEF05), thickness: 1),
+          majorTickStyle: LinearTickStyle(length: 80, color: ThemeManager().currentTheme.colorScheme.secondary, thickness: 2),
+          minorTickStyle: LinearTickStyle(length: 30, color: ThemeManager().currentTheme.colorScheme.secondary, thickness: 1),
           tickPosition: LinearElementPosition.cross,
-          ranges: const [
+          ranges: [
             LinearGaugeRange(
               startValue: -0.5,
               endValue: 0.5, // Small value to make it look like a tick
-              color: Color(0xFF0AEF05),
+              color: ThemeManager().currentTheme.colorScheme.secondary,
               startWidth: 120, // Adjust these values to change the size of the "tick"
               endWidth: 120,
               position: LinearElementPosition.cross,
