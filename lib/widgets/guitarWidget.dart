@@ -13,58 +13,81 @@ class GuitarWidget extends StatefulWidget {
 
 class _GuitarWidgetState extends State<GuitarWidget> {
   double circleSize = 50;
-  double topCirclePosition = 55;
-  double rightCirclePosition = 15;
-  double leftCirclePosition = 15;
-  double betweenCircleSpacing = 25;
-  double oldBoxHeight = 0;
 
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
-        double currentBoxWidth = constraints.maxWidth;
-        double currentBoxHeight = constraints.maxHeight;
+        double imgWidth = constraints.maxWidth;
+        double imgHeight = constraints.maxHeight;
+        double widthPosition = imgWidth * 0.25;
+
+        // if(constraints.maxWidth >= 620) {
+        //   leftPosition = imgWidth * 0.40;
+        // }
+        // else if(constraints.maxWidth >= 420 && constraints.maxWidth < 620) {
+        //   leftPosition = imgWidth * 0.35;
+        // }
+        // else if(constraints.maxWidth >= 320 && constraints.maxWidth < 420){
+        //   leftPosition = imgWidth * 0.30;
+        // }
+        // else if(constraints.maxWidth >= 220 && constraints.maxWidth < 320){
+        //   leftPosition = imgWidth * 0.25;
+        // }
+        // else{
+        //   leftPosition = imgWidth * 0.2;
+        // }
+
+
+
+        double topPosition = imgHeight * 0.125; // 20% from the top of the image
+
+        circleSize = 125 * imgHeight / 1000; // 50% of the image width
+
+        print('imgWidth: $imgWidth');
+        print('imgHeight: $imgHeight');
+        print('leftPosition: $widthPosition');
+        print('topPosition: $topPosition');
 
         return SizedBox(
-          width: currentBoxWidth,
-          height: currentBoxHeight,
+          // height: imgHeight,
+          // width: imgWidth,
           child: Stack(
             children: [
               Positioned(
-                width: constraints.maxWidth,
-                height: constraints.maxHeight,
+                width: imgWidth,
+                height: imgHeight,
                 child: SvgPicture.asset(
                   'lib/assets/Guitar.svg',
-                  width: constraints.maxWidth,
-                  height: constraints.maxHeight,
+                  // width: imgWidth,
+                  // height: imgHeight,
                   color: ThemeManager().currentTheme.colorScheme.onSecondary,
                 ),
               ),
               Positioned(
-                left: leftCirclePosition,
-                top: topCirclePosition,
+                left: widthPosition,
+                top: topPosition,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     _buildCircle(),
-                    SizedBox(height: betweenCircleSpacing),
+                    SizedBox(height: 65 * imgHeight / 1000),
                     _buildCircle(),
-                    SizedBox(height: betweenCircleSpacing),
+                    SizedBox(height: 65 * imgHeight / 1000),
                     _buildCircle(),
                   ],
                 ),
               ),
               Positioned(
-                right: rightCirclePosition,
-                top: topCirclePosition,
+                right: widthPosition,
+                top: topPosition,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     _buildCircle(),
-                    SizedBox(height: betweenCircleSpacing),
+                    SizedBox(height: 65 * imgHeight / 1000),
                     _buildCircle(),
-                    SizedBox(height: betweenCircleSpacing),
+                    SizedBox(height: 65 * imgHeight / 1000),
                     _buildCircle(),
                   ],
                 ),
@@ -76,10 +99,10 @@ class _GuitarWidgetState extends State<GuitarWidget> {
     );
   }
 
-  Widget _buildCircle(double currentBoxHeight, double oldBoxHeight){
+  Widget _buildCircle(){
     return Container(
       alignment: Alignment.center,
-      height: circleSize * _updateElementSize(currentBoxHeight, );
+      height: circleSize,
       width: circleSize,
       decoration: BoxDecoration(
         color: Colors.transparent,
@@ -90,17 +113,5 @@ class _GuitarWidgetState extends State<GuitarWidget> {
         ),
       ),
     );
-  }
-
-  double _updateElementSize(double currentSize, double oldSize) {
-    if(currentSize < oldSize){
-      return currentSize/oldSize;
-    }
-    else if(currentSize > oldSize){
-      return currentSize*oldSize;
-    }
-    else{
-      return 1;
-    }
   }
 }
