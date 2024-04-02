@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:music_tuner/providers/ThemeManager.dart';
+import 'dart:async';
 
 class GuitarWidget extends StatefulWidget {
   const GuitarWidget({super.key, required this.title});
@@ -13,59 +14,61 @@ class GuitarWidget extends StatefulWidget {
 
 class _GuitarWidgetState extends State<GuitarWidget> {
   double circleSize = 50;
+  final GlobalKey _svgKey = GlobalKey();
+  double leftPosition = 0; // Add a variable to store the left position
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
+      _calculateLeftPosition(context);
+    });
+  }
+
+  void _calculateLeftPosition(BuildContext context) {
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
+      if (_svgKey.currentContext != null) {
+        final RenderBox renderBox = _svgKey.currentContext!.findRenderObject() as RenderBox;
+        double imgWidth = renderBox.size.width;
+        setState(() {
+          leftPosition = (MediaQuery.of(context).size.width - imgWidth) / 2 * 0.5;
+        });
+        print('leftPosition: $leftPosition');
+        print('imgWidth: $imgWidth');
+        print('MediaQuery.of(context).size.width: ${MediaQuery.of(context).size.width}');
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
-        double imgWidth = constraints.maxWidth;
         double imgHeight = constraints.maxHeight;
-        double widthPosition = imgWidth * 0.25;
+        double topPosition = imgHeight * 0.125;
 
-        // if(constraints.maxWidth >= 620) {
-        //   leftPosition = imgWidth * 0.40;
-        // }
-        // else if(constraints.maxWidth >= 420 && constraints.maxWidth < 620) {
-        //   leftPosition = imgWidth * 0.35;
-        // }
-        // else if(constraints.maxWidth >= 320 && constraints.maxWidth < 420){
-        //   leftPosition = imgWidth * 0.30;
-        // }
-        // else if(constraints.maxWidth >= 220 && constraints.maxWidth < 320){
-        //   leftPosition = imgWidth * 0.25;
-        // }
-        // else{
-        //   leftPosition = imgWidth * 0.2;
-        // }
+        circleSize = 125 * imgHeight / 1000;
 
-
-
-        double topPosition = imgHeight * 0.125; // 20% from the top of the image
-
-        circleSize = 125 * imgHeight / 1000; // 50% of the image width
-
-        print('imgWidth: $imgWidth');
-        print('imgHeight: $imgHeight');
-        print('leftPosition: $widthPosition');
-        print('topPosition: $topPosition');
+        // print('widthGEneral: ${constraints.maxWidth}');
+        // print('imgHeight: $imgHeight');
+        // print('topPosition: $topPosition');
 
         return SizedBox(
-          // height: imgHeight,
-          // width: imgWidth,
+          height: constraints.maxHeight,
+          width: constraints.maxWidth,
           child: Stack(
+            alignment: Alignment.center,
             children: [
               Positioned(
-                width: imgWidth,
-                height: imgHeight,
                 child: SvgPicture.asset(
                   'lib/assets/Guitar.svg',
-                  // width: imgWidth,
-                  // height: imgHeight,
+                  key: _svgKey,
                   color: ThemeManager().currentTheme.colorScheme.onSecondary,
+                  fit: BoxFit.contain,
                 ),
               ),
               Positioned(
-                left: widthPosition,
+                left: leftPosition,
                 top: topPosition,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -79,7 +82,7 @@ class _GuitarWidgetState extends State<GuitarWidget> {
                 ),
               ),
               Positioned(
-                right: widthPosition,
+                right: leftPosition,
                 top: topPosition,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
