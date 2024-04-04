@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:music_tuner/providers/ThemeManager.dart';
-import 'dart:async';
 
 class GuitarWidget extends StatefulWidget {
   const GuitarWidget({super.key, required this.title});
@@ -14,89 +13,61 @@ class GuitarWidget extends StatefulWidget {
 
 class _GuitarWidgetState extends State<GuitarWidget> {
   double circleSize = 50;
-  final GlobalKey _svgKey = GlobalKey();
-  double leftPosition = 0; // Add a variable to store the left position
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
-      _calculateLeftPosition(context);
-    });
-  }
-
-  void _calculateLeftPosition(BuildContext context) {
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
-      if (_svgKey.currentContext != null) {
-        final RenderBox renderBox = _svgKey.currentContext!.findRenderObject() as RenderBox;
-        double imgWidth = renderBox.size.width;
-        setState(() {
-          leftPosition = (MediaQuery.of(context).size.width - imgWidth) / 2 * 0.5;
-        });
-        print('leftPosition: $leftPosition');
-        print('imgWidth: $imgWidth');
-        print('MediaQuery.of(context).size.width: ${MediaQuery.of(context).size.width}');
-      }
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
+        double imgWidth = constraints.maxHeight * 246 / 403;
         double imgHeight = constraints.maxHeight;
-        double topPosition = imgHeight * 0.125;
+        double widthPosition = imgWidth * 0.01;
 
-        circleSize = 125 * imgHeight / 1000;
+        double topPosition = constraints.maxHeight * 0.125; // 20% from the top of the image
 
-        // print('widthGEneral: ${constraints.maxWidth}');
-        // print('imgHeight: $imgHeight');
-        // print('topPosition: $topPosition');
+        circleSize = constraints.maxWidth * 0.125; // 50% of the image width
 
-        return SizedBox(
-          height: constraints.maxHeight,
-          width: constraints.maxWidth,
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              Positioned(
+        print('imgWidth: $imgWidth');
+        print('imgHeight: $imgHeight');
+        print('leftPosition: $widthPosition');
+        print('topPosition: $topPosition');
+
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            SizedBox(width: (constraints.maxWidth - imgWidth - 2 * circleSize) / 2 * 0.8),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                SizedBox(height: topPosition, width: circleSize),
+                _buildCircle(),
+                SizedBox(height: 65 * imgHeight / 1000, width: circleSize),
+                _buildCircle(),
+                SizedBox(height: 65 * imgHeight / 1000, width: circleSize),
+                _buildCircle(),
+              ]
+            ),
+            Expanded(
+              child: SizedBox(
+                height: constraints.maxHeight,
                 child: SvgPicture.asset(
                   'lib/assets/Guitar.svg',
-                  key: _svgKey,
+                  fit: BoxFit.fitHeight,
                   color: ThemeManager().currentTheme.colorScheme.onSecondary,
-                  fit: BoxFit.contain,
                 ),
               ),
-              Positioned(
-                left: leftPosition,
-                top: topPosition,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    _buildCircle(),
-                    SizedBox(height: 65 * imgHeight / 1000),
-                    _buildCircle(),
-                    SizedBox(height: 65 * imgHeight / 1000),
-                    _buildCircle(),
-                  ],
-                ),
-              ),
-              Positioned(
-                right: leftPosition,
-                top: topPosition,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    _buildCircle(),
-                    SizedBox(height: 65 * imgHeight / 1000),
-                    _buildCircle(),
-                    SizedBox(height: 65 * imgHeight / 1000),
-                    _buildCircle(),
-                  ],
-                ),
-              ),
-            ],
-          ),
+            ),
+            Column(
+                children: <Widget>[
+                  SizedBox(height: topPosition),
+                  _buildCircle(),
+                  SizedBox(height: 65 * imgHeight / 1000),
+                  _buildCircle(),
+                  SizedBox(height: 65 * imgHeight / 1000),
+                  _buildCircle(),
+                ]
+            ),
+            SizedBox(width: (constraints.maxWidth - imgWidth - 2 * circleSize) / 2 * 0.8),
+          ],
         );
       },
     );
