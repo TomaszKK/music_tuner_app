@@ -18,18 +18,19 @@ class _GuitarWidgetState extends State<GuitarWidget> {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
-        double imgWidth = constraints.maxHeight * 246 / 403;
+        double imgWidth = constraints.maxHeight * 246 / 403;            //original size of the image
+        double circleSpaceScale = 1;
+        double topPositionScale = 1;
+        double topPosition = constraints.maxHeight * 0.125;
         double imgHeight = constraints.maxHeight;
-        double widthPosition = imgWidth * 0.01;
+        circleSize = constraints.maxHeight * 0.125;
 
-        double topPosition = constraints.maxHeight * 0.125; // 20% from the top of the image
-
-        circleSize = constraints.maxWidth * 0.125; // 50% of the image width
-
-        print('imgWidth: $imgWidth');
-        print('imgHeight: $imgHeight');
-        print('leftPosition: $widthPosition');
-        print('topPosition: $topPosition');
+        if(imgWidth + 2 * circleSize >= constraints.maxWidth){
+          imgHeight = constraints.maxHeight * 0.9;
+          circleSpaceScale = 1.15;
+          topPositionScale = 1.4;
+          circleSize = circleSize * 0.8;
+        }
 
         return Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -38,17 +39,17 @@ class _GuitarWidgetState extends State<GuitarWidget> {
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                SizedBox(height: topPosition, width: circleSize),
+                SizedBox(height: topPosition * topPositionScale),
                 _buildCircle(),
-                SizedBox(height: 65 * imgHeight / 1000, width: circleSize),
+                SizedBox(height: 65 * imgHeight / 1000 * circleSpaceScale),
                 _buildCircle(),
-                SizedBox(height: 65 * imgHeight / 1000, width: circleSize),
+                SizedBox(height: 65 * imgHeight / 1000 * circleSpaceScale),
                 _buildCircle(),
               ]
             ),
             Expanded(
               child: SizedBox(
-                height: constraints.maxHeight,
+                height: imgHeight,
                 child: SvgPicture.asset(
                   'lib/assets/Guitar.svg',
                   fit: BoxFit.fitHeight,
@@ -58,11 +59,11 @@ class _GuitarWidgetState extends State<GuitarWidget> {
             ),
             Column(
                 children: <Widget>[
-                  SizedBox(height: topPosition),
+                  SizedBox(height: topPosition * topPositionScale),
                   _buildCircle(),
-                  SizedBox(height: 65 * imgHeight / 1000),
+                  SizedBox(height: 65 * imgHeight / 1000 * circleSpaceScale),
                   _buildCircle(),
-                  SizedBox(height: 65 * imgHeight / 1000),
+                  SizedBox(height: 65 * imgHeight / 1000 * circleSpaceScale),
                   _buildCircle(),
                 ]
             ),
