@@ -13,89 +13,70 @@ class BassWidget extends StatefulWidget {
 
 class _BassWidgetState extends State<BassWidget> {
   double circleSize = 50;
-  double topCirclePosition = 60;
-  double rightCirclePosition = 20;
-  double leftCirclePosition = 20;
-  double betweenCircleSpacing = 22;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      height: double.infinity,
-      child: Stack(
-        children: [
-          SvgPicture.asset(
-            'lib/assets/Bass.svg',
-            width: double.infinity,
-            height: double.infinity,
-            color: ThemeManager().currentTheme.colorScheme.onSecondary,
-          ),
-          Positioned(
-            right: rightCirclePosition,
-            top: topCirclePosition,
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        double imgWidth = constraints.maxHeight * 225 / 402;            //original size of the image
+        double topPositionScale = 1;
+        double topPosition = constraints.maxHeight * 0.05;
+        double imgHeight = constraints.maxHeight;
+        double circleSpaceScale = 53 * imgHeight / 1000;
+        circleSize = constraints.maxHeight * 0.120;
+
+        if(imgWidth + 2 * circleSize >= constraints.maxWidth) {
+          imgHeight = constraints.maxHeight * 0.9;
+          circleSpaceScale = circleSpaceScale * 1.4;
+          topPositionScale = 1.4;
+          circleSize = circleSize * 0.6;
+        }
+
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            SizedBox(width: (constraints.maxWidth - imgWidth - 2 * circleSize) / 2 * 0.8),
+            Column(
                 children: <Widget>[
-                  Container(
-                    alignment: Alignment.center,
-                    height: circleSize,
-                    width: circleSize,
-                    decoration: BoxDecoration(
-                      color: Colors.transparent,
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: ThemeManager().currentTheme.colorScheme.secondaryContainer,
-                        width: 3,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: betweenCircleSpacing),
-                  Container(
-                    alignment: Alignment.center,
-                    height: circleSize,
-                    width: circleSize,
-                    decoration: BoxDecoration(
-                      color: Colors.transparent,
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: ThemeManager().currentTheme.colorScheme.secondaryContainer,
-                        width: 3,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: betweenCircleSpacing),
-                  Container(
-                    alignment: Alignment.center,
-                    height: circleSize,
-                    width: circleSize,
-                    decoration: BoxDecoration(
-                      color: Colors.transparent,
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: ThemeManager().currentTheme.colorScheme.secondaryContainer,
-                        width: 3,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: betweenCircleSpacing),
-                  Container(
-                    alignment: Alignment.center,
-                    height: circleSize,
-                    width: circleSize,
-                    decoration: BoxDecoration(
-                      color: Colors.transparent,
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: ThemeManager().currentTheme.colorScheme.secondaryContainer,
-                        width: 3,
-                      ),
-                    ),
-                  ),
+                  SizedBox(height: topPosition * topPositionScale),
+                  _buildCircle(),
+                  SizedBox(height: circleSpaceScale),
+                  _buildCircle(),
+                  SizedBox(height: circleSpaceScale),
+                  _buildCircle(),
+                  SizedBox(height: circleSpaceScale),
+                  _buildCircle(),
                 ]
             ),
-          ),
-        ],
+            Expanded(
+              child: SizedBox(
+                height: imgHeight,
+                child: SvgPicture.asset(
+                  'lib/assets/Bass.svg',
+                  fit: BoxFit.fitHeight,
+                  color: ThemeManager().currentTheme.colorScheme.onSecondary,
+                ),
+              ),
+            ),
+            SizedBox(width: circleSize + (constraints.maxWidth - imgWidth - 2 * circleSize) / 2 * 0.8),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildCircle(){
+    return Container(
+      alignment: Alignment.center,
+      height: circleSize,
+      width: circleSize,
+      decoration: BoxDecoration(
+        color: Colors.transparent,
+        shape: BoxShape.circle,
+        border: Border.all(
+          color: ThemeManager().currentTheme.colorScheme.secondaryContainer,
+          width: 3,
+        ),
       ),
     );
   }
