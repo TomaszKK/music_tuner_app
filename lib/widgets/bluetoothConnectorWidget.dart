@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:platform/platform.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class BluetoothConnectorWidget {
   LocalPlatform platform = const LocalPlatform();
 
   void showBluetoothConnectorWidget(BuildContext context) {
-    launchBluetooth();
-    scanForDevices();
+    launchBluetooth(context);
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
@@ -24,32 +24,31 @@ class BluetoothConnectorWidget {
                   fontFamily: 'Poppins',
                 ),
               ),
-              ListView(
-                shrinkWrap: true,
-                children: <Widget>[
-                  ListTile(
-                    title: const Text(
-                      'Device 1',
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
-                    ),
-                    onTap: () {
-                      // Respond to button press
-                    },
-                  ),
-                  ListTile(
-                    title: const Text(
-                      'Device 2',
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
-                    ),
-                    onTap: () {
-                      // Respond to button press
-                    },
-                  ),
-                ],
+              StreamBuilder<List<ScanResult>>(
+                stream: FlutterBluePlus.scanResults,
+                initialData: [],
+                builder: (c, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  return ListView(
+                    shrinkWrap: true,
+                    children: snapshot.data!.map((r) {
+                      return ListTile(
+                        title: Text(
+                          r.device.remoteId.toString(),
+                          style: const TextStyle(
+                            color: Colors.black,
+                          ),
+                        ),
+                        subtitle: Text(r.advertisementData.localName),
+                        onTap: () {
+                          connectToDevice(r.device);
+                        },
+                      );
+                    }).toList(),
+                  );
+                },
               ),
             ],
           ),
@@ -58,47 +57,89 @@ class BluetoothConnectorWidget {
     );
   }
 
-  void launchBluetooth() async{
+  void launchBluetooth(BuildContext context) async {
+    await requestPermissions();
+
     if (await FlutterBluePlus.isSupported == false) {
       print("Bluetooth not supported by this device");
       return;
     }
 
-    var subscription = FlutterBluePlus.adapterState.listen((BluetoothAdapterState state) {
+    FlutterBluePlus.adapterState.listen((BluetoothAdapterState state) {
       print(state);
       if (state == BluetoothAdapterState.on) {
-        // usually start scanning, connecting, etc
+        print("Bluetooth is on");
+        scanForDevices();
       } else {
-        // show an error to the user, etc
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Bluetooth is not enabled')),
+        );
       }
     });
 
     if (platform.isAndroid) {
       await FlutterBluePlus.turnOn();
     }
-
-    subscription.cancel();
   }
 
   void scanForDevices() async {
-    var subscription = FlutterBluePlus.onScanResults.listen((results) {
-      if (results.isNotEmpty) {
-        ScanResult r = results.last;
-        print('${r.device.remoteId}: "${r.advertisementData.advName}" found!');
+    // var subscription = FlutterBluePlus.onScanResults.listen((results) {
+    //   if (results.isNotEmpty) {
+    //     ScanResult r = results.last; // the most recently found device
+    //     print('${r.device.remoteId}: "${r.advertisementData.advName}" found!');
+    //   }
+    // },
+    //   onError: (e) => print(e),
+    // );
+    //
+    // FlutterBluePlus.cancelWhenScanComplete(subscription);
+    //
+    // // In your real app you should use `FlutterBluePlus.adapterState.listen` to handle all states
+    // await FlutterBluePlus.adapterState.where((val) => val == BluetoothAdapterState.on).first;
+    //
+    // // Start scanning w/ timeout
+    // // Optional: use `stopScan()` as an alternative to timeout
+    // await FlutterBluePlus.startScan(
+    //     withServices:[Guid("180D")], // match any of the specified services
+    //     withNames:["Bluno"], // *or* any of the specified names
+    //     timeout: Duration(seconds:15));
+    //
+    // // wait for scanning to stop
+    // await FlutterBluePlus.isScanning.where((val) => val == false).first;
+
+    print("Starting scan for devices...");
+    FlutterBluePlus.startScan(timeout: const Duration(seconds: 20));
+
+    // Wait for the scan to complete
+    await Future.delayed(const Duration(seconds: 20));
+
+    // Stop the scan after 20 seconds
+    print("Scan complete.");
+    FlutterBluePlus.stopScan();
+
+    // Print found devices
+    FlutterBluePlus.scanResults.listen((results) {
+      print("Found ${results.length} devices:");
+      for (ScanResult r in results) {
+        print('${r.device.remoteId}: "${r.advertisementData.localName}" found!');
       }
-    },
-      onError: (e) => print(e),
-    );
+    }).onError((e) {
+      print("Scan error: $e");
+    });
+  }
 
-    FlutterBluePlus.cancelWhenScanComplete(subscription);
+  void connectToDevice(BluetoothDevice device) async {
+    print('Connecting to ${device.remoteId}');
+    await device.connect();
+    print('Connected to ${device.remoteId}');
+  }
 
-    await FlutterBluePlus.adapterState.where((val) => val == BluetoothAdapterState.on).first;
-
-    await FlutterBluePlus.startScan(
-        withServices:[Guid("180D")],
-        withNames:["Bluno"],
-        timeout: Duration(seconds:15));
-
-    await FlutterBluePlus.isScanning.where((val) => val == false).first;
+  Future<void> requestPermissions() async {
+    await [
+      Permission.bluetoothScan,
+      Permission.bluetoothConnect,
+      Permission.bluetoothAdvertise,
+      Permission.location,
+    ].request();
   }
 }

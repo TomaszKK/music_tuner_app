@@ -6,6 +6,7 @@ import 'package:music_tuner/widgets/tunerWidget.dart';
 import 'package:music_tuner/widgets/instrumentWidget.dart';
 import 'package:music_tuner/widgets/InstrumentSelectionWidget.dart';
 import 'package:music_tuner/widgets/bluetoothConnectorWidget.dart';
+import 'package:bluetooth_enable_fork/bluetooth_enable_fork.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key, required this.title});
@@ -40,9 +41,9 @@ class _HomePageState extends State<HomePage> {
         actions: <Widget>[
           IconButton(
             icon: Icon(
-                Icons.account_circle_rounded,
-                color: Theme.of(context).colorScheme.onPrimaryContainer,
-                size: 30,
+              Icons.account_circle_rounded,
+              color: Theme.of(context).colorScheme.onPrimaryContainer,
+              size: 30,
             ),
             onPressed: () {
 
@@ -55,7 +56,8 @@ class _HomePageState extends State<HomePage> {
               size: 30,
             ),
             onPressed: () {
-              bluetoothConnectorWidget.showBluetoothConnectorWidget(context);
+              customEnableBT(context);
+              // bluetoothConnectorWidget.showBluetoothConnectorWidget(context);
             },
           ),
           IconButton(
@@ -66,8 +68,8 @@ class _HomePageState extends State<HomePage> {
             ),
             onPressed: () {
               Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const SettingsPage(title: 'Settings')),
+                context,
+                MaterialPageRoute(builder: (context) => const SettingsPage(title: 'Settings')),
               );
             },
           ),
@@ -112,56 +114,14 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  // void _showBluetoothStatus() {
-  //   showModalBottomSheet(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return Container(
-  //         padding: EdgeInsets.all(16.0),
-  //         child: Column(
-  //           mainAxisSize: MainAxisSize.min,
-  //           children: <Widget>[
-  //             const Text(
-  //               'Select device to connect to:',
-  //               style: TextStyle(
-  //                 fontSize: 20.0,
-  //                 fontWeight: FontWeight.bold,
-  //                 fontFamily: FontManager.poppins,
-  //               ),
-  //             ),
-  //            ListView(
-  //              shrinkWrap: true,
-  //              children: <Widget>[
-  //                ListTile(
-  //                  title: const Text(
-  //                    'Device 1',
-  //                    style: TextStyle(
-  //                      color: Colors.white,
-  //                    ),
-  //                  ),
-  //                  onTap: () {
-  //                    // Respond to button press
-  //                  },
-  //                ),
-  //                ListTile(
-  //                  title: const Text(
-  //                    'Device 2',
-  //                    style: TextStyle(
-  //                      color: Colors.white,
-  //                    ),
-  //                  ),
-  //                  onTap: () {
-  //                    // Respond to button press
-  //                  },
-  //                ),
-  //              ],
-  //            ),
-  //           ],
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
+
+  Future<void> customEnableBT(BuildContext context) async {
+    BluetoothEnable.enableBluetooth.then((result) {
+      if (result == "true") {
+        bluetoothConnectorWidget.showBluetoothConnectorWidget(context);
+      }
+    });
+  }
 
   void _showInstrumentSelection() async{
     final selectedInstrument = await showDialog<String>(
@@ -191,4 +151,5 @@ class _HomePageState extends State<HomePage> {
   String _getPickedInstrument() {
     return _selectedInstrument ?? 'Guitar';
   }
+
 }
