@@ -22,6 +22,15 @@ class _HomePageState extends State<HomePage> {
   BluetoothConnectorWidget bluetoothConnectorWidget = BluetoothConnectorWidget();
 
   @override
+  void initState() {
+    super.initState();
+
+    bluetoothConnectorWidget.isBluetoothConnected.addListener(() {
+      setState(() {});
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -52,7 +61,9 @@ class _HomePageState extends State<HomePage> {
           IconButton(
             icon: Icon(
               Icons.bluetooth_connected,
-              color: Theme.of(context).colorScheme.onPrimaryContainer,
+              color: bluetoothConnectorWidget.isBluetoothConnected.value
+                  ? Colors.green  // Change to green if connected
+                  : Theme.of(context).colorScheme.onPrimaryContainer,
               size: 30,
             ),
             onPressed: () {

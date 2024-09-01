@@ -2,59 +2,110 @@ import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:platform/platform.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'dart:typed_data';
+typedef FloatValueCallback = void Function(double floatValue);
 
 class BluetoothConnectorWidget {
+  bool isDeviceConnected = false;
+  BluetoothDevice ?connectedDevice;
   LocalPlatform platform = const LocalPlatform();
+  ValueNotifier<bool> isBluetoothConnected = ValueNotifier<bool>(false);
+  final FloatValueCallback onFloatValueReceived;
+  BluetoothConnectorWidget({required this.onFloatValueReceived});
 
   void showBluetoothConnectorWidget(BuildContext context) {
-    launchBluetooth(context);
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return Container(
-          padding: EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              const Text(
-                'Select device to connect to:',
-                style: TextStyle(
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'Poppins',
+    if(!isDeviceConnected) {
+      launchBluetooth(context);
+      showModalBottomSheet(
+        context: context,
+        builder: (BuildContext context) {
+          return Container(
+            padding: EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                const Text(
+                  'Select device to connect to:',
+                  style: TextStyle(
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Poppins',
+                  ),
                 ),
-              ),
-              StreamBuilder<List<ScanResult>>(
-                stream: FlutterBluePlus.scanResults,
-                initialData: [],
-                builder: (c, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
-                  }
-                  return ListView(
-                    shrinkWrap: true,
-                    children: snapshot.data!.map((r) {
-                      return ListTile(
-                        title: Text(
-                          r.device.remoteId.toString(),
-                          style: const TextStyle(
-                            color: Colors.black,
+                StreamBuilder<List<ScanResult>>(
+                  stream: FlutterBluePlus.scanResults,
+                  initialData: [],
+                  builder: (c, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                    return ListView(
+                      shrinkWrap: true,
+                      children: snapshot.data!.map((r) {
+                        return ListTile(
+                          title: Text(
+                            r.device.platformName,
+                            style: const TextStyle(
+                              color: Colors.green,
+                            ),
                           ),
-                        ),
-                        subtitle: Text(r.advertisementData.localName),
-                        onTap: () {
-                          connectToDevice(r.device);
-                        },
-                      );
-                    }).toList(),
-                  );
-                },
-              ),
-            ],
-          ),
-        );
-      },
-    );
+                          onTap: () {
+                            connectToDevice(r.device, context);
+                          },
+                        );
+                      }).toList(),
+                    );
+                  },
+                ),
+              ],
+            ),
+          );
+        },
+      );
+    }else{
+      showModalBottomSheet(
+        context: context,
+        builder: (BuildContext context) {
+          return Container(
+            padding: EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                const Text(
+                  'Device already connected.',
+                  style: TextStyle(
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Poppins',
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    if(connectedDevice != null){
+                      disconnectDevice(connectedDevice!, context);
+                      Navigator.pop(context);
+                    }
+                    else{
+                      print("No device connected");
+                    }
+                  },
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
+                  ),
+                  child: const Text(
+                    'Disconnect',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontFamily: 'Poppins',
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      );
+    }
   }
 
   void launchBluetooth(BuildContext context) async {
@@ -72,7 +123,10 @@ class BluetoothConnectorWidget {
         scanForDevices();
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Bluetooth is not enabled')),
+          const SnackBar(
+              content: Text('Bluetooth is not enabled'),
+              duration: Duration(seconds: 3),
+          ),
         );
       }
     });
@@ -83,55 +137,75 @@ class BluetoothConnectorWidget {
   }
 
   void scanForDevices() async {
-    // var subscription = FlutterBluePlus.onScanResults.listen((results) {
-    //   if (results.isNotEmpty) {
-    //     ScanResult r = results.last; // the most recently found device
-    //     print('${r.device.remoteId}: "${r.advertisementData.advName}" found!');
-    //   }
-    // },
-    //   onError: (e) => print(e),
-    // );
-    //
-    // FlutterBluePlus.cancelWhenScanComplete(subscription);
-    //
-    // // In your real app you should use `FlutterBluePlus.adapterState.listen` to handle all states
-    // await FlutterBluePlus.adapterState.where((val) => val == BluetoothAdapterState.on).first;
-    //
-    // // Start scanning w/ timeout
-    // // Optional: use `stopScan()` as an alternative to timeout
-    // await FlutterBluePlus.startScan(
-    //     withServices:[Guid("180D")], // match any of the specified services
-    //     withNames:["Bluno"], // *or* any of the specified names
-    //     timeout: Duration(seconds:15));
-    //
-    // // wait for scanning to stop
-    // await FlutterBluePlus.isScanning.where((val) => val == false).first;
-
     print("Starting scan for devices...");
-    FlutterBluePlus.startScan(timeout: const Duration(seconds: 20));
+    FlutterBluePlus.startScan(
+        timeout: const Duration(seconds: 20),
+        withNames: ['TUNER IOT'],
+        //withServices: [Guid('4fafc201-1fb5-459e-8fcc-c5c9c331914b')]
+    );
 
     // Wait for the scan to complete
     await Future.delayed(const Duration(seconds: 20));
 
     // Stop the scan after 20 seconds
-    print("Scan complete.");
-    FlutterBluePlus.stopScan();
+    // print("Scan complete.");
+    // FlutterBluePlus.stopScan();
+  }
 
-    // Print found devices
-    FlutterBluePlus.scanResults.listen((results) {
-      print("Found ${results.length} devices:");
-      for (ScanResult r in results) {
-        print('${r.device.remoteId}: "${r.advertisementData.localName}" found!');
-      }
-    }).onError((e) {
-      print("Scan error: $e");
+  void connectToDevice(BluetoothDevice device, BuildContext context) async {
+    print('Connecting to ${device.remoteId}');
+    await device.connect(
+      timeout: const Duration(seconds: 10),
+      autoConnect: false,     //to change to true
+    ).then((value) {
+      isDeviceConnected = true;
+      isBluetoothConnected.value = true;
+      connectedDevice = device;
+      Navigator.pop(context);
+
+      discoverServices(device);
+
+    }).catchError((e) {
+      print("Error connecting to device: $e");
     });
   }
 
-  void connectToDevice(BluetoothDevice device) async {
-    print('Connecting to ${device.remoteId}');
-    await device.connect();
-    print('Connected to ${device.remoteId}');
+  void disconnectDevice(BluetoothDevice device, BuildContext context) async {
+    print('Disconnecting from ${device.remoteId}');
+    await device.disconnect().then((value) {
+      isDeviceConnected = false;
+      isBluetoothConnected.value = false;
+    }).catchError((e) {
+      print("Error disconnecting from device: $e");
+    });
+  }
+
+  Future<void> discoverServices(BluetoothDevice device) async {
+    List<BluetoothService> services = await device.discoverServices();
+    for (BluetoothService service in services) {
+      for (BluetoothCharacteristic characteristic in service.characteristics) {
+        // Find the characteristic you want to listen to
+        if (characteristic.properties.notify) {
+          listenForNotifications(characteristic);
+        }
+      }
+    }
+  }
+
+  void listenForNotifications(BluetoothCharacteristic characteristic) async {
+    await characteristic.setNotifyValue(true);
+    characteristic.value.listen((value) {
+      if (value.length >= 4) {
+        final byteData = ByteData.sublistView(Uint8List.fromList(value));
+        final floatValue = byteData.getFloat32(0, Endian.little);
+        print('Received float value: $floatValue');
+
+        // Call the callback function with the float value
+        onFloatValueReceived(floatValue);
+      } else {
+        print('Received data is too short to be a float: $value');
+      }
+    });
   }
 
   Future<void> requestPermissions() async {
