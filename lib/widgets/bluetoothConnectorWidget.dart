@@ -10,8 +10,13 @@ class BluetoothConnectorWidget {
   BluetoothDevice ?connectedDevice;
   LocalPlatform platform = const LocalPlatform();
   ValueNotifier<bool> isBluetoothConnected = ValueNotifier<bool>(false);
-  final FloatValueCallback onFloatValueReceived;
-  BluetoothConnectorWidget({required this.onFloatValueReceived});
+  int takeThree = 0;
+  double freqTemp = 0;
+  double freqLast = 0;
+
+  static ValueNotifier<double> frequencyNotifier = ValueNotifier<double>(0.0);
+  // FloatValueCallback onFloatValueReceived;
+  // BluetoothConnectorWidget({required this.onFloatValueReceived});
 
   void showBluetoothConnectorWidget(BuildContext context) {
     if(!isDeviceConnected) {
@@ -110,7 +115,6 @@ class BluetoothConnectorWidget {
 
   void launchBluetooth(BuildContext context) async {
     await requestPermissions();
-
     if (await FlutterBluePlus.isSupported == false) {
       print("Bluetooth not supported by this device");
       return;
@@ -198,10 +202,8 @@ class BluetoothConnectorWidget {
       if (value.length >= 4) {
         final byteData = ByteData.sublistView(Uint8List.fromList(value));
         final floatValue = byteData.getFloat32(0, Endian.little);
-        print('Received float value: $floatValue');
-
-        // Call the callback function with the float value
-        onFloatValueReceived(floatValue);
+        // print('Received float value: $floatValue');
+        frequencyNotifier.value = floatValue;
       } else {
         print('Received data is too short to be a float: $value');
       }

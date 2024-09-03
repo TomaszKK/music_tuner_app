@@ -4,10 +4,12 @@ class Assets {
 
   static const String assetsBass = 'lib/assets/Bass.svg';
   static const String assetsGuitar = 'lib/assets/guitar.png';
+  static const String assetsNotes = 'lib/assets/notes.json';
   static const String generatedAssets = 'lib/generated/assets.dart';
   static const String libAssetsBass = 'lib/assets/Bass.svg';
   static const String libAssetsGuitar = 'lib/assets/Guitar.svg';
   static const String libMain = 'lib/main.dart';
+  static const String modelsNoteModel = 'lib/models/noteModel.dart';
   static const String providersInstrumentProvider = 'lib/providers/InstrumentProvider.dart';
   static const String providersThemeManager = 'lib/providers/ThemeManager.dart';
   static const String screensHomePage = 'lib/screens/HomePage.dart';

@@ -99,4 +99,5 @@ flutter:
     - lib/providers/
     - lib/assets/Guitar.svg
     - lib/assets/Bass.svg
+    - lib/assets/notes.json
 
