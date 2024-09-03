@@ -86,3 +86,30 @@ String checkNote(List<Note> notes, double freq) {
   // If no match found, return the last note (though this should not occur due to edge handling)
   return notes.last.name;
 }
+
+
+Note getCurrentNoteBasedOnFrequency(double frequency, List<Note> notes) {
+  return notes.reduce((a, b) => (frequency - a.freq).abs() < (frequency - b.freq).abs() ? a : b);
+}
+
+double getPreviousNoteMidpoint(Note currentNote, List<Note> notes) {
+  int index = notes.indexOf(currentNote);
+  if (index > 0) {
+    Note previousNote = notes[index - 1];
+    return (currentNote.freq + previousNote.freq) / 2;
+  } else {
+    // If there's no previous note, you might return a default value or handle it accordingly
+    return currentNote.freq; // Return the current note's frequency as a fallback
+  }
+}
+
+double getNextNoteMidpoint(Note currentNote, List<Note> notes) {
+  int index = notes.indexOf(currentNote);
+  if (index < notes.length - 1) {
+    Note nextNote = notes[index + 1];
+    return (currentNote.freq + nextNote.freq) / 2;
+  } else {
+    // If there's no next note, you might return a default value or handle it accordingly
+    return currentNote.freq; // Return the current note's frequency as a fallback
+  }
+}
