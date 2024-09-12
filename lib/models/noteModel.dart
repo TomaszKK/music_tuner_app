@@ -53,20 +53,16 @@ Future<List<Note>> loadNotes() async {
   }
 }
 
-String checkNote(List<Note> notes, double freq) {
-  if (notes.isEmpty) {
-    return '';
-  }
-
-  // Sort the notes by frequency to ensure correct comparisons
+Note checkNote(List<Note> notes, double freq) {
+   // Sort the notes by frequency to ensure correct comparisons
   notes.sort((a, b) => a.freq.compareTo(b.freq));
 
   // Edge cases: frequency is lower than the lowest note or higher than the highest note
   if (freq <= notes.first.freq) {
-    return notes.first.name;
+    return notes.first;
   }
   if (freq >= notes.last.freq) {
-    return notes.last.name;
+    return notes.last;
   }
 
   // Iterate over the notes to find the closest one
@@ -79,12 +75,12 @@ String checkNote(List<Note> notes, double freq) {
 
     // Check if the frequency is closer to the current note or the next note
     if (freq < midpoint) {
-      return currentNote.name;
+      return currentNote;
     }
   }
 
   // If no match found, return the last note (though this should not occur due to edge handling)
-  return notes.last.name;
+  return notes.last;
 }
 
 
