@@ -11,6 +11,8 @@ class TunerWidget extends StatefulWidget {
   const TunerWidget({super.key, required this.title});
   final String title;
 
+  static ValueNotifier<String> currentNoteNotifier = ValueNotifier<String>('');
+
   @override
   State<TunerWidget> createState() => _TunerWidgetState();
 }
@@ -25,7 +27,6 @@ class _TunerWidgetState extends State<TunerWidget> {
     return FutureBuilder<List<Note>>(
       future: notesFuture,
       builder: (context, snapshot) {
-        // Check if data is still loading
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
         }
@@ -78,6 +79,11 @@ class _TunerWidgetState extends State<TunerWidget> {
                     builder: (context, frequency, child) {
                       Note currentNote = checkNote(notes, frequency);
                       String textUnderNote = setTextUnderNote(currentNote, frequency);
+
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        TunerWidget.currentNoteNotifier.value = currentNote.name;
+                      });
+
                       return Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[

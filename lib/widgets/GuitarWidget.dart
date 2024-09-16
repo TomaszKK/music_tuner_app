@@ -45,11 +45,11 @@ class _GuitarWidgetState extends State<GuitarWidget> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 SizedBox(height: max(topPosition * topPositionScale, 0)), // Prevent negative height
-                PinNoteWidget(defaultNote: 'E#2', circleSize: circleSize),
+                PinNoteWidget(defaultNote: 'E2', circleSize: circleSize),
                 SizedBox(height: max(65 * imgHeight / 1000 * circleSpaceScale, 0)),
-                _buildCircle(),
+                PinNoteWidget(defaultNote: 'A2', circleSize: circleSize),
                 SizedBox(height: max(65 * imgHeight / 1000 * circleSpaceScale, 0)),
-                _buildCircle(),
+                PinNoteWidget(defaultNote: 'D3', circleSize: circleSize),
               ],
             ),
             Expanded(
@@ -65,33 +65,17 @@ class _GuitarWidgetState extends State<GuitarWidget> {
             Column(
               children: <Widget>[
                 SizedBox(height: max(topPosition * topPositionScale, 0)),
-                _buildCircle(),
+                PinNoteWidget(defaultNote: 'G3', circleSize: circleSize),
                 SizedBox(height: max(65 * imgHeight / 1000 * circleSpaceScale, 0)),
-                _buildCircle(),
+                PinNoteWidget(defaultNote: 'B3', circleSize: circleSize),
                 SizedBox(height: max(65 * imgHeight / 1000 * circleSpaceScale, 0)),
-                _buildCircle(),
+                PinNoteWidget(defaultNote: 'E4', circleSize: circleSize),
               ],
             ),
             SizedBox(width: sidePadding),
           ],
         );
       },
-    );
-  }
-
-  Widget _buildCircle(){
-    return Container(
-      alignment: Alignment.center,
-      height: circleSize,
-      width: circleSize,
-      decoration: BoxDecoration(
-        color: Colors.transparent,
-        shape: BoxShape.circle,
-        border: Border.all(
-          color: ThemeManager().currentTheme.colorScheme.secondaryContainer,
-          width: 3,
-        ),
-      ),
     );
   }
 }
