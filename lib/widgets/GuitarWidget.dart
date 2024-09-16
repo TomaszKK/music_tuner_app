@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:music_tuner/providers/ThemeManager.dart';
+import 'package:music_tuner/widgets/PinNoteWidget.dart';
 
 class GuitarWidget extends StatefulWidget {
   const GuitarWidget({super.key, required this.title});
@@ -44,7 +45,7 @@ class _GuitarWidgetState extends State<GuitarWidget> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 SizedBox(height: max(topPosition * topPositionScale, 0)), // Prevent negative height
-                _buildCircle(),
+                PinNoteWidget(defaultNote: 'E#2', circleSize: circleSize),
                 SizedBox(height: max(65 * imgHeight / 1000 * circleSpaceScale, 0)),
                 _buildCircle(),
                 SizedBox(height: max(65 * imgHeight / 1000 * circleSpaceScale, 0)),

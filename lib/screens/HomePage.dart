@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:music_tuner/providers/ThemeManager.dart';
 import 'package:music_tuner/screens/SettingsPage.dart';
-import 'package:music_tuner/widgets/tunerWidget.dart';
+import 'package:music_tuner/widgets/TunerWidget.dart';
 import 'package:music_tuner/widgets/instrumentWidget.dart';
 import 'package:music_tuner/widgets/InstrumentSelectionWidget.dart';
-import 'package:music_tuner/widgets/bluetoothConnectorWidget.dart';
+import 'package:music_tuner/widgets/BluetoothConnectorWidget.dart';
 import 'package:bluetooth_enable_fork/bluetooth_enable_fork.dart';
 
 class HomePage extends StatefulWidget {

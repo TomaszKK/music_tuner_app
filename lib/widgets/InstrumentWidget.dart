@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:music_tuner/widgets/guitarWidget.dart';
-import 'package:music_tuner/widgets/bassWidget.dart';
+import 'package:music_tuner/widgets/GuitarWidget.dart';
+import 'package:music_tuner/widgets/BassWidget.dart';
 
 class InstrumentWidget extends StatefulWidget {
   const InstrumentWidget({Key? key, required this.title, required this.selectedInstrument}) : super(key: key);

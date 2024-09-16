@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:music_tuner/providers/ThemeManager.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 
-import 'bluetoothConnectorWidget.dart';
+import 'BluetoothConnectorWidget.dart';
 import 'package:music_tuner/models/noteModel.dart';
+
+import 'NoteRepresentationWidget.dart';
 
 class TunerWidget extends StatefulWidget {
   const TunerWidget({super.key, required this.title});
@@ -45,6 +47,7 @@ class _TunerWidgetState extends State<TunerWidget> {
         return Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
+            const SizedBox(height: 5),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
@@ -78,13 +81,8 @@ class _TunerWidgetState extends State<TunerWidget> {
                       return Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                          Text(
-                            currentNote.name,
-                            style: TextStyle(
-                              color: ThemeManager().currentTheme.colorScheme.secondary,
-                              fontSize: 40,
-                            ),
-                          ),
+                          // NoteRepresentationWidget(noteString: "C#2", fontSize: 40),
+                          NoteRepresentationWidget(noteString: currentNote.name, fontSize: 40),
                           Text(
                             textUnderNote,
                             style: TextStyle(
@@ -197,10 +195,10 @@ class _TunerWidgetState extends State<TunerWidget> {
     String text = '';
     double Treshold = 0.1;
     if(note.freq < (frequency - Treshold)){
-      text = 'Less';
+      text = 'Lower';
     }
     else if(note.freq > frequency + Treshold){
-      text = 'More';
+      text = 'Higher';
     }
     else{
       text = 'Perfect';
