@@ -13,6 +13,10 @@ class NoteRepresentationWidget extends StatelessWidget {
   String chromatic = '';
 
   void parseNoteString(){
+    if(noteString == '-'){
+      note = "-";
+      return;
+    }
     if(noteString.substring(0, 1) != '') {
       note = noteString.substring(0, 1);
     }
@@ -33,6 +37,16 @@ class NoteRepresentationWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if(note == ''){
+      return Text(
+        note,
+        style: TextStyle(
+          color: ThemeManager().currentTheme.colorScheme.secondary,
+          fontSize: fontSize,
+          fontWeight: FontWeight.bold
+        ),
+      );
+    }
     return FittedBox(
       fit: BoxFit.fill,
       child:  Row(

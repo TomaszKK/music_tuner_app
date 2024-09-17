@@ -54,6 +54,9 @@ Future<List<Note>> loadNotes() async {
 }
 
 Note checkNote(List<Note> notes, double freq) {
+  if(freq == 0){
+    return notes[0];
+  }
    // Sort the notes by frequency to ensure correct comparisons
   notes.sort((a, b) => a.freq.compareTo(b.freq));
 

@@ -21,8 +21,29 @@ class PinNoteWidget extends StatelessWidget {
             height: circleSize,
             width: circleSize,
             decoration: BoxDecoration(
-              color: ThemeManager().currentTheme.colorScheme.secondaryContainer,
+              color: Colors.transparent,
               shape: BoxShape.circle,
+              border: Border.all(
+                color: ThemeManager().currentTheme.colorScheme
+                    .secondaryContainer,
+                width: 2,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: ThemeManager().currentTheme.colorScheme
+                      .secondaryContainer,
+                  blurRadius: 15.0,
+                  // spreadRadius: 3.0,
+                  blurStyle: BlurStyle.outer,
+                ),
+                // BoxShadow(
+                //   color: ThemeManager().currentTheme.colorScheme
+                //       .secondaryContainer,
+                //   blurRadius: 10.0,
+                //   // spreadRadius: -5.0,
+                //   blurStyle: BlurStyle.inner,
+                // )
+              ],
             ),
             child: NoteRepresentationWidget(
                 noteString: currentNote, fontSize: 20),
@@ -39,7 +60,7 @@ class PinNoteWidget extends StatelessWidget {
               border: Border.all(
                 color: ThemeManager().currentTheme.colorScheme
                     .secondaryContainer,
-                width: 3,
+                width: 2,
               ),
             ),
             child: NoteRepresentationWidget(

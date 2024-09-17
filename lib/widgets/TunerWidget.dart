@@ -206,6 +206,9 @@ class _TunerWidgetState extends State<TunerWidget> {
     else if(note.freq > frequency + Treshold){
       text = 'Higher';
     }
+    else if(frequency == 0){
+      text = '';
+    }
     else{
       text = 'Perfect';
     }

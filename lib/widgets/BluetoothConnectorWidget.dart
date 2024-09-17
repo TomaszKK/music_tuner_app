@@ -17,6 +17,7 @@ class BluetoothConnectorWidget {
   int takeThree = 0;
   double freqTemp = 0;
   double freqLast = 0;
+  int noteClearCount = 0;
 
   static ValueNotifier<double> frequencyNotifier = ValueNotifier<double>(0.0);
 
@@ -268,6 +269,13 @@ class BluetoothConnectorWidget {
         final floatValue = byteData.getFloat32(0, Endian.little);
         if (floatValue != 0) {
           frequencyNotifier.value = floatValue;
+          noteClearCount = 0;
+        }else{
+          noteClearCount++;
+        }
+
+        if(noteClearCount > 20){
+          frequencyNotifier.value = 0.0;
         }
       } else {
         print('Received data is too short to be a float: $value');
