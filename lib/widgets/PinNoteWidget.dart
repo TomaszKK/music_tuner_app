@@ -29,9 +29,9 @@ class _PinNoteWidgetState extends State<PinNoteWidget> {
     final NoteScrollerWidget noteScrollerWidget = NoteScrollerWidget();
 
     return ValueListenableBuilder<String>(
-      valueListenable: TunerWidget.currentNoteNotifier, // Listen to the ValueNotifier
-      builder: (context, currentNote, child) {
-        final isCurrentNote = currentNote == widget.defaultNote;
+      valueListenable: TunerWidget.blockedNoteNotifier, // Listen to the global blocked note
+      builder: (context, blockedNote, child) {
+        final isCurrentNoteBlocked = blockedNote == widget.defaultNote;
 
         return GestureDetector(
           onLongPress: () {
@@ -39,10 +39,10 @@ class _PinNoteWidgetState extends State<PinNoteWidget> {
               isTapped = !isTapped;
 
               if (isTapped) {
-                // Block the current note in TunerWidget by updating the blockedNoteNotifier
+                // Block the current note, update the global blockedNoteNotifier
                 TunerWidget.blockedNoteNotifier.value = widget.defaultNote;
               } else {
-                // Unblock the note if tapped again
+                // Unblock the note by setting the global blockedNoteNotifier to empty
                 TunerWidget.blockedNoteNotifier.value = '';
               }
             });
@@ -54,10 +54,6 @@ class _PinNoteWidgetState extends State<PinNoteWidget> {
             if (returnNote != null) {
               setState(() {
                 widget.defaultNote = returnNote;
-                if(isTapped){
-                  // Unblock the note if it was blocked
-                  TunerWidget.blockedNoteNotifier.value = widget.defaultNote;
-                }
               });
             }
           },
@@ -66,13 +62,13 @@ class _PinNoteWidgetState extends State<PinNoteWidget> {
             height: widget.circleSize,
             width: widget.circleSize,
             decoration: BoxDecoration(
-              color: isTapped ? themeColor : Colors.transparent, // Fill with red if tapped
+              color: isCurrentNoteBlocked ? themeColor : Colors.transparent, // Change color when blocked
               shape: BoxShape.circle,
               border: Border.all(
-                color: isCurrentNote ? currentNoteColor : themeColor,
+                color: isCurrentNoteBlocked ? currentNoteColor : themeColor,
                 width: 2,
               ),
-              boxShadow: isCurrentNote
+              boxShadow: isCurrentNoteBlocked
                   ? [
                 BoxShadow(
                   color: themeColor,
@@ -80,10 +76,10 @@ class _PinNoteWidgetState extends State<PinNoteWidget> {
                   blurStyle: BlurStyle.outer,
                 ),
               ]
-                  : null, // Only add boxShadow if it's the current note
+                  : null, // Only add shadow if it's the current blocked note
             ),
             child: NoteRepresentationWidget(
-              noteString: isCurrentNote ? currentNote : widget.defaultNote,
+              noteString: isCurrentNoteBlocked ? widget.defaultNote : widget.defaultNote,
               fontSize: 20,
             ),
           ),
