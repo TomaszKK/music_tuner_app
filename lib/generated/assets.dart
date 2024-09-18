@@ -23,6 +23,7 @@ class Assets {
   static const String widgetsInstrumentSelectionWidget = 'lib/widgets/InstrumentSelectionWidget.dart';
   static const String widgetsInstrumentWidget = 'lib/widgets/InstrumentWidget.dart';
   static const String widgetsNoteRepresentationWidget = 'lib/widgets/NoteRepresentationWidget.dart';
+  static const String widgetsNoteSrollerWidget = 'lib/widgets/NoteSrollerWidget.dart';
   static const String widgetsPinNoteWidget = 'lib/widgets/PinNoteWidget.dart';
   static const String widgetsTunerWidget = 'lib/widgets/TunerWidget.dart';
 

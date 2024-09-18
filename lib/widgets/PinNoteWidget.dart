@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:music_tuner/providers/ThemeManager.dart';
 import 'package:music_tuner/widgets/NoteRepresentationWidget.dart';
 
+import 'NoteSrollerWidget.dart';
 import 'TunerWidget.dart';
 
 class PinNoteWidget extends StatefulWidget {
@@ -37,7 +38,7 @@ class _PinNoteWidgetState extends State<PinNoteWidget> {
             });
           },
           onTap: () {
-
+            _showNotePicker(context);
           },
           child: Container(
             alignment: Alignment.center,
@@ -64,6 +65,45 @@ class _PinNoteWidgetState extends State<PinNoteWidget> {
               noteString: isCurrentNote ? currentNote : widget.defaultNote,
               fontSize: 20,
             ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _showNotePicker(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return SizedBox(
+          height: 300, // Adjust height for the picker
+          child: Column(
+            children: [
+              const Text(
+                'Select Note, Chromatic, and Octave',
+                style: TextStyle(fontSize: 20.0,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Poppins'
+                ),
+              ),
+              Expanded(
+                child: NoteScrollerWidget(),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).pop(); // Close the modal after selection
+                },
+                child: const Text(
+                  'Done',
+                  style: TextStyle(
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Poppins',
+                    color: Colors.green,
+                  ),
+                ),
+              ),
+            ],
           ),
         );
       },
