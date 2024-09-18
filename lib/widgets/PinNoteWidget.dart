@@ -6,13 +6,13 @@ import 'NoteSrollerWidget.dart';
 import 'TunerWidget.dart';
 
 class PinNoteWidget extends StatefulWidget {
-  const PinNoteWidget({
+  PinNoteWidget({
     Key? key,
     required this.defaultNote,
     required this.circleSize,
   }) : super(key: key);
 
-  final String defaultNote;
+  String defaultNote;
   final double circleSize;
 
   @override
@@ -25,6 +25,8 @@ class _PinNoteWidgetState extends State<PinNoteWidget> {
   @override
   Widget build(BuildContext context) {
     final themeColor = ThemeManager().currentTheme.colorScheme.secondaryContainer;
+    final currentNoteColor = ThemeManager().currentTheme.colorScheme.onSecondaryContainer;
+    final NoteScrollerWidget noteScrollerWidget = NoteScrollerWidget();
 
     return ValueListenableBuilder<String>(
       valueListenable: TunerWidget.currentNoteNotifier, // Listen to the ValueNotifier
@@ -37,8 +39,15 @@ class _PinNoteWidgetState extends State<PinNoteWidget> {
               isTapped = !isTapped; // Toggle the tapped state
             });
           },
-          onTap: () {
-            _showNotePicker(context);
+          onTap: () async {
+            // Show note picker and wait for the selected note
+            String? returnNote = await noteScrollerWidget.showNotePicker(context, widget.defaultNote);
+
+            if (returnNote != null) {
+              setState(() {
+                widget.defaultNote = returnNote;
+              });
+            }
           },
           child: Container(
             alignment: Alignment.center,
@@ -48,14 +57,14 @@ class _PinNoteWidgetState extends State<PinNoteWidget> {
               color: isTapped ? themeColor : Colors.transparent, // Fill with red if tapped
               shape: BoxShape.circle,
               border: Border.all(
-                color: themeColor,
+                color: isCurrentNote ? currentNoteColor : themeColor,
                 width: 2,
               ),
               boxShadow: isCurrentNote
                   ? [
                 BoxShadow(
                   color: themeColor,
-                  blurRadius: 15.0,
+                  blurRadius: 20.0,
                   blurStyle: BlurStyle.outer,
                 ),
               ]
@@ -65,45 +74,6 @@ class _PinNoteWidgetState extends State<PinNoteWidget> {
               noteString: isCurrentNote ? currentNote : widget.defaultNote,
               fontSize: 20,
             ),
-          ),
-        );
-      },
-    );
-  }
-
-  void _showNotePicker(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return SizedBox(
-          height: 300, // Adjust height for the picker
-          child: Column(
-            children: [
-              const Text(
-                'Select Note, Chromatic, and Octave',
-                style: TextStyle(fontSize: 20.0,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'Poppins'
-                ),
-              ),
-              Expanded(
-                child: NoteScrollerWidget(),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).pop(); // Close the modal after selection
-                },
-                child: const Text(
-                  'Done',
-                  style: TextStyle(
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'Poppins',
-                    color: Colors.green,
-                  ),
-                ),
-              ),
-            ],
           ),
         );
       },

@@ -22,7 +22,7 @@ class NoteRepresentationWidget extends StatelessWidget {
     }
 
     if(noteString.substring(1, 2) != ''){
-      if(noteString.substring(1, 2) == '#' || noteString.substring(1, 2) == 'b'){
+      if(noteString.substring(1, 2) == '♯' || noteString.substring(1, 2) == '♭'){
         chromatic = noteString.substring(1, 2);
       }
       else{

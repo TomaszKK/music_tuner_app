@@ -43,7 +43,7 @@ class ThemeManager with ChangeNotifier {
       secondary: const Color(0xFF0AEF05),
       onSecondary: const Color(0xFFFE8C22),
       secondaryContainer: const Color(0xFFC03BFF),
-      onSecondaryContainer: const Color(0xFF1E1E1E),
+      onSecondaryContainer: const Color(0xFFD177FF),
       background: const Color(0xFF322C2C),
       surface: const Color(0xFF1E1E1E),
       error: const Color(0xFF1E1E1E),
