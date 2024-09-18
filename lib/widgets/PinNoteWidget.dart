@@ -36,7 +36,15 @@ class _PinNoteWidgetState extends State<PinNoteWidget> {
         return GestureDetector(
           onLongPress: () {
             setState(() {
-              isTapped = !isTapped; // Toggle the tapped state
+              isTapped = !isTapped;
+
+              if (isTapped) {
+                // Block the current note in TunerWidget by updating the blockedNoteNotifier
+                TunerWidget.blockedNoteNotifier.value = widget.defaultNote;
+              } else {
+                // Unblock the note if tapped again
+                TunerWidget.blockedNoteNotifier.value = '';
+              }
             });
           },
           onTap: () async {
@@ -46,6 +54,10 @@ class _PinNoteWidgetState extends State<PinNoteWidget> {
             if (returnNote != null) {
               setState(() {
                 widget.defaultNote = returnNote;
+                if(isTapped){
+                  // Unblock the note if it was blocked
+                  TunerWidget.blockedNoteNotifier.value = widget.defaultNote;
+                }
               });
             }
           },

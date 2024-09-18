@@ -12,6 +12,7 @@ class TunerWidget extends StatefulWidget {
   final String title;
 
   static ValueNotifier<String> currentNoteNotifier = ValueNotifier<String>('');
+  static ValueNotifier<String> blockedNoteNotifier = ValueNotifier<String>('');
 
   @override
   State<TunerWidget> createState() => _TunerWidgetState();
@@ -21,6 +22,7 @@ class _TunerWidgetState extends State<TunerWidget> {
   String frequencyText = '0.0';
   static Future<List<Note>> notesFuture = loadNotes();
   String currentNote = '';
+  String textUnderNote = '';
 
   @override
   Widget build(BuildContext context) {
@@ -74,29 +76,44 @@ class _TunerWidgetState extends State<TunerWidget> {
                   alignment: Alignment.center,
                   height: 100,
                   width: 100,
-                  child: ValueListenableBuilder<double>(
-                    valueListenable: BluetoothConnectorWidget.frequencyNotifier,
-                    builder: (context, frequency, child) {
-                      Note currentNote = checkNote(notes, frequency);
-                      String textUnderNote = setTextUnderNote(currentNote, frequency);
+                  child: ValueListenableBuilder<String>(
+                    valueListenable: TunerWidget.blockedNoteNotifier, // Listen to the blocked note
+                    builder: (context, blockedNote, child) {
+                      return ValueListenableBuilder<double>(
+                        valueListenable: BluetoothConnectorWidget.frequencyNotifier,
+                        builder: (context, frequency, child) {
+                          String noteToDisplay;
 
-                      WidgetsBinding.instance.addPostFrameCallback((_) {
-                        TunerWidget.currentNoteNotifier.value = currentNote.name;
-                      });
+                          if (blockedNote.isNotEmpty) {
+                            // If a note is blocked, show the blocked note
+                            noteToDisplay = blockedNote;
+                          } else {
+                            // Otherwise, calculate the current note based on frequency
+                            Note currentNote = checkNote(notes, frequency);
+                            textUnderNote = setTextUnderNote(currentNote, frequency);
 
-                      return Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          // NoteRepresentationWidget(noteString: "C#2", fontSize: 40),
-                          NoteRepresentationWidget(noteString: currentNote.name, fontSize: 40),
-                          Text(
-                            textUnderNote,
-                            style: TextStyle(
-                              color: ThemeManager().currentTheme.colorScheme.secondary,
-                              fontSize: 20,
-                            ),
-                          ),
-                        ],
+                            WidgetsBinding.instance.addPostFrameCallback((_) {
+                              TunerWidget.currentNoteNotifier.value = currentNote.name;
+                            });
+
+                            noteToDisplay = currentNote.name;
+                          }
+
+                          return Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              NoteRepresentationWidget(noteString: noteToDisplay, fontSize: 40),
+                              if (blockedNote.isEmpty)
+                                Text(
+                                  textUnderNote,
+                                  style: TextStyle(
+                                    color: ThemeManager().currentTheme.colorScheme.secondary,
+                                    fontSize: 20,
+                                  ),
+                                ),
+                            ],
+                          );
+                        },
                       );
                     },
                   ),
