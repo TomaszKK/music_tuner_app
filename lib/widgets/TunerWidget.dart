@@ -83,7 +83,6 @@ class _TunerWidgetState extends State<TunerWidget> {
                         valueListenable: BluetoothConnectorWidget.frequencyNotifier,
                         builder: (context, frequency, child) {
                           String noteToDisplay;
-
                           if (blockedNote.isNotEmpty) {
                             // If a note is blocked, show the blocked note
                             noteToDisplay = blockedNote;
@@ -133,64 +132,78 @@ class _TunerWidgetState extends State<TunerWidget> {
                 ),
               ],
             ),
-            const SizedBox(height: 10),
-            ValueListenableBuilder<double>(
-              valueListenable: BluetoothConnectorWidget.frequencyNotifier,
-              builder: (context, frequency, child) {
-                // Assume you have a function to get the current note and its range
-                Note currentNote = getCurrentNoteBasedOnFrequency(frequency, notes);
-                double minFrequency = getPreviousNoteMidpoint(currentNote, notes);
-                double maxFrequency = getNextNoteMidpoint(currentNote, notes);
+            const SizedBox(height: 5),
+            ValueListenableBuilder<String>(
+              valueListenable: TunerWidget.blockedNoteNotifier, // Listen to the blocked note
+              builder: (context, blockedNote, child) {
+                return ValueListenableBuilder<double>(
+                  valueListenable: BluetoothConnectorWidget.frequencyNotifier,
+                  builder: (context, frequency, child) {
+                    Note currentNote;
+                    if (blockedNote.isNotEmpty) {
+                      currentNote = notes.firstWhere((note) => note.name == blockedNote);
+                    } else {
+                      currentNote = getCurrentNoteBasedOnFrequency(frequency, notes);
+                    }
 
-                // Map the current frequency to the gauge range of -50 to 50
-                double normalizedFrequency = mapFrequencyToGaugeRange(
-                  frequency,
-                  minFrequency,
-                  maxFrequency,
-                  -50,
-                  50,
-                );
+                    double minFrequency = getPreviousNoteMidpoint(currentNote, notes);
+                    double maxFrequency = getNextNoteMidpoint(currentNote, notes);
 
-                return SfLinearGauge(
-                  minimum: -50,
-                  maximum: 50,
-                  interval: 10,
-                  minorTicksPerInterval: 3,
-                  showTicks: true,
-                  showLabels: false,
-                  majorTickStyle: LinearTickStyle(
-                    length: 80,
-                    color: ThemeManager().currentTheme.colorScheme.secondary,
-                    thickness: 2,
-                  ),
-                  minorTickStyle: LinearTickStyle(
-                    length: 30,
-                    color: ThemeManager().currentTheme.colorScheme.secondary,
-                    thickness: 1,
-                  ),
-                  tickPosition: LinearElementPosition.cross,
-                  ranges: [
-                    LinearGaugeRange(
-                      startValue: -0.5,
-                      endValue: 0.5,
-                      // Small value to make it look like a tick
-                      color: ThemeManager().currentTheme.colorScheme.secondary,
-                      startWidth: 120,
-                      // Adjust these values to change the size of the "tick"
-                      endWidth: 120,
-                      position: LinearElementPosition.cross,
-                    ),
-                  ],
-                  markerPointers: [
-                    LinearShapePointer(
-                      shapeType: LinearShapePointerType.rectangle,
-                      value: normalizedFrequency, // Bind this to the normalized frequency
-                      width: 2,
-                      height: 160,
-                      color: const Color(0xFFAA1717),
-                      position: LinearElementPosition.cross,
-                    ),
-                  ],
+                    double normalizedFrequency = mapFrequencyToGaugeRange(
+                      frequency,
+                      minFrequency,
+                      maxFrequency,
+                      -50,
+                      50,
+                    );
+
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SfLinearGauge(
+                          minimum: -50,
+                          maximum: 50,
+                          interval: 10,
+                          minorTicksPerInterval: 3,
+                          showTicks: true,
+                          showLabels: false,
+                          majorTickStyle: LinearTickStyle(
+                            length: 80,
+                            color: ThemeManager().currentTheme.colorScheme.secondary,
+                            thickness: 2,
+                          ),
+                          minorTickStyle: LinearTickStyle(
+                            length: 30,
+                            color: ThemeManager().currentTheme.colorScheme.secondary,
+                            thickness: 1,
+                          ),
+                          tickPosition: LinearElementPosition.cross,
+                          ranges: [
+                            LinearGaugeRange(
+                              startValue: -0.5,
+                              endValue: 0.5,
+                              // Small value to make it look like a tick
+                              color: ThemeManager().currentTheme.colorScheme.secondary,
+                              startWidth: 120,
+                              // Adjust these values to change the size of the "tick"
+                              endWidth: 120,
+                              position: LinearElementPosition.cross,
+                            ),
+                          ],
+                          markerPointers: [
+                            LinearShapePointer(
+                              shapeType: LinearShapePointerType.rectangle,
+                              value: normalizedFrequency, // Bind this to the normalized frequency
+                              width: 2,
+                              height: 160,
+                              color: const Color(0xFFAA1717),
+                              position: LinearElementPosition.cross,
+                            ),
+                          ],
+                        ),
+                      ],
+                    );
+                  },
                 );
               },
             ),

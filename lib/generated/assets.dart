@@ -5,7 +5,11 @@ class Assets {
   static const String assetsBass = 'lib/assets/Bass.svg';
   static const String assetsGuitar = 'lib/assets/guitar.png';
   static const String assetsNotes = 'lib/assets/notes.json';
+  static const String assetsTenorhorn = 'lib/assets/Tenorhorn.svg';
   static const String generatedAssets = 'lib/generated/assets.dart';
+  static const String instrumentWidgetsDirBassWidget = 'lib/widgets/instrumentWidgetsDir/BassWidget.dart';
+  static const String instrumentWidgetsDirGuitarWidget = 'lib/widgets/instrumentWidgetsDir/GuitarWidget.dart';
+  static const String instrumentWidgetsDirTenorhornWidget = 'lib/widgets/instrumentWidgetsDir/TenorhornWidget.dart';
   static const String libAssetsBass = 'lib/assets/Bass.svg';
   static const String libAssetsGuitar = 'lib/assets/Guitar.svg';
   static const String libAssetsNotes = 'lib/assets/notes.json';
@@ -17,9 +21,7 @@ class Assets {
   static const String screensLoginPage = 'lib/screens/LoginPage.dart';
   static const String screensSettingsPage = 'lib/screens/SettingsPage.dart';
   static const String screensSplashScreen = 'lib/screens/SplashScreen.dart';
-  static const String widgetsBassWidget = 'lib/widgets/BassWidget.dart';
   static const String widgetsBluetoothConnectorWidget = 'lib/widgets/BluetoothConnectorWidget.dart';
-  static const String widgetsGuitarWidget = 'lib/widgets/GuitarWidget.dart';
   static const String widgetsInstrumentSelectionWidget = 'lib/widgets/InstrumentSelectionWidget.dart';
   static const String widgetsInstrumentWidget = 'lib/widgets/InstrumentWidget.dart';
   static const String widgetsNoteRepresentationWidget = 'lib/widgets/NoteRepresentationWidget.dart';

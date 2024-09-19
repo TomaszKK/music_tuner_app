@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:music_tuner/providers/ThemeManager.dart';
 
+import '../PinNoteWidget.dart';
+
 class BassWidget extends StatefulWidget {
   const BassWidget({super.key, required this.title});
 
@@ -39,13 +41,13 @@ class _BassWidgetState extends State<BassWidget> {
             Column(
                 children: <Widget>[
                   SizedBox(height: topPosition * topPositionScale),
-                  _buildCircle(),
+                  PinNoteWidget(defaultNote: 'E1', circleSize: circleSize),
                   SizedBox(height: circleSpaceScale),
-                  _buildCircle(),
+                  PinNoteWidget(defaultNote: 'A1', circleSize: circleSize),
                   SizedBox(height: circleSpaceScale),
-                  _buildCircle(),
+                  PinNoteWidget(defaultNote: 'D2', circleSize: circleSize),
                   SizedBox(height: circleSpaceScale),
-                  _buildCircle(),
+                  PinNoteWidget(defaultNote: 'G2', circleSize: circleSize),
                 ]
             ),
             Expanded(
