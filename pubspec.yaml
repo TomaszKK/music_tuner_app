@@ -102,5 +102,6 @@ flutter:
     - lib/providers/
     - lib/assets/Guitar.svg
     - lib/assets/Bass.svg
-    - lib/assets/notes.json
     - lib/assets/Tenorhorn.svg
+    - lib/assets/notes.json
+    - lib/assets/notes-tenor.json

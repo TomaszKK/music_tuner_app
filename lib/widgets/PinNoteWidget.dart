@@ -62,7 +62,7 @@ class _PinNoteWidgetState extends State<PinNoteWidget> {
             height: widget.circleSize,
             width: widget.circleSize,
             decoration: BoxDecoration(
-              color: isCurrentNoteBlocked ? themeColor : Colors.transparent, // Change color when blocked
+              color: isCurrentNoteBlocked ? themeColor : Colors.transparent,
               shape: BoxShape.circle,
               border: Border.all(
                 color: isCurrentNoteBlocked ? currentNoteColor : themeColor,
@@ -76,7 +76,7 @@ class _PinNoteWidgetState extends State<PinNoteWidget> {
                   blurStyle: BlurStyle.outer,
                 ),
               ]
-                  : null, // Only add shadow if it's the current blocked note
+                  : null,
             ),
             child: NoteRepresentationWidget(
               noteString: isCurrentNoteBlocked ? widget.defaultNote : widget.defaultNote,

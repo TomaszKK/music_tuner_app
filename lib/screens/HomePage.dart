@@ -18,7 +18,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  String _selectedInstrument = 'Guitar';
+  String _selectedInstrument = 'Tenorhorn';
   BluetoothConnectorWidget bluetoothConnectorWidget = BluetoothConnectorWidget();
 
   @override
