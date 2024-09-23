@@ -21,7 +21,6 @@ class _InstrumentWidgetState extends State<InstrumentWidget> {
 
   @override
   Widget build(BuildContext context) {
-
     switch(widget.selectedInstrument){
       case 'Guitar':
         currentInstrument = 'Guitar';

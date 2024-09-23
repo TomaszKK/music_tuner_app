@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:music_tuner/providers/ThemeManager.dart';
 import 'package:music_tuner/widgets/NoteRepresentationWidget.dart';
-
 import 'NoteSrollerWidget.dart';
 import 'TunerWidget.dart';
 
@@ -10,17 +9,45 @@ class PinNoteWidget extends StatefulWidget {
     Key? key,
     required this.defaultNote,
     required this.circleSize,
+    required this.currentInstrument,
   }) : super(key: key);
 
   String defaultNote;
   final double circleSize;
+  final String currentInstrument; // Instrument name or ID
 
   @override
   State<PinNoteWidget> createState() => _PinNoteWidgetState();
 }
 
 class _PinNoteWidgetState extends State<PinNoteWidget> {
-  bool isTapped = false; // State to track if the widget is tapped
+  // Store blocked notes per instrument
+  static final Map<String, String> _blockedNotesByInstrument = {};
+  String initBLockedNote = '';
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadBlockedNoteForInstrument();
+    });
+  }
+
+  // Load the blocked note for the current instrument when the widget is initialized
+  void _loadBlockedNoteForInstrument() {
+    final blockedNote = _blockedNotesByInstrument[widget.currentInstrument] ?? '';
+    TunerWidget.blockedNoteNotifier.value = blockedNote;
+  }
+
+  // Save the blocked note for the current instrument
+  void _setBlockedNoteForInstrument(String note) {
+    _blockedNotesByInstrument[widget.currentInstrument] = note;
+  }
+
+  // Clear the blocked note for the current instrument
+  void _clearBlockedNoteForInstrument() {
+    _blockedNotesByInstrument[widget.currentInstrument] = '';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,14 +63,15 @@ class _PinNoteWidgetState extends State<PinNoteWidget> {
         return GestureDetector(
           onLongPress: () {
             setState(() {
-              isTapped = !isTapped;
-
-              if (isTapped) {
-                // Block the current note, update the global blockedNoteNotifier
-                TunerWidget.blockedNoteNotifier.value = widget.defaultNote;
-              } else {
-                // Unblock the note by setting the global blockedNoteNotifier to empty
+              // Toggle blocked state for the current instrument
+              if (isCurrentNoteBlocked) {
+                // Unblock if already blocked
                 TunerWidget.blockedNoteNotifier.value = '';
+                _clearBlockedNoteForInstrument();
+              } else {
+                // Block this note
+                TunerWidget.blockedNoteNotifier.value = widget.defaultNote;
+                _setBlockedNoteForInstrument(widget.defaultNote);
               }
             });
           },
@@ -79,7 +107,7 @@ class _PinNoteWidgetState extends State<PinNoteWidget> {
                   : null,
             ),
             child: NoteRepresentationWidget(
-              noteString: isCurrentNoteBlocked ? widget.defaultNote : widget.defaultNote,
+              noteString: widget.defaultNote,
               fontSize: 20,
             ),
           ),

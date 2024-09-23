@@ -45,11 +45,11 @@ class _GuitarWidgetState extends State<GuitarWidget> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 SizedBox(height: max(topPosition * topPositionScale, 0)), // Prevent negative height
-                PinNoteWidget(defaultNote: 'E2', circleSize: circleSize),
+                PinNoteWidget(defaultNote: 'E2', circleSize: circleSize, currentInstrument: 'Guitar'),
                 SizedBox(height: max(65 * imgHeight / 1000 * circleSpaceScale, 0)),
-                PinNoteWidget(defaultNote: 'A2', circleSize: circleSize),
+                PinNoteWidget(defaultNote: 'A2', circleSize: circleSize, currentInstrument: 'Guitar'),
                 SizedBox(height: max(65 * imgHeight / 1000 * circleSpaceScale, 0)),
-                PinNoteWidget(defaultNote: 'D3', circleSize: circleSize),
+                PinNoteWidget(defaultNote: 'D3', circleSize: circleSize, currentInstrument: 'Guitar'),
               ],
             ),
             Expanded(
@@ -65,11 +65,11 @@ class _GuitarWidgetState extends State<GuitarWidget> {
             Column(
               children: <Widget>[
                 SizedBox(height: max(topPosition * topPositionScale, 0)),
-                PinNoteWidget(defaultNote: 'G3', circleSize: circleSize),
+                PinNoteWidget(defaultNote: 'G3', circleSize: circleSize, currentInstrument: 'Guitar'),
                 SizedBox(height: max(65 * imgHeight / 1000 * circleSpaceScale, 0)),
-                PinNoteWidget(defaultNote: 'B3', circleSize: circleSize),
+                PinNoteWidget(defaultNote: 'B3', circleSize: circleSize, currentInstrument: 'Guitar'),
                 SizedBox(height: max(65 * imgHeight / 1000 * circleSpaceScale, 0)),
-                PinNoteWidget(defaultNote: 'E4', circleSize: circleSize),
+                PinNoteWidget(defaultNote: 'E4', circleSize: circleSize, currentInstrument: 'Guitar'),
               ],
             ),
             SizedBox(width: sidePadding),

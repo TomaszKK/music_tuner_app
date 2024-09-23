@@ -117,6 +117,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ],
               ),
+              const SizedBox(height: 10),
               Expanded(
                 child: InstrumentWidget(title: 'Instrument', selectedInstrument: _selectedInstrument),
               ),

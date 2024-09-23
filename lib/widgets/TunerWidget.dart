@@ -49,11 +49,10 @@ class _TunerWidgetState extends State<TunerWidget> {
 
         return LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraints) {
-            // Calculate the font size based on available width or height
+
             double availableHeight = constraints.maxHeight;
             double availableWidth = constraints.maxWidth;
 
-            // Use 5% or 6% of the available width/height as font size
             double baseFontSize = availableHeight * 0.05;
 
             return Column(
@@ -68,7 +67,7 @@ class _TunerWidgetState extends State<TunerWidget> {
                         child: Container(
                           alignment: Alignment.center,
                           constraints: BoxConstraints(
-                            maxHeight: constraints.maxHeight * 0.1, // Use 10% of the available height
+                            maxHeight: constraints.maxHeight * 0.1,
                           ),
                           child: ValueListenableBuilder<double>(
                             valueListenable: BluetoothConnectorWidget.frequencyNotifier,
@@ -77,7 +76,7 @@ class _TunerWidgetState extends State<TunerWidget> {
                                 frequency.toStringAsFixed(1),
                                 style: TextStyle(
                                   color: ThemeManager().currentTheme.colorScheme.secondary,
-                                  fontSize: baseFontSize, // Set dynamic font size
+                                  fontSize: baseFontSize,
                                 ),
                               );
                             },
@@ -96,7 +95,8 @@ class _TunerWidgetState extends State<TunerWidget> {
                               return ValueListenableBuilder<double>(
                                 valueListenable: BluetoothConnectorWidget.frequencyNotifier,
                                 builder: (context, frequency, child) {
-                                  String noteToDisplay;
+                                  String noteToDisplay = '';
+
                                   if (blockedNote.isNotEmpty) {
                                     noteToDisplay = blockedNote;
                                   } else {
@@ -107,6 +107,7 @@ class _TunerWidgetState extends State<TunerWidget> {
                                       TunerWidget.currentNoteNotifier.value = currentNote.name;
                                     });
 
+
                                     noteToDisplay = currentNote.name;
                                   }
 
@@ -115,13 +116,13 @@ class _TunerWidgetState extends State<TunerWidget> {
                                     children: <Widget>[
                                       NoteRepresentationWidget(
                                         noteString: noteToDisplay,
-                                        fontSize: baseFontSize * 2, // Dynamically scale the font size
+                                        fontSize: baseFontSize * 2,
                                       ),
                                       Text(
                                         textUnderNote,
                                         style: TextStyle(
                                           color: ThemeManager().currentTheme.colorScheme.secondary,
-                                          fontSize: baseFontSize * 0.8, // Slightly smaller than the main note
+                                          fontSize: baseFontSize * 0.8,
                                         ),
                                       ),
                                     ],
@@ -142,7 +143,7 @@ class _TunerWidgetState extends State<TunerWidget> {
                             '440 Hz',
                             style: TextStyle(
                               color: ThemeManager().currentTheme.colorScheme.secondary,
-                              fontSize: baseFontSize, // Dynamic font size
+                              fontSize: baseFontSize,
                             ),
                           ),
                         ),
@@ -251,7 +252,7 @@ class _TunerWidgetState extends State<TunerWidget> {
     } else if (note.freq > frequency + threshold) {
       text = 'Higher';
     } else if (frequency == 0) {
-      text = 'lskks';
+      text = 'No signal';
     } else {
       text = 'Perfect';
     }

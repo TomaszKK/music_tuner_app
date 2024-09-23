@@ -41,13 +41,13 @@ class _BassWidgetState extends State<BassWidget> {
             Column(
                 children: <Widget>[
                   SizedBox(height: topPosition * topPositionScale),
-                  PinNoteWidget(defaultNote: 'E1', circleSize: circleSize),
+                  PinNoteWidget(defaultNote: 'E1', circleSize: circleSize, currentInstrument: 'Bass'),
                   SizedBox(height: circleSpaceScale),
-                  PinNoteWidget(defaultNote: 'A1', circleSize: circleSize),
+                  PinNoteWidget(defaultNote: 'A1', circleSize: circleSize, currentInstrument: 'Bass'),
                   SizedBox(height: circleSpaceScale),
-                  PinNoteWidget(defaultNote: 'D2', circleSize: circleSize),
+                  PinNoteWidget(defaultNote: 'D2', circleSize: circleSize, currentInstrument: 'Bass'),
                   SizedBox(height: circleSpaceScale),
-                  PinNoteWidget(defaultNote: 'G2', circleSize: circleSize),
+                  PinNoteWidget(defaultNote: 'G2', circleSize: circleSize, currentInstrument: 'Bass'),
                 ]
             ),
             Expanded(

@@ -46,7 +46,7 @@ class _TenorhornWidgetState extends State<TenorhornWidget> {
                 ),
               ),
             ),
-            PinNoteWidget(defaultNote: 'B3', circleSize: circleSize),
+            PinNoteWidget(defaultNote: 'B3', circleSize: circleSize, currentInstrument: 'Tenorhorn'),
             SizedBox(width: sidePadding),
           ],
         );
