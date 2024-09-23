@@ -4,6 +4,8 @@ class Assets {
 
   static const String assetsBass = 'lib/assets/Bass.svg';
   static const String assetsGuitar = 'lib/assets/guitar.png';
+  static const String assetsLoadingAppScreen = 'lib/assets/loading_app_screen.png';
+  static const String assetsLoadingAppScreen2 = 'lib/assets/loading_app_screen_2.png';
   static const String assetsNotes = 'lib/assets/notes.json';
   static const String assetsNotesTenor = 'lib/assets/notes-tenor.json';
   static const String assetsTenorhorn = 'lib/assets/Tenorhorn.svg';
@@ -14,6 +16,7 @@ class Assets {
   static const String libAssetsBass = 'lib/assets/Bass.svg';
   static const String libAssetsGuitar = 'lib/assets/Guitar.svg';
   static const String libAssetsNotes = 'lib/assets/notes.json';
+  static const String libAssetsNotesTenor = 'lib/assets/notes-tenor.json';
   static const String libAssetsTenorhorn = 'lib/assets/Tenorhorn.svg';
   static const String libMain = 'lib/main.dart';
   static const String modelsNoteModel = 'lib/models/noteModel.dart';
