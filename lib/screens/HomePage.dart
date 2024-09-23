@@ -86,42 +86,49 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          ButtonBar(
-            alignment: MainAxisAlignment.start,
+      body: LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.7),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(40),
+              ButtonBar(
+                alignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.7),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(40),
+                      ),
+                      minimumSize: const Size(100, 30),
+                      alignment: Alignment.centerLeft,
+                    ),
+                    child: Text(
+                      'Selected Instrument: ${_getPickedInstrument()}',
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onPrimaryContainer.withOpacity(0.7),
+                        fontFamily: 'Poppins',
+                        fontSize: 15,
+                      ),
+                    ),
+                    onPressed: () {
+                      _showInstrumentSelection();
+                    },
                   ),
-                  minimumSize: const Size(100, 30),
-                  alignment: Alignment.centerLeft,
-                ),
-                child: Text(
-                  'Selected Instrument: ${_getPickedInstrument()}',
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.onPrimaryContainer.withOpacity(0.7),
-                    fontFamily: 'Poppins',
-                    fontSize: 15,
-                  ),
-                ),
-                onPressed: () {
-                  _showInstrumentSelection();
-                },
+                ],
               ),
+              Expanded(
+                child: InstrumentWidget(title: 'Instrument', selectedInstrument: _selectedInstrument),
+              ),
+              const Expanded(
+                // fit: FlexFit.tight,
+                child: TunerWidget(title: 'Tuner'),
+              ),
+              //const TunerWidget(title: 'Tuner'),
             ],
-          ),
-          Expanded(
-            child: InstrumentWidget(title: 'Instrument', selectedInstrument: _selectedInstrument),
-          ),
-          const TunerWidget(title: 'Tuner'),
-          //const TunerWidget(title: 'Tuner'),
-        ],
-      ),
+          );
+        },
+      )
     );
   }
 
