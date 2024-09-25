@@ -6,6 +6,7 @@ import 'package:music_tuner/widgets/TunerWidget.dart';
 import 'package:music_tuner/widgets/instrumentWidget.dart';
 import 'package:music_tuner/widgets/InstrumentSelectionWidget.dart';
 import 'package:music_tuner/widgets/BluetoothConnectorWidget.dart';
+import 'package:music_tuner/widgets/TranspositionWidget.dart';
 import 'package:bluetooth_enable_fork/bluetooth_enable_fork.dart';
 
 class HomePage extends StatefulWidget {
@@ -18,7 +19,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  String _selectedInstrument = 'Tenorhorn';
+  String _selectedInstrument = 'Guitar';
   BluetoothConnectorWidget bluetoothConnectorWidget = BluetoothConnectorWidget();
 
   @override
@@ -55,7 +56,7 @@ class _HomePageState extends State<HomePage> {
               size: 30,
             ),
             onPressed: () {
-
+              TranspositionWidget.showTranspositionWidget(context);
             },
           ),
           IconButton(

@@ -5,9 +5,10 @@ import 'package:music_tuner/providers/ThemeManager.dart';
 import '../PinNoteWidget.dart';
 
 class BassWidget extends StatefulWidget {
-  const BassWidget({super.key, required this.title});
+  BassWidget({super.key, required this.title, required this.noteList});
 
   final String title;
+  List<String> noteList;
 
   @override
   State<BassWidget> createState() => _BassWidgetState();
@@ -41,13 +42,13 @@ class _BassWidgetState extends State<BassWidget> {
             Column(
                 children: <Widget>[
                   SizedBox(height: topPosition * topPositionScale),
-                  PinNoteWidget(defaultNote: 'E1', circleSize: circleSize, currentInstrument: 'Bass'),
+                  PinNoteWidget(defaultNote: widget.noteList[0], circleSize: circleSize, currentInstrument: 'Bass'),
                   SizedBox(height: circleSpaceScale),
-                  PinNoteWidget(defaultNote: 'A1', circleSize: circleSize, currentInstrument: 'Bass'),
+                  PinNoteWidget(defaultNote: widget.noteList[1], circleSize: circleSize, currentInstrument: 'Bass'),
                   SizedBox(height: circleSpaceScale),
-                  PinNoteWidget(defaultNote: 'D2', circleSize: circleSize, currentInstrument: 'Bass'),
+                  PinNoteWidget(defaultNote: widget.noteList[2], circleSize: circleSize, currentInstrument: 'Bass'),
                   SizedBox(height: circleSpaceScale),
-                  PinNoteWidget(defaultNote: 'G2', circleSize: circleSize, currentInstrument: 'Bass'),
+                  PinNoteWidget(defaultNote: widget.noteList[3], circleSize: circleSize, currentInstrument: 'Bass'),
                 ]
             ),
             Expanded(

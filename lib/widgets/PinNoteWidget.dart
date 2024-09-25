@@ -56,14 +56,13 @@ class _PinNoteWidgetState extends State<PinNoteWidget> {
     final NoteScrollerWidget noteScrollerWidget = NoteScrollerWidget();
 
     return ValueListenableBuilder<String>(
-      valueListenable: TunerWidget.blockedNoteNotifier, // Listen to the global blocked note
+      valueListenable: TunerWidget.blockedNoteNotifier,
       builder: (context, blockedNote, child) {
         final isCurrentNoteBlocked = blockedNote == widget.defaultNote;
 
         return GestureDetector(
           onLongPress: () {
             setState(() {
-              // Toggle blocked state for the current instrument
               if (isCurrentNoteBlocked) {
                 // Unblock if already blocked
                 TunerWidget.blockedNoteNotifier.value = '';
@@ -78,7 +77,6 @@ class _PinNoteWidgetState extends State<PinNoteWidget> {
           onTap: () async {
             // Show note picker and wait for the selected note
             String? returnNote = await noteScrollerWidget.showNotePicker(context, widget.defaultNote);
-
             if (returnNote != null) {
               setState(() {
                 widget.defaultNote = returnNote;

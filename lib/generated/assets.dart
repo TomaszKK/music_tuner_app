@@ -21,6 +21,7 @@ class Assets {
   static const String libMain = 'lib/main.dart';
   static const String modelsNoteModel = 'lib/models/noteModel.dart';
   static const String providersInstrumentProvider = 'lib/providers/InstrumentProvider.dart';
+  static const String providersNoteInstrumentProvider = 'lib/providers/noteInstrumentProvider.dart';
   static const String providersThemeManager = 'lib/providers/ThemeManager.dart';
   static const String screensHomePage = 'lib/screens/HomePage.dart';
   static const String screensLoginPage = 'lib/screens/LoginPage.dart';
@@ -32,6 +33,7 @@ class Assets {
   static const String widgetsNoteRepresentationWidget = 'lib/widgets/NoteRepresentationWidget.dart';
   static const String widgetsNoteSrollerWidget = 'lib/widgets/NoteSrollerWidget.dart';
   static const String widgetsPinNoteWidget = 'lib/widgets/PinNoteWidget.dart';
+  static const String widgetsTranspositionWidget = 'lib/widgets/TranspositionWidget.dart';
   static const String widgetsTunerWidget = 'lib/widgets/TunerWidget.dart';
 
 }
