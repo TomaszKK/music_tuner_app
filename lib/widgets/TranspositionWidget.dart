@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:music_tuner/widgets/InstrumentWidget.dart';
 
 class TranspositionWidget {
-  static ValueNotifier<int> transpositionNotifier = ValueNotifier<int>(0);
+  static ValueNotifier<Map<String, int>> transpositionNotifier = ValueNotifier<Map<String, int>>({
+    'Guitar': 0, 'Bass': 0, 'Tenorhorn': 0
+  });
 
-  static void showTranspositionWidget(BuildContext context) {
+  static void showTranspositionWidget(BuildContext context, String selectedInstrument) {
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
@@ -38,9 +40,10 @@ class TranspositionWidget {
                             height: constraints.maxHeight * 0.2,
                             child: ElevatedButton(
                               onPressed: () {
-                                print(isTranspositionBound);
-                                if(!isTranspositionBound) {
-                                  transpositionNotifier.value -= 1;
+                                var value = transpositionNotifier.value[selectedInstrument];
+                                if(value != null){
+                                  transpositionNotifier.value[selectedInstrument] = value - 1;
+                                  transpositionNotifier.value = Map.from(transpositionNotifier.value);
                                 }
                               },
                               child: const Text(
@@ -61,7 +64,11 @@ class TranspositionWidget {
                             child: ElevatedButton(
                               onPressed: () {
                                 if(!isTranspositionBound) {
-                                  transpositionNotifier.value += 1;
+                                  var value = transpositionNotifier.value[selectedInstrument];
+                                  if(value != null){
+                                    transpositionNotifier.value[selectedInstrument] = value + 1;
+                                    transpositionNotifier.value = Map.from(transpositionNotifier.value);
+                                  }
                                 }
                               },
                               child: const Text(
@@ -85,7 +92,11 @@ class TranspositionWidget {
                         const Spacer(),
                         ElevatedButton(
                           onPressed: () {
-                            transpositionNotifier.value = 0;
+                            var value = transpositionNotifier.value[selectedInstrument];
+                            if(value != null){
+                              transpositionNotifier.value[selectedInstrument] = 0;
+                              transpositionNotifier.value = Map.from(transpositionNotifier.value);
+                            }
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.transparent,

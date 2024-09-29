@@ -9,6 +9,8 @@ class Assets {
   static const String assetsNotes = 'lib/assets/notes.json';
   static const String assetsNotesTenor = 'lib/assets/notes-tenor.json';
   static const String assetsTenorhorn = 'lib/assets/Tenorhorn.svg';
+  static const String assetsTranspLogo = 'lib/assets/Transp_logo.svg';
+  static const String assetsTranspositionLogo = 'lib/assets/Transposition_logo.svg';
   static const String generatedAssets = 'lib/generated/assets.dart';
   static const String instrumentWidgetsDirBassWidget = 'lib/widgets/instrumentWidgetsDir/BassWidget.dart';
   static const String instrumentWidgetsDirGuitarWidget = 'lib/widgets/instrumentWidgetsDir/GuitarWidget.dart';
@@ -18,6 +20,7 @@ class Assets {
   static const String libAssetsNotes = 'lib/assets/notes.json';
   static const String libAssetsNotesTenor = 'lib/assets/notes-tenor.json';
   static const String libAssetsTenorhorn = 'lib/assets/Tenorhorn.svg';
+  static const String libAssetsTranspositionLogo = 'lib/assets/Transposition_logo.svg';
   static const String libMain = 'lib/main.dart';
   static const String modelsNoteModel = 'lib/models/noteModel.dart';
   static const String providersInstrumentProvider = 'lib/providers/InstrumentProvider.dart';

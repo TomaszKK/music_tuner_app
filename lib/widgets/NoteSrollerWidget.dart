@@ -68,25 +68,52 @@ class NoteScrollerWidget extends StatelessWidget {
               Expanded(
                 child: buildPickerContent(context, noteIndex, chromaticIndex, octaveIndex),
               ),
-              ElevatedButton(
-                onPressed: () {
-                  returnNote = note + chromatic + octave;
-                  Navigator.of(context).pop(returnNote);
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.transparent,
-                  shadowColor: Colors.green,
-                ),
-                child: const Text(
-                  'Done',
-                  style: TextStyle(
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'Poppins',
-                    color: Colors.green,
+              Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  const Spacer(),
+                  ElevatedButton(
+                    onPressed: () {
+
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.transparent,
+                      shadowColor: Colors.red,
+                    ),
+                    child: const Text(
+                      'Reset',
+                      style: TextStyle(
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Poppins',
+                        color: Colors.red,
+                      ),
+                    ),
                   ),
-                ),
-              ),
+                  const SizedBox(width: 20),
+                  ElevatedButton(
+                    onPressed: () {
+                      returnNote = note + chromatic + octave;
+                      Navigator.of(context).pop(returnNote);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.transparent,
+                      shadowColor: Colors.green,
+                    ),
+                    child: const Text(
+                      'Done',
+                      style: TextStyle(
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Poppins',
+                        color: Colors.green,
+                      ),
+                    ),
+                  ),
+                  const Spacer()
+                ]
+              )
             ],
           ),
         );

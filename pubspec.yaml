@@ -104,5 +104,7 @@ flutter:
     - lib/assets/Guitar.svg
     - lib/assets/Bass.svg
     - lib/assets/Tenorhorn.svg
+    - lib/assets/Transposition_logo.svg
+    - lib/assets/Transp_logo.svg
     - lib/assets/notes.json
     - lib/assets/notes-tenor.json

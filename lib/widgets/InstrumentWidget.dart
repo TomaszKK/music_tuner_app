@@ -25,11 +25,6 @@ class InstrumentWidget extends StatefulWidget {
 
 class _InstrumentWidgetState extends State<InstrumentWidget> {
   Map<String, double> noteFrequencyMap = {};
-  Map<String, int> currentNoteTransposition = {
-    'Guitar': 0,
-    'Bass': 0,
-    'Tenorhorn': 0,
-  };
 
   @override
   void initState() {
@@ -72,27 +67,25 @@ class _InstrumentWidgetState extends State<InstrumentWidget> {
           return const CircularProgressIndicator();
         }
 
-        currentNoteTransposition[widget.selectedInstrument] = transpositionNotify;
-
         List<String> transposedNotes;
         switch (widget.selectedInstrument) {
           case 'Guitar':
-            transposedNotes = transpositionChanged(currentNoteTransposition['Guitar']!, guitarDefaultNotes, 'Guitar');
+            transposedNotes = transpositionChanged(transpositionNotify['Guitar']!, guitarDefaultNotes, 'Guitar');
             return Center(
               child: GuitarWidget(title: 'Guitar', noteList: transposedNotes),
             );
           case 'Bass':
-            transposedNotes = transpositionChanged(currentNoteTransposition['Bass']!, bassDefaultNotes, 'Bass');
+            transposedNotes = transpositionChanged(transpositionNotify['Bass']!, bassDefaultNotes, 'Bass');
             return Center(
               child: BassWidget(title: 'Bass', noteList: transposedNotes),
             );
           case 'Tenorhorn':
-            transposedNotes = transpositionChanged(currentNoteTransposition['Tenorhorn']!, tenorhornDefaultNotes, 'Tenorhorn');
+            transposedNotes = transpositionChanged(transpositionNotify['Tenorhorn']!, tenorhornDefaultNotes, 'Tenorhorn');
             return Center(
               child: TenorhornWidget(title: 'Tenorhorn', noteList: transposedNotes),
             );
           default:
-            return Center(
+            return const Center(
               child: Text('No instrument selected'),
             );
         }

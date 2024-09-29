@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:music_tuner/providers/ThemeManager.dart';
 import 'package:music_tuner/screens/SettingsPage.dart';
@@ -50,13 +51,18 @@ class _HomePageState extends State<HomePage> {
         ),
         actions: <Widget>[
           IconButton(
-            icon: Icon(
-              Icons.account_circle_rounded,
-              color: Theme.of(context).colorScheme.onPrimaryContainer,
-              size: 30,
+            icon: SvgPicture.asset(
+              'lib/assets/Transp_logo.svg',
+              // color: Theme.of(context).colorScheme.onPrimaryContainer,  // Apply color if necessary
+              colorFilter: ColorFilter.mode(
+                Theme.of(context).colorScheme.onPrimaryContainer,
+                BlendMode.srcIn,
+              ),
+              width: 28,  // Set the width of the icon
+              height: 28,  // Set the height of the icon
             ),
             onPressed: () {
-              TranspositionWidget.showTranspositionWidget(context);
+              TranspositionWidget.showTranspositionWidget(context, _selectedInstrument);
             },
           ),
           IconButton(
@@ -92,8 +98,7 @@ class _HomePageState extends State<HomePage> {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              ButtonBar(
-                alignment: MainAxisAlignment.start,
+              Row(
                 children: <Widget>[
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
@@ -115,6 +120,29 @@ class _HomePageState extends State<HomePage> {
                     onPressed: () {
                       _showInstrumentSelection();
                     },
+                  ),
+                  const Spacer(),
+                  ElevatedButton(
+                    onPressed: () {
+
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.transparent,
+                      shadowColor: Colors.red,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(40),
+                      ),
+                      minimumSize: const Size(100, 30),
+                      alignment: Alignment.centerLeft,
+                    ),
+                    child: Text(
+                      'Reset all',
+                      style: TextStyle(
+                        fontSize: 15.0,
+                        fontFamily: 'Poppins',
+                        color: Theme.of(context).colorScheme.onPrimaryContainer.withOpacity(0.7),
+                      ),
+                    ),
                   ),
                 ],
               ),
