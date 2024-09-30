@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:music_tuner/widgets/InstrumentWidget.dart';
 
+import '../providers/noteInstrumentProvider.dart';
+import '../screens/HomePage.dart';
+
 class TranspositionWidget {
   static ValueNotifier<Map<String, int>> transpositionNotifier = ValueNotifier<Map<String, int>>({
     'Guitar': 0, 'Bass': 0, 'Tenorhorn': 0
@@ -40,9 +43,11 @@ class TranspositionWidget {
                             height: constraints.maxHeight * 0.2,
                             child: ElevatedButton(
                               onPressed: () {
+                                HomePage.isResetVisible.value[selectedInstrument] = true;
+                                HomePage.isResetVisible.value = Map.from(HomePage.isResetVisible.value);
                                 var value = transpositionNotifier.value[selectedInstrument];
                                 if(value != null){
-                                  transpositionNotifier.value[selectedInstrument] = value - 1;
+                                  transpositionNotifier.value[selectedInstrument] = -1;
                                   transpositionNotifier.value = Map.from(transpositionNotifier.value);
                                 }
                               },
@@ -64,9 +69,11 @@ class TranspositionWidget {
                             child: ElevatedButton(
                               onPressed: () {
                                 if(!isTranspositionBound) {
+                                  HomePage.isResetVisible.value[selectedInstrument] = true;
+                                  HomePage.isResetVisible.value = Map.from(HomePage.isResetVisible.value);
                                   var value = transpositionNotifier.value[selectedInstrument];
                                   if(value != null){
-                                    transpositionNotifier.value[selectedInstrument] = value + 1;
+                                    transpositionNotifier.value[selectedInstrument] = 1;
                                     transpositionNotifier.value = Map.from(transpositionNotifier.value);
                                   }
                                 }
@@ -92,11 +99,15 @@ class TranspositionWidget {
                         const Spacer(),
                         ElevatedButton(
                           onPressed: () {
-                            var value = transpositionNotifier.value[selectedInstrument];
-                            if(value != null){
-                              transpositionNotifier.value[selectedInstrument] = 0;
-                              transpositionNotifier.value = Map.from(transpositionNotifier.value);
-                            }
+                            // Reset the transposition value for the selected instrument
+                            transpositionNotifier.value[selectedInstrument] = 0;
+
+                            // Restore notes from the manual changes map
+                            instrumentNotesMap[selectedInstrument] = List<String>.from(manualNotesMap[selectedInstrument]!);
+
+                            // Update the transpositionNotifier to trigger rebuilds
+                            transpositionNotifier.value = Map.from(transpositionNotifier.value);
+                            // HomePage.isResetVisible.value = false;
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.transparent,

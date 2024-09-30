@@ -6,10 +6,11 @@ import 'package:music_tuner/providers/ThemeManager.dart';
 import 'package:music_tuner/widgets/PinNoteWidget.dart';
 
 class TenorhornWidget extends StatefulWidget {
-  TenorhornWidget({super.key, required this.title, required this.noteList});
+  TenorhornWidget({super.key, required this.title, required this.noteList, required this.onNotesChanged});
 
   final String title;
   List<String> noteList;
+  final Function(List<String>) onNotesChanged;
 
   @override
   State<TenorhornWidget> createState() => _TenorhornWidgetState();
@@ -17,6 +18,15 @@ class TenorhornWidget extends StatefulWidget {
 
 class _TenorhornWidgetState extends State<TenorhornWidget> {
   double circleSize = 50;
+
+  void onNoteChanged(int index, String newNote) {
+    setState(() {
+      widget.noteList[index] = newNote;
+    });
+
+    // Notify parent about the updated notes
+    widget.onNotesChanged(widget.noteList);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +57,13 @@ class _TenorhornWidgetState extends State<TenorhornWidget> {
                 ),
               ),
             ),
-            PinNoteWidget(defaultNote: widget.noteList[0], circleSize: circleSize, currentInstrument: 'Tenorhorn'),
+            PinNoteWidget(
+              defaultNote: "B3",
+              currentNote: widget.noteList[0],
+              circleSize: circleSize,
+              currentInstrument: 'Tenorhorn',
+              onNoteChanged: (newNote) => onNoteChanged(0, newNote),  // Callback for the first pin
+            ),
             SizedBox(width: sidePadding),
           ],
         );

@@ -43,7 +43,7 @@ class NoteScrollerWidget extends StatelessWidget {
     }
   }
 
-  Future<String?> showNotePicker(BuildContext context, String currentNote) async {
+  Future<String?> showNotePicker(BuildContext context, String currentNote, String defaultNote) async {
     parseNoteString(currentNote);
 
     int noteIndex = notes.indexWhere((n) => n == note);
@@ -51,9 +51,9 @@ class NoteScrollerWidget extends StatelessWidget {
     int octaveIndex = octaves.indexWhere((o) => o == octave);
 
     noteIndex = noteIndex != -1 ? noteIndex : 0;
-    chromaticIndex = chromaticIndex != -1 ? chromaticIndex : 2; // Natural note by default
+    chromaticIndex = chromaticIndex != -1 ? chromaticIndex : 2;
     octaveIndex = octaveIndex != -1 ? octaveIndex : 0;
-    String? returnNote = 'C1';
+    String? returnNote = '';
 
     returnNote = await showModalBottomSheet<String>(
       context: context,
@@ -75,7 +75,8 @@ class NoteScrollerWidget extends StatelessWidget {
                   const Spacer(),
                   ElevatedButton(
                     onPressed: () {
-
+                      parseNoteString(defaultNote);
+                      Navigator.of(context).pop(defaultNote);
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.transparent,
@@ -143,7 +144,6 @@ class NoteScrollerWidget extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        // Notes Wheel
         Expanded(
           child: Column(
             children: [
@@ -162,7 +162,7 @@ class NoteScrollerWidget extends StatelessWidget {
                     note = notes[index];
                   },
                   style: WheelPickerStyle(
-                    itemExtent: wheelTextStyle.fontSize! * wheelTextStyle.height!, // Text height
+                    itemExtent: wheelTextStyle.fontSize! * wheelTextStyle.height!,
                     squeeze: 1.25,
                     diameterRatio: .8,
                     surroundingOpacity: .25,
@@ -192,7 +192,7 @@ class NoteScrollerWidget extends StatelessWidget {
                     octave = octaves[index];
                   },
                   style: WheelPickerStyle(
-                    itemExtent: wheelTextStyle.fontSize! * wheelTextStyle.height!, // Text height
+                    itemExtent: wheelTextStyle.fontSize! * wheelTextStyle.height!,
                     squeeze: 1.25,
                     diameterRatio: .8,
                     surroundingOpacity: .25,
@@ -221,7 +221,7 @@ class NoteScrollerWidget extends StatelessWidget {
                     chromatic = chromatics[index];
                   },
                   style: WheelPickerStyle(
-                    itemExtent: wheelTextStyle.fontSize! * wheelTextStyle.height!, // Text height
+                    itemExtent: wheelTextStyle.fontSize! * wheelTextStyle.height!,
                     squeeze: 1.25,
                     diameterRatio: .8,
                     surroundingOpacity: .25,
@@ -239,6 +239,6 @@ class NoteScrollerWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(); // Empty widget as this is not meant to be rendered directly
+    return Container();
   }
 }

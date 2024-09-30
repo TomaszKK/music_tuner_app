@@ -10,10 +10,16 @@ import 'package:music_tuner/widgets/BluetoothConnectorWidget.dart';
 import 'package:music_tuner/widgets/TranspositionWidget.dart';
 import 'package:bluetooth_enable_fork/bluetooth_enable_fork.dart';
 
+import '../providers/noteInstrumentProvider.dart';
+
 class HomePage extends StatefulWidget {
-  const HomePage({super.key, required this.title});
+  HomePage({super.key, required this.title});
 
   final String title;
+  static ValueNotifier<bool> isNoteChanged = ValueNotifier<bool>(false);
+  static ValueNotifier<Map<String, bool>> isResetVisible = ValueNotifier<Map<String, bool>>({
+    guitar: false, bass: false, tenorhorn: false
+  });
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -29,6 +35,13 @@ class _HomePageState extends State<HomePage> {
 
     bluetoothConnectorWidget.isBluetoothConnected.addListener(() {
       setState(() {});
+    });
+  }
+
+  void _resetAllChanges() {
+    setState(() {
+      HomePage.isNoteChanged.value = true;
+
     });
   }
 
@@ -110,7 +123,7 @@ class _HomePageState extends State<HomePage> {
                       alignment: Alignment.centerLeft,
                     ),
                     child: Text(
-                      'Selected Instrument: ${_getPickedInstrument()}',
+                      'Selected: ${_getPickedInstrument()}',
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.onPrimaryContainer.withOpacity(0.7),
                         fontFamily: 'Poppins',
@@ -122,27 +135,37 @@ class _HomePageState extends State<HomePage> {
                     },
                   ),
                   const Spacer(),
-                  ElevatedButton(
-                    onPressed: () {
-
+                  ValueListenableBuilder(
+                    valueListenable: HomePage.isResetVisible,
+                    builder: (context, isVisible, child) {
+                      return isVisible[_selectedInstrument]!
+                          ? ElevatedButton(
+                        onPressed: () {
+                          // Reset all changes
+                          _resetAllChanges();
+                          HomePage.isResetVisible.value[_selectedInstrument] = false;
+                          HomePage.isResetVisible.value = Map.from(HomePage.isResetVisible.value);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.transparent,
+                          shadowColor: Colors.red,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(40),
+                          ),
+                          minimumSize: const Size(50, 30),
+                          alignment: Alignment.centerLeft,
+                        ),
+                        child: Text(
+                          'Reset all',
+                          style: TextStyle(
+                            fontSize: 15.0,
+                            fontFamily: 'Poppins',
+                            color: Theme.of(context).colorScheme.onPrimaryContainer.withOpacity(0.7),
+                          ),
+                        ),
+                      )
+                          : const SizedBox.shrink(); // Show nothing if not visible
                     },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.transparent,
-                      shadowColor: Colors.red,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(40),
-                      ),
-                      minimumSize: const Size(100, 30),
-                      alignment: Alignment.centerLeft,
-                    ),
-                    child: Text(
-                      'Reset all',
-                      style: TextStyle(
-                        fontSize: 15.0,
-                        fontFamily: 'Poppins',
-                        color: Theme.of(context).colorScheme.onPrimaryContainer.withOpacity(0.7),
-                      ),
-                    ),
                   ),
                 ],
               ),

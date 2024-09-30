@@ -1,14 +1,14 @@
 import 'dart:convert';
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:music_tuner/widgets/TranspositionWidget.dart';
+import 'package:music_tuner/widgets/TunerWidget.dart';
 import 'package:music_tuner/widgets/instrumentWidgetsDir/GuitarWidget.dart';
 import 'package:music_tuner/widgets/instrumentWidgetsDir/BassWidget.dart';
+import 'package:music_tuner/widgets/instrumentWidgetsDir/TenorhornWidget.dart';
 
 import '../models/noteModel.dart';
-import 'instrumentWidgetsDir/TenorhornWidget.dart';
+import '../screens/HomePage.dart';
 import 'package:music_tuner/providers/noteInstrumentProvider.dart';
 
 class InstrumentWidget extends StatefulWidget {
@@ -16,6 +16,7 @@ class InstrumentWidget extends StatefulWidget {
 
   final String title;
   final String selectedInstrument;
+
   static ValueNotifier<String> noteListNotifier = ValueNotifier<String>('');
   static ValueNotifier<bool> isTranspositionBound = ValueNotifier<bool>(false);
 
@@ -25,6 +26,17 @@ class InstrumentWidget extends StatefulWidget {
 
 class _InstrumentWidgetState extends State<InstrumentWidget> {
   Map<String, double> noteFrequencyMap = {};
+  final Map<String, String> instrumentNoteFiles = {
+    'Guitar': 'lib/assets/notes.json',
+    'Bass': 'lib/assets/notes.json',
+    'Tenorhorn': 'lib/assets/notes-tenor.json',
+  };
+
+  final Map<String, Widget Function(String, List<String>, Function(List<String>))> instrumentWidgets = {
+    'Guitar': (title, notes, onNotesChanged) => GuitarWidget(title: title, noteList: notes, onNotesChanged: onNotesChanged),
+    'Bass': (title, notes, onNotesChanged) => BassWidget(title: title, noteList: notes, onNotesChanged: onNotesChanged),
+    'Tenorhorn': (title, notes, onNotesChanged) => TenorhornWidget(title: title, noteList: notes, onNotesChanged: onNotesChanged),
+  };
 
   @override
   void initState() {
@@ -32,24 +44,8 @@ class _InstrumentWidgetState extends State<InstrumentWidget> {
     _loadNoteListForInstrument(widget.selectedInstrument);
   }
 
-  // Load the note list based on the selected instrument
-  void _loadNoteListForInstrument(String instrument) {
-    String notePath;
-    switch (instrument) {
-      case 'Guitar':
-      case 'Bass':
-        notePath = 'lib/assets/notes.json';
-        break;
-      case 'Tenorhorn':
-        notePath = 'lib/assets/notes-tenor.json';
-        break;
-      default:
-        notePath = 'lib/assets/notes.json';
-    }
-    _loadNoteList(notePath);
-  }
-
-  Future<void> _loadNoteList(String notePath) async {
+  Future<void> _loadNoteListForInstrument(String instrument) async {
+    String notePath = instrumentNoteFiles[instrument] ?? 'lib/assets/notes.json';
     String jsonString = await rootBundle.loadString(notePath);
     Map<String, dynamic> jsonMap = json.decode(jsonString);
     setState(() {
@@ -57,67 +53,83 @@ class _InstrumentWidgetState extends State<InstrumentWidget> {
     });
   }
 
+  void _updateInstrumentNotesMap(List<String> updatedNotes) {
+    setState(() {
+      instrumentNotesMap[widget.selectedInstrument] = updatedNotes;
+      manualNotesMap[widget.selectedInstrument] = updatedNotes;
+      HomePage.isResetVisible.value[widget.selectedInstrument] = true;
+      HomePage.isResetVisible.value = Map.from(HomePage.isResetVisible.value);
+    });
+  }
+
+  List<String> _handleInstrumentNotes(String instrument, bool isNoteChanged) {
+    if (isNoteChanged) {
+      // Reset the transposition and load default notes
+      final String defaultInstrument = instrument.toLowerCase();
+      TranspositionWidget.transpositionNotifier.value[instrument] = 0;
+      instrumentNotesMap[instrument] = List<String>.from(noteInstrumentDefaultProvider[instrument]!);
+      manualNotesMap[instrument] = List<String>.from(noteInstrumentDefaultProvider[instrument]!);
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        HomePage.isNoteChanged.value = false;
+        TunerWidget.blockedNoteNotifier.value = '';
+      });
+    }
+    instrumentNotesMap[instrument] = transpositionChanged(TranspositionWidget.transpositionNotifier.value[instrument]!, instrumentNotesMap[instrument]!, instrument);
+    TranspositionWidget.transpositionNotifier.value[instrument] = 0;
+    return instrumentNotesMap[instrument]!;
+  }
+
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
-      valueListenable: TranspositionWidget.transpositionNotifier,
-      builder: (context, transpositionNotify, child) {
-        // Ensure the note list is loaded before proceeding
-        if (noteFrequencyMap.isEmpty) {
-          return const CircularProgressIndicator();
-        }
+      valueListenable: HomePage.isNoteChanged,
+      builder: (context, isNoteChanged, child) {
+        return ValueListenableBuilder(
+          valueListenable: TranspositionWidget.transpositionNotifier,
+          builder: (context, transpositionNotify, child) {
+            if (noteFrequencyMap.isEmpty) {
+              return const CircularProgressIndicator();
+            }
 
-        List<String> transposedNotes;
-        switch (widget.selectedInstrument) {
-          case 'Guitar':
-            transposedNotes = transpositionChanged(transpositionNotify['Guitar']!, guitarDefaultNotes, 'Guitar');
+            final instrument = widget.selectedInstrument;
+
+            // Handle the notes based on the selected instrument
+            List<String> transposedNotes = _handleInstrumentNotes(instrument, isNoteChanged);
+
+            // Create the appropriate instrument widget
+            final instrumentWidget = instrumentWidgets[instrument]?.call(instrument, transposedNotes, _updateInstrumentNotesMap);
+
             return Center(
-              child: GuitarWidget(title: 'Guitar', noteList: transposedNotes),
+              child: instrumentWidget ?? const Center(child: Text('No instrument selected')),
             );
-          case 'Bass':
-            transposedNotes = transpositionChanged(transpositionNotify['Bass']!, bassDefaultNotes, 'Bass');
-            return Center(
-              child: BassWidget(title: 'Bass', noteList: transposedNotes),
-            );
-          case 'Tenorhorn':
-            transposedNotes = transpositionChanged(transpositionNotify['Tenorhorn']!, tenorhornDefaultNotes, 'Tenorhorn');
-            return Center(
-              child: TenorhornWidget(title: 'Tenorhorn', noteList: transposedNotes),
-            );
-          default:
-            return const Center(
-              child: Text('No instrument selected'),
-            );
-        }
+          },
+        );
       },
     );
   }
 
   // This function transposes the notes based on the current instrument's transposition
-  List<String> transpositionChanged(int transposition, List<String> noteList, String instrument) {
+  List<String> transpositionChanged(int transpositionStep, List<String> noteList, String instrument) {
     List<String> newList = [];
     List<String> noteKeys = noteFrequencyMap.keys.toList();
+
     for (String note in noteList) {
       int currentIndex = noteKeys.indexOf(note);
+
       if (currentIndex == -1) {
         newList.add(note);
         continue;
       }
 
-      // print('Transposition $transposition');
-
-      int newIndex = currentIndex + transposition;
+      int newIndex = currentIndex + transpositionStep;
 
       if (newIndex >= noteKeys.length) {
         newIndex = noteKeys.length - 1;
         InstrumentWidget.isTranspositionBound.value = true;
-      } else if (newIndex <= 1) {
-        print("true");
-        newIndex = 1;
+      } else if (newIndex < 0) {
+        newIndex = 0;
         InstrumentWidget.isTranspositionBound.value = true;
-
       } else {
-        print('false');
         InstrumentWidget.isTranspositionBound.value = false;
       }
 

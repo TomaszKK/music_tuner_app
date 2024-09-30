@@ -8,20 +8,23 @@ class PinNoteWidget extends StatefulWidget {
   PinNoteWidget({
     Key? key,
     required this.defaultNote,
+    required this.currentNote,
     required this.circleSize,
     required this.currentInstrument,
+    required this.onNoteChanged,  // Add a callback function
   }) : super(key: key);
 
   String defaultNote;
+  String currentNote;
   final double circleSize;
-  final String currentInstrument; // Instrument name or ID
+  final String currentInstrument;
+  final ValueChanged<String> onNoteChanged;  // Callback when note is changed
 
   @override
   State<PinNoteWidget> createState() => _PinNoteWidgetState();
 }
 
 class _PinNoteWidgetState extends State<PinNoteWidget> {
-  // Store blocked notes per instrument
   static final Map<String, String> _blockedNotesByInstrument = {};
   String initBLockedNote = '';
 
@@ -51,16 +54,31 @@ class _PinNoteWidgetState extends State<PinNoteWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final themeColor = ThemeManager().currentTheme.colorScheme.secondaryContainer;
-    final currentNoteColor = ThemeManager().currentTheme.colorScheme.onSecondaryContainer;
+    final themeColor = ThemeManager().currentTheme.colorScheme
+        .secondaryContainer;
+    final currentNoteColor = ThemeManager().currentTheme.colorScheme
+        .onSecondaryContainer;
     final NoteScrollerWidget noteScrollerWidget = NoteScrollerWidget();
 
     return ValueListenableBuilder<String>(
       valueListenable: TunerWidget.blockedNoteNotifier,
       builder: (context, blockedNote, child) {
-        final isCurrentNoteBlocked = blockedNote == widget.defaultNote;
+        final isCurrentNoteBlocked = blockedNote == widget.currentNote;
 
         return GestureDetector(
+          onTap: () async {
+            String? returnNote = await noteScrollerWidget.showNotePicker(context, widget.currentNote, widget.defaultNote);
+            if (returnNote != null) {
+              setState(() {
+                widget.currentNote = returnNote;
+                if(isCurrentNoteBlocked) {
+                  TunerWidget.blockedNoteNotifier.value = returnNote;
+                  _setBlockedNoteForInstrument(returnNote);
+                }
+              });
+              widget.onNoteChanged(returnNote);
+            }
+          },
           onLongPress: () {
             setState(() {
               if (isCurrentNoteBlocked) {
@@ -69,45 +87,70 @@ class _PinNoteWidgetState extends State<PinNoteWidget> {
                 _clearBlockedNoteForInstrument();
               } else {
                 // Block this note
-                TunerWidget.blockedNoteNotifier.value = widget.defaultNote;
-                _setBlockedNoteForInstrument(widget.defaultNote);
+                TunerWidget.blockedNoteNotifier.value = widget.currentNote;
+                _setBlockedNoteForInstrument(widget.currentNote);
               }
             });
           },
-          onTap: () async {
-            // Show note picker and wait for the selected note
-            String? returnNote = await noteScrollerWidget.showNotePicker(context, widget.defaultNote);
-            if (returnNote != null) {
-              setState(() {
-                widget.defaultNote = returnNote;
-              });
-            }
-          },
-          child: Container(
-            alignment: Alignment.center,
-            height: widget.circleSize,
-            width: widget.circleSize,
-            decoration: BoxDecoration(
-              color: isCurrentNoteBlocked ? themeColor : Colors.transparent,
-              shape: BoxShape.circle,
-              border: Border.all(
-                color: isCurrentNoteBlocked ? currentNoteColor : themeColor,
-                width: 2,
-              ),
-              boxShadow: isCurrentNoteBlocked
-                  ? [
-                BoxShadow(
-                  color: themeColor,
-                  blurRadius: 20.0,
-                  blurStyle: BlurStyle.outer,
-                ),
-              ]
-                  : null,
-            ),
-            child: NoteRepresentationWidget(
-              noteString: widget.defaultNote,
-              fontSize: 20,
-            ),
+          child: ValueListenableBuilder<String>(
+            valueListenable: TunerWidget.currentNoteNotifier, // Listen to the ValueNotifier
+            builder: (context, currentNoteNotifier, child) {
+              if (currentNoteNotifier == widget.currentNote) {
+                return Container(
+                  alignment: Alignment.center,
+                  height: widget.circleSize,
+                  width: widget.circleSize,
+                  decoration: BoxDecoration(
+                    color: Colors.transparent,
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: ThemeManager().currentTheme.colorScheme
+                          .secondaryContainer,
+                      width: 2,
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: ThemeManager().currentTheme.colorScheme
+                          .secondaryContainer,
+                        blurRadius: 15.0,
+                        // spreadRadius: 3.0,
+                        blurStyle: BlurStyle.outer,
+                      ),
+                    ],
+                  ),
+                  child: NoteRepresentationWidget(
+                      noteString: widget.currentNote, fontSize: 20),
+                );
+              }
+              else{
+                return Container(
+                  alignment: Alignment.center,
+                  height: widget.circleSize,
+                  width: widget.circleSize,
+                  decoration: BoxDecoration(
+                    color: isCurrentNoteBlocked ? themeColor : Colors.transparent,
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: isCurrentNoteBlocked ? currentNoteColor : themeColor,
+                      width: 2,
+                    ),
+                    boxShadow: isCurrentNoteBlocked
+                        ? [
+                      BoxShadow(
+                        color: themeColor,
+                        blurRadius: 20.0,
+                        blurStyle: BlurStyle.outer,
+                      ),
+                    ]
+                        : null,
+                  ),
+                  child: NoteRepresentationWidget(
+                    noteString: widget.currentNote,
+                    fontSize: 20,
+                  ),
+                );
+              }
+            },
           ),
         );
       },

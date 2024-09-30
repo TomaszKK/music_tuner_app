@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Instrument Tuner',
       theme: themeManager.currentTheme,
-      home: const HomePage(title: 'Instrument Tuner'),
+      home: HomePage(title: 'Instrument Tuner'),
     );
   }
 }

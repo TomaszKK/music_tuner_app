@@ -5,10 +5,11 @@ import 'package:music_tuner/providers/ThemeManager.dart';
 import '../PinNoteWidget.dart';
 
 class BassWidget extends StatefulWidget {
-  BassWidget({super.key, required this.title, required this.noteList});
+  BassWidget({super.key, required this.title, required this.noteList, required this.onNotesChanged});
 
   final String title;
   List<String> noteList;
+  final Function(List<String>) onNotesChanged;
 
   @override
   State<BassWidget> createState() => _BassWidgetState();
@@ -16,6 +17,15 @@ class BassWidget extends StatefulWidget {
 
 class _BassWidgetState extends State<BassWidget> {
   double circleSize = 50;
+
+  void onNoteChanged(int index, String newNote) {
+    setState(() {
+      widget.noteList[index] = newNote;
+    });
+
+    // Notify parent about the updated notes
+    widget.onNotesChanged(widget.noteList);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,16 +50,40 @@ class _BassWidgetState extends State<BassWidget> {
           children: <Widget>[
             SizedBox(width: (constraints.maxWidth - imgWidth - 2 * circleSize) / 2 * 0.8),
             Column(
-                children: <Widget>[
-                  SizedBox(height: topPosition * topPositionScale),
-                  PinNoteWidget(defaultNote: widget.noteList[0], circleSize: circleSize, currentInstrument: 'Bass'),
-                  SizedBox(height: circleSpaceScale),
-                  PinNoteWidget(defaultNote: widget.noteList[1], circleSize: circleSize, currentInstrument: 'Bass'),
-                  SizedBox(height: circleSpaceScale),
-                  PinNoteWidget(defaultNote: widget.noteList[2], circleSize: circleSize, currentInstrument: 'Bass'),
-                  SizedBox(height: circleSpaceScale),
-                  PinNoteWidget(defaultNote: widget.noteList[3], circleSize: circleSize, currentInstrument: 'Bass'),
-                ]
+              children: <Widget>[
+                SizedBox(height: topPosition * topPositionScale),
+                PinNoteWidget(
+                  defaultNote: "E1",
+                  currentNote: widget.noteList[0],
+                  circleSize: circleSize,
+                  currentInstrument: 'Bass',
+                  onNoteChanged: (newNote) => onNoteChanged(0, newNote),  // Callback for the first pin
+                ),
+                SizedBox(height: circleSpaceScale),
+                PinNoteWidget(
+                  defaultNote: "A1",
+                  currentNote: widget.noteList[1],
+                  circleSize: circleSize,
+                  currentInstrument: 'Bass',
+                  onNoteChanged: (newNote) => onNoteChanged(1, newNote),  // Callback for the first pin
+                ),
+                SizedBox(height: circleSpaceScale),
+                PinNoteWidget(
+                  defaultNote: "D2",
+                  currentNote: widget.noteList[2],
+                  circleSize: circleSize,
+                  currentInstrument: 'Bass',
+                  onNoteChanged: (newNote) => onNoteChanged(2, newNote),  // Callback for the first pin
+                ),
+                SizedBox(height: circleSpaceScale),
+                PinNoteWidget(
+                  defaultNote: "G2",
+                  currentNote: widget.noteList[3],
+                  circleSize: circleSize,
+                  currentInstrument: 'Bass',
+                  onNoteChanged: (newNote) => onNoteChanged(3, newNote),  // Callback for the first pin
+                ),
+              ]
             ),
             Expanded(
               child: SizedBox(
