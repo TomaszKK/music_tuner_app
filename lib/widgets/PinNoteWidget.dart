@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:music_tuner/providers/ThemeManager.dart';
+import 'package:music_tuner/providers/noteAdditionalProvider.dart';
 import 'package:music_tuner/widgets/NoteRepresentationWidget.dart';
 import 'NoteSrollerWidget.dart';
 import 'TunerWidget.dart';
@@ -65,6 +66,8 @@ class _PinNoteWidgetState extends State<PinNoteWidget> {
         return GestureDetector(
           onTap: () async {
             String? returnNote = await noteScrollerWidget.showNotePicker(context, widget.currentNote, widget.defaultNote);
+
+
             if (returnNote != null) {
               setState(() {
                 widget.currentNote = returnNote;

@@ -10,6 +10,7 @@ import 'package:music_tuner/widgets/BluetoothConnectorWidget.dart';
 import 'package:music_tuner/widgets/TranspositionWidget.dart';
 import 'package:bluetooth_enable_fork/bluetooth_enable_fork.dart';
 
+import '../providers/InstrumentProvider.dart';
 import '../providers/noteInstrumentProvider.dart';
 
 class HomePage extends StatefulWidget {
@@ -18,7 +19,7 @@ class HomePage extends StatefulWidget {
   final String title;
   static ValueNotifier<bool> isNoteChanged = ValueNotifier<bool>(false);
   static ValueNotifier<Map<String, bool>> isResetVisible = ValueNotifier<Map<String, bool>>({
-    guitar: false, bass: false, tenorhorn: false
+    for (var instrument in InstrumentProvider.values) instrument.name: false,
   });
 
   @override

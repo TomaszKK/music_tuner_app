@@ -8,8 +8,12 @@ import 'package:music_tuner/widgets/instrumentWidgetsDir/BassWidget.dart';
 import 'package:music_tuner/widgets/instrumentWidgetsDir/TenorhornWidget.dart';
 
 import '../models/noteModel.dart';
+import '../providers/noteAdditionalProvider.dart';
 import '../screens/HomePage.dart';
 import 'package:music_tuner/providers/noteInstrumentProvider.dart';
+
+import 'instrumentWidgetsDir/SaxophoneWidget.dart';
+import 'instrumentWidgetsDir/TrumpetWidget.dart';
 
 class InstrumentWidget extends StatefulWidget {
   const InstrumentWidget({Key? key, required this.title, required this.selectedInstrument}) : super(key: key);
@@ -31,6 +35,8 @@ class _InstrumentWidgetState extends State<InstrumentWidget> {
     'Guitar': (title, notes, onNotesChanged) => GuitarWidget(title: title, noteList: notes, onNotesChanged: onNotesChanged),
     'Bass': (title, notes, onNotesChanged) => BassWidget(title: title, noteList: notes, onNotesChanged: onNotesChanged),
     'Tenorhorn': (title, notes, onNotesChanged) => TenorhornWidget(title: title, noteList: notes, onNotesChanged: onNotesChanged),
+    'Saxophone': (title, notes, onNotesChanged) => SaxophoneWidget(title: title, noteList: notes, onNotesChanged: onNotesChanged),
+    'Trumpet': (title, notes, onNotesChanged) => TrumpetWidget(title: title, noteList: notes, onNotesChanged: onNotesChanged),
   };
 
   @override
@@ -53,7 +59,6 @@ class _InstrumentWidgetState extends State<InstrumentWidget> {
     String notePath = instrumentNoteFiles[instrument] ?? 'lib/assets/notes.json';
     String jsonString = await rootBundle.loadString(notePath);
     Map<String, dynamic> jsonMap = json.decode(jsonString);
-    print(jsonMap);
     setState(() {
       noteFrequencyMap = jsonMap.map((key, value) => MapEntry(key, value.toDouble()));
       selectedInstrumentNotesMap = noteFrequencyMap;
@@ -140,7 +145,8 @@ class _InstrumentWidgetState extends State<InstrumentWidget> {
         InstrumentWidget.isTranspositionBound.value = false;
       }
 
-      newList.add(noteKeys[newIndex]);
+      String checkNote = resolveEnharmonic(noteKeys[newIndex]);
+      newList.add(checkNote);
     }
 
     int i = 0;

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:music_tuner/providers/noteAdditionalProvider.dart';
 import 'package:music_tuner/providers/noteInstrumentProvider.dart';
 import 'package:wheel_picker/wheel_picker.dart';
 
@@ -30,6 +31,7 @@ class NoteScrollerWidget extends StatelessWidget {
       }
       else{
         octave = noteString.substring(1, 2);
+        chromatic = ' ';
       }
     }
 
@@ -79,7 +81,7 @@ class NoteScrollerWidget extends StatelessWidget {
 
     // Sort the lists in order
     notes.sort(); // Already in natural order C, D, E, F, G, A, B
-    chromatics.sort(); // Order: ' ', ♭, ♯
+   // chromatics.sort(); // Order: ' ', ♭, ♯
     octaves.sort(); // Octaves in numeric order
   }
 
@@ -136,7 +138,13 @@ class NoteScrollerWidget extends StatelessWidget {
                   const SizedBox(width: 20),
                   ElevatedButton(
                     onPressed: () {
+                      if(chromatic == ' '){
+                        chromatic = '';
+                      }
                       returnNote = note + chromatic + octave;
+                      print(returnNote);
+                      returnNote = resolveEnharmonic(returnNote!);
+                      print(returnNote);
                       Navigator.of(context).pop(returnNote);
                     },
                     style: ElevatedButton.styleFrom(

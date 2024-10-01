@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:music_tuner/widgets/InstrumentWidget.dart';
 
+import '../providers/InstrumentProvider.dart';
 import '../providers/noteInstrumentProvider.dart';
 import '../screens/HomePage.dart';
 
 class TranspositionWidget {
   static ValueNotifier<Map<String, int>> transpositionNotifier = ValueNotifier<Map<String, int>>({
-    'Guitar': 0, 'Bass': 0, 'Tenorhorn': 0
+    for (var instrument in InstrumentProvider.values) instrument.name: 0,
   });
 
   static void showTranspositionWidget(BuildContext context, String selectedInstrument) {

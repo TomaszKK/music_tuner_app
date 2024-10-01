@@ -1,5 +1,7 @@
 enum InstrumentProvider{
   Guitar,
   Bass,
-  Tenorhorn
+  Tenorhorn,
+  Saxophone,
+  Trumpet
 }
