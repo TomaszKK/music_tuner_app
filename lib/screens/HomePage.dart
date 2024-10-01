@@ -113,6 +113,7 @@ class _HomePageState extends State<HomePage> {
             children: <Widget>[
               Row(
                 children: <Widget>[
+                  const SizedBox(width: 5),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.7),
@@ -167,9 +168,10 @@ class _HomePageState extends State<HomePage> {
                           : const SizedBox.shrink(); // Show nothing if not visible
                     },
                   ),
+                  const SizedBox(width: 5),
                 ],
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 5),
               Expanded(
                 child: InstrumentWidget(title: 'Instrument', selectedInstrument: _selectedInstrument),
               ),

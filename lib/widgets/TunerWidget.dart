@@ -59,7 +59,7 @@ class _TunerWidgetState extends State<TunerWidget> {
             return Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                const SizedBox(height: 5),
+                // const SizedBox(height: 5),
                 Expanded(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
