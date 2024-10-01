@@ -43,12 +43,18 @@ class TranspositionWidget {
                             height: constraints.maxHeight * 0.2,
                             child: ElevatedButton(
                               onPressed: () {
-                                HomePage.isResetVisible.value[selectedInstrument] = true;
-                                HomePage.isResetVisible.value = Map.from(HomePage.isResetVisible.value);
-                                var value = transpositionNotifier.value[selectedInstrument];
-                                if(value != null){
-                                  transpositionNotifier.value[selectedInstrument] = -1;
-                                  transpositionNotifier.value = Map.from(transpositionNotifier.value);
+                                if(!isTranspositionBound) {
+                                  HomePage.isResetVisible
+                                      .value[selectedInstrument] = true;
+                                  HomePage.isResetVisible.value = Map.from(HomePage.isResetVisible.value);
+                                  var value = transpositionNotifier.value[selectedInstrument];
+                                  if (value != null) {
+                                    transpositionNotifier.value[selectedInstrument] = -1;
+                                    transpositionNotifier.value = Map.from(transpositionNotifier.value);
+                                  }
+                                }
+                                else{
+                                  null;
                                 }
                               },
                               child: const Text(
@@ -76,6 +82,9 @@ class TranspositionWidget {
                                     transpositionNotifier.value[selectedInstrument] = 1;
                                     transpositionNotifier.value = Map.from(transpositionNotifier.value);
                                   }
+                                }
+                                else{
+                                  null;
                                 }
                               },
                               child: const Text(

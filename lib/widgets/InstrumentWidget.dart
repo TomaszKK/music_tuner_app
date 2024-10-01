@@ -108,7 +108,6 @@ class _InstrumentWidgetState extends State<InstrumentWidget> {
     );
   }
 
-  // This function transposes the notes based on the current instrument's transposition
   List<String> transpositionChanged(int transpositionStep, List<String> noteList, String instrument) {
     List<String> newList = [];
     List<String> noteKeys = noteFrequencyMap.keys.toList();
@@ -126,14 +125,38 @@ class _InstrumentWidgetState extends State<InstrumentWidget> {
       if (newIndex >= noteKeys.length) {
         newIndex = noteKeys.length - 1;
         InstrumentWidget.isTranspositionBound.value = true;
-      } else if (newIndex < 0) {
-        newIndex = 0;
+      } else if (newIndex < 1) {
+        newIndex = 1;
         InstrumentWidget.isTranspositionBound.value = true;
       } else {
         InstrumentWidget.isTranspositionBound.value = false;
       }
 
       newList.add(noteKeys[newIndex]);
+    }
+
+    int i = 0;
+    List<bool> isNoteDefault = [];
+    for(String note in newList){
+      if(note == noteInstrumentDefaultProvider[instrument]![i]){
+        isNoteDefault.add(true);
+      }
+      else{
+        isNoteDefault.add(false);
+      }
+      i++;
+    }
+
+    if(isNoteDefault.contains(false)){
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        HomePage.isResetVisible.value[instrument] = true;
+        HomePage.isResetVisible.value = Map.from(HomePage.isResetVisible.value);
+      });
+    } else{
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        HomePage.isResetVisible.value[instrument] = false;
+        HomePage.isResetVisible.value = Map.from(HomePage.isResetVisible.value);
+      });
     }
 
     return newList;
