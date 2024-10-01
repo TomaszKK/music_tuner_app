@@ -1,20 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:music_tuner/providers/noteInstrumentProvider.dart';
 import 'package:wheel_picker/wheel_picker.dart';
 
 class NoteScrollerWidget extends StatelessWidget {
   NoteScrollerWidget({super.key});
 
-  final List<String> notes = [
-    'C', 'D', 'E', 'F', 'G', 'A', 'B'
-  ];
+  final List<String> notes = [];
 
-  final List<String> chromatics = [
-    '♭', '♯', ' '
-  ];
+  final List<String> chromatics = [];
 
-  final List<String> octaves = [
-    '0', '1', '2', '3', '4', '5', '6', '7', '8'
-  ];
+  final List<String> octaves = [];
 
   String note = '';
   String octave = '';
@@ -43,7 +38,53 @@ class NoteScrollerWidget extends StatelessWidget {
     }
   }
 
+  void setRanges() {
+    // Extract unique note letters (C, D, E, F, G, A, B)
+    final Set<String> notesSet = {};
+    final Set<String> chromaticsSet = {' '}; // Adding empty space for no chromatic symbol
+    final Set<String> octavesSet = {};
+
+    // Loop over the noteFrequencyMap to extract the note components
+    for (String noteString in selectedInstrumentNotesMap.keys) {
+      // Skip if it's the dash "-"
+      if (noteString == "-") continue;
+
+      // Extract the note letter (C, D, E, F, G, A, B)
+      final note = noteString[0]; // First character is the note
+      notesSet.add(note);
+
+      // Extract the chromatic (♯, ♭, or nothing)
+      if (noteString.length > 2) {
+        final chromatic = noteString[1];
+        if (chromatic == '♯' || chromatic == '♭') {
+          chromaticsSet.add(chromatic);
+        }
+      }
+
+      // Extract the octave number
+      final octave = noteString.substring(noteString.length - 1); // Last character is the octave
+      octavesSet.add(octave);
+    }
+
+    // Convert sets to lists and sort them
+    notes
+      ..clear()
+      ..addAll(notesSet);
+    chromatics
+      ..clear()
+      ..addAll(chromaticsSet);
+    octaves
+      ..clear()
+      ..addAll(octavesSet);
+
+    // Sort the lists in order
+    notes.sort(); // Already in natural order C, D, E, F, G, A, B
+    chromatics.sort(); // Order: ' ', ♭, ♯
+    octaves.sort(); // Octaves in numeric order
+  }
+
   Future<String?> showNotePicker(BuildContext context, String currentNote, String defaultNote) async {
+    setRanges();
     parseNoteString(currentNote);
 
     int noteIndex = notes.indexWhere((n) => n == note);

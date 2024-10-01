@@ -16,3 +16,5 @@ final Map<String, String> instrumentNoteFiles = {
 
 Map<String, List<String>> instrumentNotesMap = Map<String, List<String>>.from(noteInstrumentDefaultProvider);
 Map<String, List<String>> manualNotesMap = Map<String, List<String>>.from(noteInstrumentDefaultProvider);
+
+Map<String, double> selectedInstrumentNotesMap = {};

@@ -11,14 +11,14 @@ class PinNoteWidget extends StatefulWidget {
     required this.currentNote,
     required this.circleSize,
     required this.currentInstrument,
-    required this.onNoteChanged,  // Add a callback function
+    required this.onNoteChanged,
   }) : super(key: key);
 
   String defaultNote;
   String currentNote;
   final double circleSize;
   final String currentInstrument;
-  final ValueChanged<String> onNoteChanged;  // Callback when note is changed
+  final ValueChanged<String> onNoteChanged;
 
   @override
   State<PinNoteWidget> createState() => _PinNoteWidgetState();
@@ -36,18 +36,15 @@ class _PinNoteWidgetState extends State<PinNoteWidget> {
     });
   }
 
-  // Load the blocked note for the current instrument when the widget is initialized
   void _loadBlockedNoteForInstrument() {
     final blockedNote = _blockedNotesByInstrument[widget.currentInstrument] ?? '';
     TunerWidget.blockedNoteNotifier.value = blockedNote;
   }
 
-  // Save the blocked note for the current instrument
   void _setBlockedNoteForInstrument(String note) {
     _blockedNotesByInstrument[widget.currentInstrument] = note;
   }
 
-  // Clear the blocked note for the current instrument
   void _clearBlockedNoteForInstrument() {
     _blockedNotesByInstrument[widget.currentInstrument] = '';
   }

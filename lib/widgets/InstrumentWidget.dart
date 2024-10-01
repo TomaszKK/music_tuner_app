@@ -56,6 +56,7 @@ class _InstrumentWidgetState extends State<InstrumentWidget> {
     print(jsonMap);
     setState(() {
       noteFrequencyMap = jsonMap.map((key, value) => MapEntry(key, value.toDouble()));
+      selectedInstrumentNotesMap = noteFrequencyMap;
     });
   }
 
