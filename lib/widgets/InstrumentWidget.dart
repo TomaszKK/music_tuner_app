@@ -26,11 +26,6 @@ class InstrumentWidget extends StatefulWidget {
 
 class _InstrumentWidgetState extends State<InstrumentWidget> {
   Map<String, double> noteFrequencyMap = {};
-  final Map<String, String> instrumentNoteFiles = {
-    'Guitar': 'lib/assets/notes.json',
-    'Bass': 'lib/assets/notes.json',
-    'Tenorhorn': 'lib/assets/notes-tenor.json',
-  };
 
   final Map<String, Widget Function(String, List<String>, Function(List<String>))> instrumentWidgets = {
     'Guitar': (title, notes, onNotesChanged) => GuitarWidget(title: title, noteList: notes, onNotesChanged: onNotesChanged),
@@ -44,10 +39,21 @@ class _InstrumentWidgetState extends State<InstrumentWidget> {
     _loadNoteListForInstrument(widget.selectedInstrument);
   }
 
+  @override
+  void didUpdateWidget(covariant InstrumentWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Check if the selectedInstrument has changed
+    if (oldWidget.selectedInstrument != widget.selectedInstrument) {
+      // Reload notes for the new instrument
+      _loadNoteListForInstrument(widget.selectedInstrument);
+    }
+  }
+
   Future<void> _loadNoteListForInstrument(String instrument) async {
     String notePath = instrumentNoteFiles[instrument] ?? 'lib/assets/notes.json';
     String jsonString = await rootBundle.loadString(notePath);
     Map<String, dynamic> jsonMap = json.decode(jsonString);
+    print(jsonMap);
     setState(() {
       noteFrequencyMap = jsonMap.map((key, value) => MapEntry(key, value.toDouble()));
     });
@@ -87,6 +93,7 @@ class _InstrumentWidgetState extends State<InstrumentWidget> {
         return ValueListenableBuilder(
           valueListenable: TranspositionWidget.transpositionNotifier,
           builder: (context, transpositionNotify, child) {
+
             if (noteFrequencyMap.isEmpty) {
               return const CircularProgressIndicator();
             }

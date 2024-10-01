@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:music_tuner/providers/ThemeManager.dart';
+import 'package:music_tuner/providers/noteInstrumentProvider.dart';
 
 import '../PinNoteWidget.dart';
 
@@ -53,7 +54,7 @@ class _BassWidgetState extends State<BassWidget> {
               children: <Widget>[
                 SizedBox(height: topPosition * topPositionScale),
                 PinNoteWidget(
-                  defaultNote: "E1",
+                  defaultNote: noteInstrumentDefaultProvider['Bass']![0],
                   currentNote: widget.noteList[0],
                   circleSize: circleSize,
                   currentInstrument: 'Bass',
@@ -61,7 +62,7 @@ class _BassWidgetState extends State<BassWidget> {
                 ),
                 SizedBox(height: circleSpaceScale),
                 PinNoteWidget(
-                  defaultNote: "A1",
+                  defaultNote: noteInstrumentDefaultProvider['Bass']![1],
                   currentNote: widget.noteList[1],
                   circleSize: circleSize,
                   currentInstrument: 'Bass',
@@ -69,7 +70,7 @@ class _BassWidgetState extends State<BassWidget> {
                 ),
                 SizedBox(height: circleSpaceScale),
                 PinNoteWidget(
-                  defaultNote: "D2",
+                  defaultNote: noteInstrumentDefaultProvider['Bass']![2],
                   currentNote: widget.noteList[2],
                   circleSize: circleSize,
                   currentInstrument: 'Bass',
@@ -77,7 +78,7 @@ class _BassWidgetState extends State<BassWidget> {
                 ),
                 SizedBox(height: circleSpaceScale),
                 PinNoteWidget(
-                  defaultNote: "G2",
+                  defaultNote: noteInstrumentDefaultProvider['Bass']![3],
                   currentNote: widget.noteList[3],
                   circleSize: circleSize,
                   currentInstrument: 'Bass',

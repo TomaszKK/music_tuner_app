@@ -5,7 +5,13 @@ String tenorhorn = 'Tenorhorn';
 Map<String, List<String>> noteInstrumentDefaultProvider = {
   'Guitar':  ['E2', 'A2', 'D3', 'G3', 'B3', 'E4'],
   'Bass': ['E1', 'A1', 'D2', 'G2'],
-  'Tenorhorn': ['B3'],
+  'Tenorhorn': ['B1'],
+};
+
+final Map<String, String> instrumentNoteFiles = {
+  'Guitar': 'lib/assets/notes.json',
+  'Bass': 'lib/assets/notes.json',
+  'Tenorhorn': 'lib/assets/notes-tenor.json',
 };
 
 Map<String, List<String>> instrumentNotesMap = Map<String, List<String>>.from(noteInstrumentDefaultProvider);

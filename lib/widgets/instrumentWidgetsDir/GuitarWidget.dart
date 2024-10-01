@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:music_tuner/providers/ThemeManager.dart';
+import 'package:music_tuner/providers/noteInstrumentProvider.dart';
 import 'package:music_tuner/widgets/PinNoteWidget.dart';
 
 class GuitarWidget extends StatefulWidget {
@@ -60,7 +61,7 @@ class _GuitarWidgetState extends State<GuitarWidget> {
               children: <Widget>[
                 SizedBox(height: max(topPosition * topPositionScale, 0)),
                 PinNoteWidget(
-                  defaultNote: "E2",
+                  defaultNote: noteInstrumentDefaultProvider['Guitar']![0],
                   currentNote: widget.noteList[0],
                   circleSize: circleSize,
                   currentInstrument: 'Guitar',
@@ -68,7 +69,7 @@ class _GuitarWidgetState extends State<GuitarWidget> {
                 ),
                 SizedBox(height: max(65 * imgHeight / 1000 * circleSpaceScale, 0)),
                 PinNoteWidget(
-                  defaultNote: "A2",
+                  defaultNote: noteInstrumentDefaultProvider['Guitar']![1],
                   currentNote: widget.noteList[1],
                   circleSize: circleSize,
                   currentInstrument: 'Guitar',
@@ -76,7 +77,7 @@ class _GuitarWidgetState extends State<GuitarWidget> {
                 ),
                 SizedBox(height: max(65 * imgHeight / 1000 * circleSpaceScale, 0)),
                 PinNoteWidget(
-                  defaultNote: "D3",
+                  defaultNote: noteInstrumentDefaultProvider['Guitar']![2],
                   currentNote: widget.noteList[2],
                   circleSize: circleSize,
                   currentInstrument: 'Guitar',
@@ -98,7 +99,7 @@ class _GuitarWidgetState extends State<GuitarWidget> {
               children: <Widget>[
                 SizedBox(height: max(topPosition * topPositionScale, 0)),
                 PinNoteWidget(
-                  defaultNote: "G3",
+                  defaultNote: noteInstrumentDefaultProvider['Guitar']![3],
                   currentNote: widget.noteList[3],
                   circleSize: circleSize,
                   currentInstrument: 'Guitar',
@@ -106,7 +107,7 @@ class _GuitarWidgetState extends State<GuitarWidget> {
                 ),
                 SizedBox(height: max(65 * imgHeight / 1000 * circleSpaceScale, 0)),
                 PinNoteWidget(
-                  defaultNote: "B3",
+                  defaultNote: noteInstrumentDefaultProvider['Guitar']![4],
                   currentNote: widget.noteList[4],
                   circleSize: circleSize,
                   currentInstrument: 'Guitar',
@@ -114,7 +115,7 @@ class _GuitarWidgetState extends State<GuitarWidget> {
                 ),
                 SizedBox(height: max(65 * imgHeight / 1000 * circleSpaceScale, 0)),
                 PinNoteWidget(
-                  defaultNote: "E4",
+                  defaultNote: noteInstrumentDefaultProvider['Guitar']![5],
                   currentNote: widget.noteList[5],
                   circleSize: circleSize,
                   currentInstrument: 'Guitar',

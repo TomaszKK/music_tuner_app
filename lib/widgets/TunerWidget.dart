@@ -8,8 +8,10 @@ import 'package:music_tuner/models/noteModel.dart';
 import 'NoteRepresentationWidget.dart';
 
 class TunerWidget extends StatefulWidget {
-  const TunerWidget({super.key, required this.title});
+  TunerWidget({super.key, required this.title, required this.selectedInstrument});
+
   final String title;
+  final String selectedInstrument;
 
   static ValueNotifier<String> currentNoteNotifier = ValueNotifier<String>('');
   static ValueNotifier<String> blockedNoteNotifier = ValueNotifier<String>('');
@@ -20,14 +22,13 @@ class TunerWidget extends StatefulWidget {
 
 class _TunerWidgetState extends State<TunerWidget> {
   String frequencyText = '0.0';
-  static Future<List<Note>> notesFuture = loadNotes();
   String currentNote = '';
   String textUnderNote = '';
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Note>>(
-      future: notesFuture,
+      future: loadNotes(widget.selectedInstrument),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());

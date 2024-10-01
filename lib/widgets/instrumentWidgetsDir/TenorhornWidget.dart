@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:music_tuner/providers/ThemeManager.dart';
+import 'package:music_tuner/providers/noteInstrumentProvider.dart';
 import 'package:music_tuner/widgets/PinNoteWidget.dart';
 
 class TenorhornWidget extends StatefulWidget {
@@ -58,7 +59,7 @@ class _TenorhornWidgetState extends State<TenorhornWidget> {
               ),
             ),
             PinNoteWidget(
-              defaultNote: "B3",
+              defaultNote: noteInstrumentDefaultProvider['Tenorhorn']![0],
               currentNote: widget.noteList[0],
               circleSize: circleSize,
               currentInstrument: 'Tenorhorn',

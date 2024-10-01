@@ -173,9 +173,9 @@ class _HomePageState extends State<HomePage> {
               Expanded(
                 child: InstrumentWidget(title: 'Instrument', selectedInstrument: _selectedInstrument),
               ),
-              const Expanded(
+              Expanded(
                 // fit: FlexFit.tight,
-                child: TunerWidget(title: 'Tuner'),
+                child: TunerWidget(title: 'Tuner', selectedInstrument: _selectedInstrument),
               ),
               //const TunerWidget(title: 'Tuner'),
             ],
