@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:music_tuner/providers/ThemeManager.dart';
 import 'package:music_tuner/screens/SettingsPage.dart';
@@ -6,12 +7,20 @@ import 'package:music_tuner/widgets/TunerWidget.dart';
 import 'package:music_tuner/widgets/instrumentWidget.dart';
 import 'package:music_tuner/widgets/InstrumentSelectionWidget.dart';
 import 'package:music_tuner/widgets/BluetoothConnectorWidget.dart';
+import 'package:music_tuner/widgets/TranspositionWidget.dart';
 import 'package:bluetooth_enable_fork/bluetooth_enable_fork.dart';
 
+import '../providers/InstrumentProvider.dart';
+import '../providers/noteInstrumentProvider.dart';
+
 class HomePage extends StatefulWidget {
-  const HomePage({super.key, required this.title});
+  HomePage({super.key, required this.title});
 
   final String title;
+  static ValueNotifier<bool> isNoteChanged = ValueNotifier<bool>(false);
+  static ValueNotifier<Map<String, bool>> isResetVisible = ValueNotifier<Map<String, bool>>({
+    for (var instrument in InstrumentProvider.values) instrument.name: false,
+  });
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -27,6 +36,13 @@ class _HomePageState extends State<HomePage> {
 
     bluetoothConnectorWidget.isBluetoothConnected.addListener(() {
       setState(() {});
+    });
+  }
+
+  void _resetAllChanges() {
+    setState(() {
+      HomePage.isNoteChanged.value = true;
+
     });
   }
 
@@ -49,13 +65,18 @@ class _HomePageState extends State<HomePage> {
         ),
         actions: <Widget>[
           IconButton(
-            icon: Icon(
-              Icons.account_circle_rounded,
-              color: Theme.of(context).colorScheme.onPrimaryContainer,
-              size: 30,
+            icon: SvgPicture.asset(
+              'lib/assets/Transp_logo.svg',
+              // color: Theme.of(context).colorScheme.onPrimaryContainer,  // Apply color if necessary
+              colorFilter: ColorFilter.mode(
+                Theme.of(context).colorScheme.onPrimaryContainer,
+                BlendMode.srcIn,
+              ),
+              width: 28,  // Set the width of the icon
+              height: 28,  // Set the height of the icon
             ),
             onPressed: () {
-
+              TranspositionWidget.showTranspositionWidget(context, _selectedInstrument);
             },
           ),
           IconButton(
@@ -86,42 +107,84 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          ButtonBar(
-            alignment: MainAxisAlignment.start,
+      body: LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.7),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(40),
+              Row(
+                children: <Widget>[
+                  const SizedBox(width: 5),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.7),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(40),
+                      ),
+                      minimumSize: const Size(100, 30),
+                      alignment: Alignment.centerLeft,
+                    ),
+                    child: Text(
+                      'Selected: ${_getPickedInstrument()}',
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onPrimaryContainer.withOpacity(0.7),
+                        fontFamily: 'Poppins',
+                        fontSize: 15,
+                      ),
+                    ),
+                    onPressed: () {
+                      _showInstrumentSelection();
+                    },
                   ),
-                  minimumSize: const Size(100, 30),
-                  alignment: Alignment.centerLeft,
-                ),
-                child: Text(
-                  'Selected Instrument: ${_getPickedInstrument()}',
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.onPrimaryContainer.withOpacity(0.7),
-                    fontFamily: 'Poppins',
-                    fontSize: 15,
+                  const Spacer(),
+                  ValueListenableBuilder(
+                    valueListenable: HomePage.isResetVisible,
+                    builder: (context, isVisible, child) {
+                      return isVisible[_selectedInstrument]!
+                          ? ElevatedButton(
+                        onPressed: () {
+                          // Reset all changes
+                          _resetAllChanges();
+                          HomePage.isResetVisible.value[_selectedInstrument] = false;
+                          HomePage.isResetVisible.value = Map.from(HomePage.isResetVisible.value);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.transparent,
+                          shadowColor: Colors.red,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(40),
+                          ),
+                          minimumSize: const Size(50, 30),
+                          alignment: Alignment.centerLeft,
+                        ),
+                        child: Text(
+                          'Reset all',
+                          style: TextStyle(
+                            fontSize: 15.0,
+                            fontFamily: 'Poppins',
+                            color: Theme.of(context).colorScheme.onPrimaryContainer.withOpacity(0.7),
+                          ),
+                        ),
+                      )
+                          : const SizedBox.shrink(); // Show nothing if not visible
+                    },
                   ),
-                ),
-                onPressed: () {
-                  _showInstrumentSelection();
-                },
+                  const SizedBox(width: 5),
+                ],
               ),
+              const SizedBox(height: 5),
+              Expanded(
+                child: InstrumentWidget(title: 'Instrument', selectedInstrument: _selectedInstrument),
+              ),
+              Expanded(
+                // fit: FlexFit.tight,
+                child: TunerWidget(title: 'Tuner', selectedInstrument: _selectedInstrument),
+              ),
+              //const TunerWidget(title: 'Tuner'),
             ],
-          ),
-          Expanded(
-            child: InstrumentWidget(title: 'Instrument', selectedInstrument: _selectedInstrument),
-          ),
-          const TunerWidget(title: 'Tuner'),
-          //const TunerWidget(title: 'Tuner'),
-        ],
-      ),
+          );
+        },
+      )
     );
   }
 

@@ -17,6 +17,7 @@ class BluetoothConnectorWidget {
   int takeThree = 0;
   double freqTemp = 0;
   double freqLast = 0;
+  int noteClearCount = 0;
 
   static ValueNotifier<double> frequencyNotifier = ValueNotifier<double>(0.0);
 
@@ -213,29 +214,38 @@ class BluetoothConnectorWidget {
   }
 
   void connectToDevice(BluetoothDevice device, BuildContext context) async {
-    print('Connecting to ${device.remoteId}');
+    // print('Connecting to ${device.remoteId}');
 
     // Update the connecting state to show loading animation
     isConnecting.value = true;
 
-    await device
-        .connect(
-      timeout: const Duration(seconds: 10),
-      autoConnect: false,
-    )
-        .then((value) {
+    try {
+      await device.connect(
+        timeout: const Duration(seconds: 10),
+        autoConnect: false,
+      );
       isDeviceConnected = true;
       isBluetoothConnected.value = true;
       connectedDevice = device;
       Navigator.pop(context);
 
-      discoverServices(device);
-    }).catchError((e) {
+      // Listen for connection state changes to detect disconnection
+      device.state.listen((BluetoothConnectionState state) {
+        if (state == BluetoothConnectionState.disconnected) {
+          // Connection lost, update isBluetoothConnected and UI
+          isDeviceConnected = false;
+          isBluetoothConnected.value = false;
+          connectedDevice = null; // Clear the connected device
+        }
+      });
+
+      // Discover services after connection
+      await discoverServices(device);
+    } catch (e) {
       print("Error connecting to device: $e");
-    }).whenComplete(() {
-      // Update the connecting state to hide loading animation
+    } finally {
       isConnecting.value = false;
-    });
+    }
   }
 
   void disconnectDevice(BluetoothDevice device, BuildContext context) async {
@@ -268,6 +278,13 @@ class BluetoothConnectorWidget {
         final floatValue = byteData.getFloat32(0, Endian.little);
         if (floatValue != 0) {
           frequencyNotifier.value = floatValue;
+          noteClearCount = 0;
+        }else{
+          noteClearCount++;
+        }
+
+        if(noteClearCount > 20){
+          frequencyNotifier.value = 0.0;
         }
       } else {
         print('Received data is too short to be a float: $value');
