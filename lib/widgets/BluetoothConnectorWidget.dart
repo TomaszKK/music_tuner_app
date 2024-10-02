@@ -214,29 +214,38 @@ class BluetoothConnectorWidget {
   }
 
   void connectToDevice(BluetoothDevice device, BuildContext context) async {
-    print('Connecting to ${device.remoteId}');
+    // print('Connecting to ${device.remoteId}');
 
     // Update the connecting state to show loading animation
     isConnecting.value = true;
 
-    await device
-        .connect(
-      timeout: const Duration(seconds: 10),
-      autoConnect: false,
-    )
-        .then((value) {
+    try {
+      await device.connect(
+        timeout: const Duration(seconds: 10),
+        autoConnect: false,
+      );
       isDeviceConnected = true;
       isBluetoothConnected.value = true;
       connectedDevice = device;
       Navigator.pop(context);
 
-      discoverServices(device);
-    }).catchError((e) {
+      // Listen for connection state changes to detect disconnection
+      device.state.listen((BluetoothConnectionState state) {
+        if (state == BluetoothConnectionState.disconnected) {
+          // Connection lost, update isBluetoothConnected and UI
+          isDeviceConnected = false;
+          isBluetoothConnected.value = false;
+          connectedDevice = null; // Clear the connected device
+        }
+      });
+
+      // Discover services after connection
+      await discoverServices(device);
+    } catch (e) {
       print("Error connecting to device: $e");
-    }).whenComplete(() {
-      // Update the connecting state to hide loading animation
+    } finally {
       isConnecting.value = false;
-    });
+    }
   }
 
   void disconnectDevice(BluetoothDevice device, BuildContext context) async {

@@ -176,54 +176,86 @@ class _TunerWidgetState extends State<TunerWidget> {
                             -50,
                             50,
                           );
-
                           return FittedBox(
                             fit: BoxFit.fitWidth,
-                            child: Container(
-                              constraints: BoxConstraints(
-                                //maxHeight: constraints.maxHeight,
-                                maxWidth: constraints.maxWidth,
-                              ),
-                              // padding: const EdgeInsets.symmetric(horizontal: 16),
-                              child: SfLinearGauge(
-                                minimum: -50,
-                                maximum: 50,
-                                interval: 10,
-                                minorTicksPerInterval: 3,
-                                showTicks: true,
-                                showLabels: false,
-                                majorTickStyle: LinearTickStyle(
-                                  length: 80,
-                                  color: ThemeManager().currentTheme.colorScheme.secondary,
-                                  thickness: 2,
-                                ),
-                                minorTickStyle: LinearTickStyle(
-                                  length: 30,
-                                  color: ThemeManager().currentTheme.colorScheme.secondary,
-                                  thickness: 1,
-                                ),
-                                tickPosition: LinearElementPosition.cross,
-                                ranges: [
-                                  LinearGaugeRange(
-                                    startValue: -0.5,
-                                    endValue: 0.5,
-                                    color: ThemeManager().currentTheme.colorScheme.secondary,
-                                    startWidth: 120,
-                                    endWidth: 120,
-                                    position: LinearElementPosition.cross,
+                            child: Column(
+                              children: [
+                                Container(
+                                  constraints: BoxConstraints(
+                                    maxWidth: constraints.maxWidth,
                                   ),
-                                ],
-                                markerPointers: [
-                                  LinearShapePointer(
-                                    shapeType: LinearShapePointerType.rectangle,
-                                    value: normalizedFrequency,
-                                    width: 2,
-                                    height: 160,
-                                    color: const Color(0xFFAA1717),
-                                    position: LinearElementPosition.cross,
+                                  child: SfLinearGauge(
+                                    minimum: -50,
+                                    maximum: 50,
+                                    interval: 10,
+                                    minorTicksPerInterval: 3,
+                                    showTicks: true,
+                                    showLabels: false,
+                                    majorTickStyle: LinearTickStyle(
+                                      length: 80,
+                                      color: ThemeManager().currentTheme.colorScheme.secondary,
+                                      thickness: 2,
+                                    ),
+                                    minorTickStyle: LinearTickStyle(
+                                      length: 30,
+                                      color: ThemeManager().currentTheme.colorScheme.secondary,
+                                      thickness: 1,
+                                    ),
+                                    tickPosition: LinearElementPosition.cross,
+                                    ranges: [
+                                      LinearGaugeRange(
+                                        startValue: -0.5,
+                                        endValue: 0.5,
+                                        color: ThemeManager().currentTheme.colorScheme.secondary,
+                                        startWidth: 120,
+                                        endWidth: 120,
+                                        position: LinearElementPosition.cross,
+                                      ),
+                                    ],
+                                    markerPointers: [
+                                      LinearShapePointer(
+                                        shapeType: LinearShapePointerType.rectangle,
+                                        value: normalizedFrequency,
+                                        width: 2,
+                                        height: 160,
+                                        color: const Color(0xFFAA1717),
+                                        position: LinearElementPosition.cross,
+                                      ),
+                                    ],
                                   ),
-                                ],
-                              ),
+                                ),
+                                Container(
+                                  // padding: EdgeInsets.symmetric(horizontal: 16.0),
+                                  constraints: BoxConstraints(
+                                    maxWidth: constraints.maxWidth,
+                                  ),
+                                  child: Row(
+
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        minFrequency == 0
+                                            ? ' '  // Show blank space if frequency is 0
+                                            : minFrequency.toStringAsFixed(1) + ' Hz',
+                                        style: TextStyle(
+                                          color: ThemeManager().currentTheme.colorScheme.secondary,
+                                          fontSize: baseFontSize * 0.6,  // Smaller font for the range
+                                        ),
+                                      ),
+                                      const Spacer(),
+                                      Text(
+                                        minFrequency == 0
+                                            ? ' '  // Show blank space if frequency is 0
+                                            : maxFrequency.toStringAsFixed(1) + ' Hz',
+                                        style: TextStyle(
+                                          color: ThemeManager().currentTheme.colorScheme.secondary,
+                                          fontSize: baseFontSize * 0.6,  // Smaller font for the range
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
                             ),
                           );
                         },
@@ -231,7 +263,7 @@ class _TunerWidgetState extends State<TunerWidget> {
                     },
                   ),
                 ),
-                SizedBox(height: constraints.maxHeight * 0.05),
+                SizedBox(height: constraints.maxHeight * 0.03),
               ],
             );
           },
