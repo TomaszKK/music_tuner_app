@@ -12,6 +12,7 @@ import 'package:bluetooth_enable_fork/bluetooth_enable_fork.dart';
 
 import '../providers/InstrumentProvider.dart';
 import '../providers/noteInstrumentProvider.dart';
+import '../widgets/DatabaseHelper.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({super.key, required this.title});
@@ -34,17 +35,60 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
 
+    _loadAppState();
+
     bluetoothConnectorWidget.isBluetoothConnected.addListener(() {
       setState(() {});
     });
+    // WidgetsBinding.instance.addObserver(this as WidgetsBindingObserver);
+  }
+
+  Future<void> _loadAppState() async {
+    // Load saved state from SQLite
+    var settings = await DatabaseHelper().getSettings();
+
+    if (settings != null) {
+      setState(() {
+        _selectedInstrument = settings['selected_instrument'] ?? 'Guitar';
+        HomePage.isNoteChanged.value = settings['is_note_changed'] == 1;
+        HomePage.isResetVisible.value = Map<String, bool>.from(settings['is_reset_visible']);
+      });
+    }
+  }
+
+  Future<void> _saveAppState() async {
+    // Save the current state to SQLite
+    await DatabaseHelper().insertOrUpdateSettings(
+      _selectedInstrument,
+      HomePage.isNoteChanged.value,
+      HomePage.isResetVisible.value,  // Save the isResetVisible map
+    );
   }
 
   void _resetAllChanges() {
     setState(() {
       HomePage.isNoteChanged.value = true;
+      HomePage.isResetVisible.value = {
+        for (var instrument in InstrumentProvider.values) instrument.name: false,
+      };
 
+      _saveAppState();  // Save the state
     });
   }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused || state == AppLifecycleState.inactive) {
+      _saveAppState();  // Save app state when app is paused or inactive
+    }
+  }
+
+  @override
+  void dispose() {
+    // WidgetsBinding.instance.removeObserver(this);  // Remove observer on dispose
+    super.dispose();
+  }
+
 
   @override
   Widget build(BuildContext context) {

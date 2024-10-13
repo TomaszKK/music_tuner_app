@@ -43,6 +43,7 @@ class Assets {
   static const String screensSettingsPage = 'lib/screens/SettingsPage.dart';
   static const String screensSplashScreen = 'lib/screens/SplashScreen.dart';
   static const String widgetsBluetoothConnectorWidget = 'lib/widgets/BluetoothConnectorWidget.dart';
+  static const String widgetsDatabaseHelper = 'lib/widgets/DatabaseHelper.dart';
   static const String widgetsInstrumentSelectionWidget = 'lib/widgets/InstrumentSelectionWidget.dart';
   static const String widgetsInstrumentWidget = 'lib/widgets/InstrumentWidget.dart';
   static const String widgetsNoteRepresentationWidget = 'lib/widgets/NoteRepresentationWidget.dart';
