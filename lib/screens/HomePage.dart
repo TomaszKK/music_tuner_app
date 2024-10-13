@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
@@ -28,7 +30,7 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   String _selectedInstrument = 'Guitar';
   BluetoothConnectorWidget bluetoothConnectorWidget = BluetoothConnectorWidget();
 
@@ -41,28 +43,29 @@ class _HomePageState extends State<HomePage> {
     bluetoothConnectorWidget.isBluetoothConnected.addListener(() {
       setState(() {});
     });
-    // WidgetsBinding.instance.addObserver(this as WidgetsBindingObserver);
+    WidgetsBinding.instance.addObserver(this);  // Add observer to listen to app lifecycle changes
   }
 
   Future<void> _loadAppState() async {
-    // Load saved state from SQLite
     var settings = await DatabaseHelper().getSettings();
-
     if (settings != null) {
       setState(() {
         _selectedInstrument = settings['selected_instrument'] ?? 'Guitar';
         HomePage.isNoteChanged.value = settings['is_note_changed'] == 1;
-        HomePage.isResetVisible.value = Map<String, bool>.from(settings['is_reset_visible']);
+        String isResetVisibleJson = settings['is_reset_visible'];
+        HomePage.isResetVisible.value = Map<String, bool>.from(jsonDecode(isResetVisibleJson));
+
       });
     }
   }
 
   Future<void> _saveAppState() async {
     // Save the current state to SQLite
+    print('Saving app state: $_selectedInstrument');
     await DatabaseHelper().insertOrUpdateSettings(
       _selectedInstrument,
       HomePage.isNoteChanged.value,
-      HomePage.isResetVisible.value,  // Save the isResetVisible map
+      HomePage.isResetVisible.value,
     );
   }
 
@@ -86,7 +89,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void dispose() {
-    // WidgetsBinding.instance.removeObserver(this);  // Remove observer on dispose
+    WidgetsBinding.instance.removeObserver(this);  // Remove observer on dispose
     super.dispose();
   }
 
@@ -289,6 +292,8 @@ class _HomePageState extends State<HomePage> {
     if (selectedInstrument != null) {
       setState(() {
         _selectedInstrument = selectedInstrument;
+        print('Selected instrument: $_selectedInstrument');
+        _saveAppState();
       });
     }
   }

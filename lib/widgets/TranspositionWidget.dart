@@ -1,9 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:music_tuner/widgets/InstrumentWidget.dart';
 
 import '../providers/InstrumentProvider.dart';
 import '../providers/noteInstrumentProvider.dart';
 import '../screens/HomePage.dart';
+import 'DatabaseHelper.dart';
 
 class TranspositionWidget {
   static ValueNotifier<Map<String, int>> transpositionNotifier = ValueNotifier<Map<String, int>>({

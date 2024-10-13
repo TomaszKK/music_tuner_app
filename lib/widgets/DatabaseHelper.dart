@@ -1,5 +1,5 @@
 import 'dart:convert';  // Add this for JSON encoding/decoding
-import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DatabaseHelper {
@@ -18,22 +18,45 @@ class DatabaseHelper {
     return _database!;
   }
 
+  Future<void> clearDatabase() async {
+    var directory = await getApplicationDocumentsDirectory();
+    var path = '${directory.path}/settings.db';
+    final db = await openDatabase(path);
+    await db.close(); // Close the database first
+    await deleteDatabase(path); // Then delete the database
+  }
+
   Future<Database> _initDatabase() async {
-    String path = join(await getDatabasesPath(), 'app_data.db');
+    var directory = await getApplicationDocumentsDirectory();
+    var path = '${directory.path}/settings.db';
 
     return await openDatabase(
       path,
-      version: 1,
+      version: 2,  // Increment the version to trigger migration
       onCreate: (db, version) async {
         // Create tables
-        await db.execute('''
-          CREATE TABLE settings(
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            selected_instrument TEXT,
-            is_note_changed INTEGER,
-            is_reset_visible TEXT  -- Store the map as a JSON string
-          )
+        await db.execute(''' 
+      CREATE TABLE settings(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        selected_instrument TEXT,
+        is_note_changed INTEGER,
+        is_reset_visible TEXT,
+        transposition_notifier TEXT,
+        instrument_notes TEXT,
+        manual_notes TEXT
+      )
+      ''');
+      },
+      onUpgrade: (db, oldVersion, newVersion) async {
+        if (oldVersion < 2) {
+          // Add the missing columns
+          await db.execute(''' 
+        ALTER TABLE settings ADD COLUMN instrument_notes TEXT;
         ''');
+          await db.execute(''' 
+        ALTER TABLE settings ADD COLUMN manual_notes TEXT; 
+        ''');
+        }
       },
     );
   }
@@ -45,25 +68,82 @@ class DatabaseHelper {
     // Convert the isResetVisible map to JSON string
     String isResetVisibleJson = jsonEncode(isResetVisible);
 
-    await db.insert(
-      'settings',
-      {
-        'selected_instrument': instrument,
-        'is_note_changed': isNoteChanged ? 1 : 0,
-        'is_reset_visible': isResetVisibleJson
-      },
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
+    // Check if a row already exists
+    var existingRows = await db.query('settings');
+    if (existingRows.isNotEmpty) {
+      // If settings exist, update the row
+      await db.update(
+        'settings',
+        {
+          'selected_instrument': instrument,
+          'is_note_changed': isNoteChanged ? 1 : 0,
+          'is_reset_visible': isResetVisibleJson
+        },
+      );
+    } else {
+      // Insert new row if no settings exist
+      await db.insert(
+        'settings',
+        {
+          'selected_instrument': instrument,
+          'is_note_changed': isNoteChanged ? 1 : 0,
+          'is_reset_visible': isResetVisibleJson
+        },
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+    }
+
+    print('Settings saved');
   }
 
-  // Get Settings
-  Future<Map<String, dynamic>?> getSettings() async {
+  Future<void> insertOrUpdateInstrumentsSettings(Map<String, int> transpositionNotify, Map<String, List<String>> instrumentNotesMap, Map<String, List<String>> manualNotesMap) async {
     final db = await database;
-    final result = await db.query('settings', limit: 1);
+
+    // Convert the transpositionNotify map to JSON string
+    String transpositionNotifyJson = jsonEncode(transpositionNotify);
+    String instrumentNotesJson = jsonEncode(instrumentNotesMap);
+    String manualNotesJson = jsonEncode(manualNotesMap);
+
+    // Check if a row already exists
+    var existingRows = await db.query('settings');
+    if (existingRows.isNotEmpty) {
+      // If settings exist, update only the transposition_notifier field
+      await db.update(
+        'settings',
+        {
+          'transposition_notifier': transpositionNotifyJson,
+          'instrument_notes': instrumentNotesJson,
+          'manual_notes': manualNotesJson
+        },
+        where: 'id = ?',  // Specify where clause to update the correct row
+        whereArgs: [existingRows.first['id']],  // Use the id from the first row
+      );
+    } else {
+      // Insert new row if no settings exist
+      await db.insert(
+        'settings',
+        {
+          'transposition_notifier': transpositionNotifyJson,
+          'instrument_notes': instrumentNotesJson,
+          'manual_notes': manualNotesJson
+        },
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+    }
+
+    print('Transposition settings saved');
+  }
+
+
+
+
+  // Get Settings
+  Future<Map<dynamic, dynamic>?> getSettings() async {
+    final db = await database;
+    final result = await db.query('settings');
 
     if (result.isNotEmpty) {
-      Map<String, dynamic> settings = result.first;
-      settings['is_reset_visible'] = jsonDecode(settings['is_reset_visible']);add
+      Map<dynamic, dynamic> settings = result.first;
       return settings;
     }
     return null;

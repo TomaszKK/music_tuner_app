@@ -297,6 +297,10 @@ class _TunerWidgetState extends State<TunerWidget> {
 
     // Calculate the exact midpoint for the current note
 
+    if (frequency == 0) {
+      return gaugeMin; // Position at the left
+    }
+
     // If the frequency is within the tolerance range, return the center of the gauge (0)
     if ((frequency - targetFreq).abs() <= tolerance) {
       return 0.0; // Center position on the gauge
