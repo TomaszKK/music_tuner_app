@@ -236,6 +236,7 @@ class BluetoothConnectorWidget {
           isDeviceConnected = false;
           isBluetoothConnected.value = false;
           connectedDevice = null; // Clear the connected device
+          frequencyNotifier.value = 0.0; // Reset frequency notifier
         }
       });
 
@@ -283,7 +284,7 @@ class BluetoothConnectorWidget {
           noteClearCount++;
         }
 
-        if(noteClearCount > 20){
+        if(noteClearCount > 5){
           frequencyNotifier.value = 0.0;
         }
       } else {
