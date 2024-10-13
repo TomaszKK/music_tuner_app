@@ -168,14 +168,17 @@ class _TunerWidgetState extends State<TunerWidget> {
 
                           double minFrequency = getPreviousNoteMidpoint(currentNote, notes);
                           double maxFrequency = getNextNoteMidpoint(currentNote, notes);
+                          double tarFrequency = currentNote.freq;
 
                           double normalizedFrequency = mapFrequencyToGaugeRange(
                             frequency,
                             minFrequency,
+                            tarFrequency,
                             maxFrequency,
                             -50,
                             50,
                           );
+                          print('Normalized frequency: $normalizedFrequency');
                           return FittedBox(
                             fit: BoxFit.fitWidth,
                             child: Column(
@@ -204,8 +207,8 @@ class _TunerWidgetState extends State<TunerWidget> {
                                     tickPosition: LinearElementPosition.cross,
                                     ranges: [
                                       LinearGaugeRange(
-                                        startValue: -0.5,
-                                        endValue: 0.5,
+                                        startValue: -1,
+                                        endValue: 1,
                                         color: ThemeManager().currentTheme.colorScheme.secondary,
                                         startWidth: 120,
                                         endWidth: 120,
@@ -239,7 +242,7 @@ class _TunerWidgetState extends State<TunerWidget> {
                                             : minFrequency.toStringAsFixed(1) + ' Hz',
                                         style: TextStyle(
                                           color: ThemeManager().currentTheme.colorScheme.secondary,
-                                          fontSize: baseFontSize * 0.6,  // Smaller font for the range
+                                          fontSize: baseFontSize * 0.9,  // Smaller font for the range
                                         ),
                                       ),
                                       const Spacer(),
@@ -249,7 +252,7 @@ class _TunerWidgetState extends State<TunerWidget> {
                                             : maxFrequency.toStringAsFixed(1) + ' Hz',
                                         style: TextStyle(
                                           color: ThemeManager().currentTheme.colorScheme.secondary,
-                                          fontSize: baseFontSize * 0.6,  // Smaller font for the range
+                                          fontSize: baseFontSize * 0.9,  // Smaller font for the range
                                         ),
                                       ),
                                     ],
@@ -272,10 +275,35 @@ class _TunerWidgetState extends State<TunerWidget> {
     );
   }
 
+  // double mapFrequencyToGaugeRange(
+  //     double frequency, double minFreq, double maxFreq, double gaugeMin, double gaugeMax) {
+  //   return ((frequency - minFreq) / (maxFreq - minFreq)) * (gaugeMax - gaugeMin) + gaugeMin;
+  // }
+
   double mapFrequencyToGaugeRange(
-      double frequency, double minFreq, double maxFreq, double gaugeMin, double gaugeMax) {
-    return ((frequency - minFreq) / (maxFreq - minFreq)) * (gaugeMax - gaugeMin) + gaugeMin;
+      double frequency, double minFreq, double targetFreq, double maxFreq, double gaugeMin, double gaugeMax) {
+
+    // Apply small tolerance to treat very small frequency deviations as zero deviation
+    const double tolerance = 0.05;
+
+    // Calculate the exact midpoint for the current note
+
+    // If the frequency is within the tolerance range, return the center of the gauge (0)
+    if ((frequency - targetFreq).abs() <= tolerance) {
+      return 0.0; // Center position on the gauge
+    }
+
+    // Map the frequency relative to the midpoint (targetFreq)
+    if (frequency < targetFreq) {
+      // Frequency is less than midpoint, move pointer to the left (negative range)
+      return ((frequency - minFreq) / (targetFreq - minFreq)) * (0 - gaugeMin) + gaugeMin;
+    } else {
+      // Frequency is greater than midpoint, move pointer to the right (positive range)
+      return ((frequency - targetFreq) / (maxFreq - targetFreq)) * (gaugeMax - 0);
+    }
   }
+
+
 
   String setTextUnderNote(Note note, double frequency) {
     String text = '';
