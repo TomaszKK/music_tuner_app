@@ -63,7 +63,7 @@ class DatabaseHelper {
 
     if (result.isNotEmpty) {
       Map<String, dynamic> settings = result.first;
-      settings['is_reset_visible'] = jsonDecode(settings['is_reset_visible']);
+      settings['is_reset_visible'] = jsonDecode(settings['is_reset_visible']);add
       return settings;
     }
     return null;
