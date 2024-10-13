@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:music_tuner/providers/ThemeManager.dart';
@@ -48,6 +49,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.primaryContainer,
@@ -67,13 +70,12 @@ class _HomePageState extends State<HomePage> {
           IconButton(
             icon: SvgPicture.asset(
               'lib/assets/Transp_logo.svg',
-              // color: Theme.of(context).colorScheme.onPrimaryContainer,  // Apply color if necessary
               colorFilter: ColorFilter.mode(
                 Theme.of(context).colorScheme.onPrimaryContainer,
                 BlendMode.srcIn,
               ),
-              width: 28,  // Set the width of the icon
-              height: 28,  // Set the height of the icon
+              width: 28,
+              height: 28,
             ),
             onPressed: () {
               TranspositionWidget.showTranspositionWidget(context, _selectedInstrument);
@@ -83,13 +85,12 @@ class _HomePageState extends State<HomePage> {
             icon: Icon(
               Icons.bluetooth_connected,
               color: bluetoothConnectorWidget.isBluetoothConnected.value
-                  ? Colors.green  // Change to green if connected
+                  ? Colors.green
                   : Theme.of(context).colorScheme.onPrimaryContainer,
               size: 30,
             ),
             onPressed: () {
               customEnableBT(context);
-              // bluetoothConnectorWidget.showBluetoothConnectorWidget(context);
             },
           ),
           IconButton(
@@ -107,84 +108,110 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      body: LayoutBuilder(
-        builder: (BuildContext context, BoxConstraints constraints) {
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+      body: isPortrait
+          ? _buildPortraitLayout()  // Portrait layout
+          : _buildLandscapeLayout(), // Landscape layout
+    );
+  }
+
+  Widget _buildPortraitLayout() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: <Widget>[
+        _buildHeaderRow(),
+        const SizedBox(height: 5),
+        Expanded(
+          child: InstrumentWidget(title: 'Instrument', selectedInstrument: _selectedInstrument),
+        ),
+        Expanded(
+          child: TunerWidget(title: 'Tuner', selectedInstrument: _selectedInstrument),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildLandscapeLayout() {
+    return Row(
+      children: <Widget>[
+        Flexible(
+          flex: 1,
+          child: InstrumentWidget(title: 'Instrument', selectedInstrument: _selectedInstrument),
+        ),
+        Expanded(
+          flex: 1,
+          child: Column(
             children: <Widget>[
-              Row(
-                children: <Widget>[
-                  const SizedBox(width: 5),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.7),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(40),
-                      ),
-                      minimumSize: const Size(100, 30),
-                      alignment: Alignment.centerLeft,
-                    ),
-                    child: Text(
-                      'Selected: ${_getPickedInstrument()}',
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.onPrimaryContainer.withOpacity(0.7),
-                        fontFamily: 'Poppins',
-                        fontSize: 15,
-                      ),
-                    ),
-                    onPressed: () {
-                      _showInstrumentSelection();
-                    },
-                  ),
-                  const Spacer(),
-                  ValueListenableBuilder(
-                    valueListenable: HomePage.isResetVisible,
-                    builder: (context, isVisible, child) {
-                      return isVisible[_selectedInstrument]!
-                          ? ElevatedButton(
-                        onPressed: () {
-                          // Reset all changes
-                          _resetAllChanges();
-                          HomePage.isResetVisible.value[_selectedInstrument] = false;
-                          HomePage.isResetVisible.value = Map.from(HomePage.isResetVisible.value);
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.transparent,
-                          shadowColor: Colors.red,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(40),
-                          ),
-                          minimumSize: const Size(50, 30),
-                          alignment: Alignment.centerLeft,
-                        ),
-                        child: Text(
-                          'Reset all',
-                          style: TextStyle(
-                            fontSize: 15.0,
-                            fontFamily: 'Poppins',
-                            color: Theme.of(context).colorScheme.onPrimaryContainer.withOpacity(0.7),
-                          ),
-                        ),
-                      )
-                          : const SizedBox.shrink(); // Show nothing if not visible
-                    },
-                  ),
-                  const SizedBox(width: 5),
-                ],
-              ),
+              _buildHeaderRow(),
               const SizedBox(height: 5),
               Expanded(
-                child: InstrumentWidget(title: 'Instrument', selectedInstrument: _selectedInstrument),
-              ),
-              Expanded(
-                // fit: FlexFit.tight,
                 child: TunerWidget(title: 'Tuner', selectedInstrument: _selectedInstrument),
               ),
-              //const TunerWidget(title: 'Tuner'),
             ],
-          );
-        },
-      )
+          ),
+        )
+      ],
+    );
+  }
+
+  Widget _buildHeaderRow() {
+    return Row(
+      children: <Widget>[
+        const SizedBox(width: 5),
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.7),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(40),
+            ),
+            minimumSize: const Size(100, 30),
+            alignment: Alignment.centerLeft,
+          ),
+          child: Text(
+            'Selected: ${_getPickedInstrument()}',
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.onPrimaryContainer.withOpacity(0.7),
+              fontFamily: 'Poppins',
+              fontSize: 15,
+            ),
+          ),
+          onPressed: () {
+            _showInstrumentSelection();
+          },
+        ),
+        const Spacer(),
+        ValueListenableBuilder(
+          valueListenable: HomePage.isResetVisible,
+          builder: (context, isVisible, child) {
+            return isVisible[_selectedInstrument]!
+                ? ElevatedButton(
+              onPressed: () {
+                _resetAllChanges();
+                HomePage.isResetVisible.value[_selectedInstrument] = false;
+                HomePage.isResetVisible.value = Map.from(HomePage.isResetVisible.value);
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.transparent,
+                shadowColor: Colors.red,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(40),
+                ),
+                minimumSize: const Size(50, 30),
+                alignment: Alignment.centerLeft,
+              ),
+              child: Text(
+                'Reset all',
+                style: TextStyle(
+                  fontSize: 15.0,
+                  fontFamily: 'Poppins',
+                  color: Theme.of(context).colorScheme.onPrimaryContainer.withOpacity(0.7),
+                ),
+              ),
+            )
+                : const SizedBox.shrink(); // Show nothing if not visible
+          },
+        ),
+        const SizedBox(width: 5),
+      ],
     );
   }
 

@@ -178,7 +178,6 @@ class _TunerWidgetState extends State<TunerWidget> {
                             -50,
                             50,
                           );
-                          print('Normalized frequency: $normalizedFrequency');
                           return FittedBox(
                             fit: BoxFit.fitWidth,
                             child: Column(
