@@ -8,10 +8,12 @@ import 'package:music_tuner/widgets/instrumentWidgetsDir/BassWidget.dart';
 import 'package:music_tuner/widgets/instrumentWidgetsDir/TenorhornWidget.dart';
 
 import '../models/noteModel.dart';
+import '../providers/InstrumentProvider.dart';
 import '../providers/noteAdditionalProvider.dart';
 import '../screens/HomePage.dart';
 import 'package:music_tuner/providers/noteInstrumentProvider.dart';
 
+import 'DatabaseHelper.dart';
 import 'instrumentWidgetsDir/SaxophoneWidget.dart';
 import 'instrumentWidgetsDir/TrumpetWidget.dart';
 
@@ -28,7 +30,7 @@ class InstrumentWidget extends StatefulWidget {
   State<InstrumentWidget> createState() => _InstrumentWidgetState();
 }
 
-class _InstrumentWidgetState extends State<InstrumentWidget> {
+class _InstrumentWidgetState extends State<InstrumentWidget> with WidgetsBindingObserver {
   Map<String, double> noteFrequencyMap = {};
 
   final Map<String, Widget Function(String, List<String>, Function(List<String>))> instrumentWidgets = {
@@ -42,7 +44,64 @@ class _InstrumentWidgetState extends State<InstrumentWidget> {
   @override
   void initState() {
     super.initState();
+    _loadAppState();
     _loadNoteListForInstrument(widget.selectedInstrument);
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+
+  Future<void> _loadAppState() async {
+    var settings = await DatabaseHelper().getSettings();
+    if (settings != null) {
+      setState(() {
+        String transpositionJson = settings['transposition_notifier'] ?? '{}';
+        TranspositionWidget.transpositionNotifier.value = Map<String, int>.from(jsonDecode(transpositionJson));
+        String instrumentNotesJson = settings['instrument_notes'] ?? '{}';  // Default to empty map
+        Map<String, dynamic> instrumentNotesMapDynamic = jsonDecode(instrumentNotesJson);
+        instrumentNotesMap = {
+          for (var key in instrumentNotesMapDynamic.keys)
+            key: List<String>.from(instrumentNotesMapDynamic[key])  // Convert each entry to List<String>
+        };
+
+        // Parse manual notes JSON
+        String manualNotesJson = settings['manual_notes'] ?? '{}';  // Default to empty map
+        Map<String, dynamic> manualNotesMapDynamic = jsonDecode(manualNotesJson);
+        manualNotesMap = {
+          for (var key in manualNotesMapDynamic.keys)
+            key: List<String>.from(manualNotesMapDynamic[key])  // Convert each entry to List<String>
+        };
+      });
+    }
+  }
+
+  Future<void> _saveAppState() async {
+    await DatabaseHelper().insertOrUpdateInstrumentsSettings(
+      TranspositionWidget.transpositionNotifier.value,
+      instrumentNotesMap,
+      manualNotesMap
+    );
+  }
+
+  void _resetAllChanges() {
+    setState(() {
+      TranspositionWidget.transpositionNotifier.value = {
+        for (var instrument in InstrumentProvider.values) instrument.name: 0,
+      };
+      _saveAppState();
+    });
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused || state == AppLifecycleState.inactive) {
+      _saveAppState();  // Save app state when app is paused or inactive
+    }
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);  // Remove observer on dispose
+    super.dispose();
   }
 
   @override
@@ -52,6 +111,7 @@ class _InstrumentWidgetState extends State<InstrumentWidget> {
     if (oldWidget.selectedInstrument != widget.selectedInstrument) {
       // Reload notes for the new instrument
       _loadNoteListForInstrument(widget.selectedInstrument);
+      _saveAppState();
     }
   }
 
@@ -71,6 +131,7 @@ class _InstrumentWidgetState extends State<InstrumentWidget> {
       manualNotesMap[widget.selectedInstrument] = updatedNotes;
       HomePage.isResetVisible.value[widget.selectedInstrument] = true;
       HomePage.isResetVisible.value = Map.from(HomePage.isResetVisible.value);
+      _saveAppState();
     });
   }
 
@@ -85,9 +146,11 @@ class _InstrumentWidgetState extends State<InstrumentWidget> {
         HomePage.isNoteChanged.value = false;
         TunerWidget.blockedNoteNotifier.value = '';
       });
+      _saveAppState();
     }
     instrumentNotesMap[instrument] = transpositionChanged(TranspositionWidget.transpositionNotifier.value[instrument]!, instrumentNotesMap[instrument]!, instrument);
     TranspositionWidget.transpositionNotifier.value[instrument] = 0;
+    _saveAppState();
     return instrumentNotesMap[instrument]!;
   }
 
@@ -99,7 +162,7 @@ class _InstrumentWidgetState extends State<InstrumentWidget> {
         return ValueListenableBuilder(
           valueListenable: TranspositionWidget.transpositionNotifier,
           builder: (context, transpositionNotify, child) {
-
+            _saveAppState();
             if (noteFrequencyMap.isEmpty) {
               return const CircularProgressIndicator();
             }

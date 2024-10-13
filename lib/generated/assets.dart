@@ -6,6 +6,7 @@ class Assets {
   static const String assetsGuitar = 'lib/assets/guitar.png';
   static const String assetsLoadingAppScreen = 'lib/assets/loading_app_screen.png';
   static const String assetsLoadingAppScreen2 = 'lib/assets/loading_app_screen_2.png';
+  static const String assetsLogo = 'lib/assets/logo.png';
   static const String assetsNotes = 'lib/assets/notes.json';
   static const String assetsNotesSaxophone = 'lib/assets/notes-saxophone.json';
   static const String assetsNotesTenor = 'lib/assets/notes-tenor.json';
@@ -43,6 +44,7 @@ class Assets {
   static const String screensSettingsPage = 'lib/screens/SettingsPage.dart';
   static const String screensSplashScreen = 'lib/screens/SplashScreen.dart';
   static const String widgetsBluetoothConnectorWidget = 'lib/widgets/BluetoothConnectorWidget.dart';
+  static const String widgetsDatabaseHelper = 'lib/widgets/DatabaseHelper.dart';
   static const String widgetsInstrumentSelectionWidget = 'lib/widgets/InstrumentSelectionWidget.dart';
   static const String widgetsInstrumentWidget = 'lib/widgets/InstrumentWidget.dart';
   static const String widgetsNoteRepresentationWidget = 'lib/widgets/NoteRepresentationWidget.dart';
