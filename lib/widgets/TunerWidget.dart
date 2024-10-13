@@ -236,25 +236,35 @@ class _TunerWidgetState extends State<TunerWidget> {
 
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Text(
-                                        minFrequency == 0
-                                            ? ' '  // Show blank space if frequency is 0
-                                            : minFrequency.toStringAsFixed(1) + ' Hz',
-                                        style: TextStyle(
-                                          color: ThemeManager().currentTheme.colorScheme.secondary,
-                                          fontSize: baseFontSize * 0.9,  // Smaller font for the range
-                                        ),
-                                      ),
+                                      // Text(
+                                      //   minFrequency == 0
+                                      //       ? ' '
+                                      //       : minFrequency.toStringAsFixed(1) + ' Hz',
+                                      //   style: TextStyle(
+                                      //     color: ThemeManager().currentTheme.colorScheme.secondary,
+                                      //     fontSize: baseFontSize * 0.8,  // Smaller font for the range
+                                      //   ),
+                                      // ),
                                       const Spacer(),
                                       Text(
                                         minFrequency == 0
-                                            ? ' '  // Show blank space if frequency is 0
-                                            : maxFrequency.toStringAsFixed(1) + ' Hz',
+                                            ? ' '
+                                            : currentNote.freq.toStringAsFixed(1) + ' Hz',
                                         style: TextStyle(
                                           color: ThemeManager().currentTheme.colorScheme.secondary,
-                                          fontSize: baseFontSize * 0.9,  // Smaller font for the range
+                                          fontSize: baseFontSize * 0.95,  // Smaller font for the range
                                         ),
                                       ),
+                                      const Spacer(),
+                                      // Text(
+                                      //   minFrequency == 0
+                                      //       ? ' '
+                                      //       : maxFrequency.toStringAsFixed(1) + ' Hz',
+                                      //   style: TextStyle(
+                                      //     color: ThemeManager().currentTheme.colorScheme.secondary,
+                                      //     fontSize: baseFontSize * 0.8,  // Smaller font for the range
+                                      //   ),
+                                      // ),
                                     ],
                                   ),
                                 ),
