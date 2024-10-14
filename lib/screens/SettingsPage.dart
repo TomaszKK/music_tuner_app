@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/DatabaseHelper.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key, required this.title});
@@ -10,6 +11,10 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
+  void _resetDatabase() async {
+    final dbHelper = DatabaseHelper();
+    await dbHelper.resetDatabaseToDefault();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,10 +45,20 @@ class _SettingsPageState extends State<SettingsPage> {
       ),
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            const Text(
-              'Settings Page',
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: _resetDatabase,
+              style: ElevatedButton.styleFrom(
+                // padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                primary: Theme.of(context).colorScheme.primaryContainer,
+                textStyle: TextStyle(
+                  color: Theme.of(context).colorScheme.onPrimaryContainer,
+                  fontFamily: 'Poppins',
+                ),
+              ),
+              child: const Text('Reset all instruments'),
             ),
           ],
         ),

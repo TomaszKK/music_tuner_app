@@ -134,7 +134,42 @@ class DatabaseHelper {
     print('Transposition settings saved');
   }
 
+  Future<void> resetDatabaseToDefault() async {
+    final db = await database;
 
+    // Check if a row already exists
+    var existingRows = await db.query('settings');
+    if (existingRows.isNotEmpty) {
+      // If settings exist, update only the transposition_notifier field
+      await db.update(
+        'settings',
+        {
+          'transposition_notifier': "{}",
+          'instrument_notes': "{}",
+          'manual_notes': "{}",
+          // 'selected_instrument': "Guitar",
+          'is_note_changed': 0,
+          'is_reset_visible': "{}"
+        },
+        where: 'id = ?',  // Specify where clause to update the correct row
+        whereArgs: [existingRows.first['id']],  // Use the id from the first row
+      );
+    } else {
+      // Insert new row if no settings exist
+      await db.insert(
+        'settings',
+        {
+          'transposition_notifier': "{}",
+          'instrument_notes': "{}",
+          'manual_notes': "{}",
+          // 'selected_instrument': "Guitar",
+          'is_note_changed': 0,
+          'is_reset_visible': "{}"
+        },
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+    }
+  }
 
 
   // Get Settings
