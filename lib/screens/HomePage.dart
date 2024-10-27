@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:music_tuner/screens/SettingsPage.dart';
 import 'package:music_tuner/widgets/TunerWidget.dart';
@@ -15,7 +14,7 @@ import '../providers/InstrumentProvider.dart';
 import '../widgets/DatabaseHelper.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage({super.key, required this.title});
+  const HomePage({super.key, required this.title});
 
   final String title;
   static ValueNotifier<bool> isNoteChanged = ValueNotifier<bool>(false);
@@ -36,12 +35,13 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   void initState() {
     super.initState();
 
-    _loadAppState();
-
-    bluetoothConnectorWidget.isBluetoothConnected.addListener(() {
-      setState(() {});
+    Future.delayed(Duration.zero, () {
+      _loadAppState();
+      bluetoothConnectorWidget.isBluetoothConnected.addListener(() {
+        setState(() {});
+      });
+      WidgetsBinding.instance.addObserver(this);  // Add observer to listen to app lifecycle changes
     });
-    WidgetsBinding.instance.addObserver(this);  // Add observer to listen to app lifecycle changes
   }
 
   Future<void> _loadAppState() async {
