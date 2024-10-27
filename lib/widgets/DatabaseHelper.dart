@@ -98,8 +98,6 @@ class DatabaseHelper {
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
     }
-
-    print('Settings saved');
   }
 
   Future<void> insertOrUpdateInstrumentsSettings(Map<String, int> transpositionNotify, Map<String, List<String>> instrumentNotesMap, Map<String, List<String>> manualNotesMap) async {
@@ -136,8 +134,6 @@ class DatabaseHelper {
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
     }
-
-    print('Transposition settings saved');
   }
 
   Future<void> insertOrUpdateBLE(String deviceId) async {
@@ -163,8 +159,6 @@ class DatabaseHelper {
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
     }
-
-    print('Settings saved');
   }
 
   Future<void> insertOrUpdateAll(Map<String, int> transpositionNotify, Map<String, List<String>> instrumentNotesMap, Map<String, List<String>> manualNotesMap, bool isNoteChanged, Map<String, bool> isResetVisible, String deviceId) async {
@@ -205,8 +199,6 @@ class DatabaseHelper {
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
     }
-
-    print('Reset all settings');
   }
 
   // Get Settings

@@ -61,8 +61,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   }
 
   Future<void> _saveAppState() async {
-    // Save the current state to SQLite
-    print('Saving app state: $_selectedInstrument');
     await DatabaseHelper().insertOrUpdateSettings(
       _selectedInstrument,
       HomePage.isNoteChanged.value,
@@ -294,7 +292,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     if (selectedInstrument != null) {
       setState(() {
         _selectedInstrument = selectedInstrument;
-        print('Selected instrument: $_selectedInstrument');
         _saveAppState();
       });
     }

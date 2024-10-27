@@ -142,9 +142,7 @@ class NoteScrollerWidget extends StatelessWidget {
                         chromatic = '';
                       }
                       returnNote = note + chromatic + octave;
-                      print(returnNote);
                       returnNote = resolveEnharmonic(returnNote!);
-                      print(returnNote);
                       Navigator.of(context).pop(returnNote);
                     },
                     style: ElevatedButton.styleFrom(
