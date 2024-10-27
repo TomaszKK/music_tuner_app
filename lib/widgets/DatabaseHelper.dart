@@ -32,7 +32,7 @@ class DatabaseHelper {
 
     return await openDatabase(
       path,
-      version: 2,  // Increment the version to trigger migration
+      version: 3,  // Increment the version to trigger migration
       onCreate: (db, version) async {
         // Create tables
         await db.execute(''' 
@@ -43,7 +43,8 @@ class DatabaseHelper {
         is_reset_visible TEXT,
         transposition_notifier TEXT,
         instrument_notes TEXT,
-        manual_notes TEXT
+        manual_notes TEXT,
+        device_id TEXT
       )
       ''');
       },
@@ -55,6 +56,11 @@ class DatabaseHelper {
         ''');
           await db.execute(''' 
         ALTER TABLE settings ADD COLUMN manual_notes TEXT; 
+        ''');
+        }
+        if (oldVersion < 3) {
+          await db.execute(''' 
+          ALTER TABLE settings ADD COLUMN device_id TEXT; 
         ''');
         }
       },
@@ -134,43 +140,74 @@ class DatabaseHelper {
     print('Transposition settings saved');
   }
 
-  Future<void> resetDatabaseToDefault() async {
+  Future<void> insertOrUpdateBLE(String deviceId) async {
     final db = await database;
 
     // Check if a row already exists
     var existingRows = await db.query('settings');
     if (existingRows.isNotEmpty) {
-      // If settings exist, update only the transposition_notifier field
+      // If settings exist, update the row
       await db.update(
         'settings',
         {
-          'transposition_notifier': "{}",
-          'instrument_notes': "{}",
-          'manual_notes': "{}",
-          // 'selected_instrument': "Guitar",
-          'is_note_changed': 0,
-          'is_reset_visible': "{}"
+          'device_id': deviceId,
         },
-        where: 'id = ?',  // Specify where clause to update the correct row
-        whereArgs: [existingRows.first['id']],  // Use the id from the first row
       );
     } else {
       // Insert new row if no settings exist
       await db.insert(
         'settings',
         {
-          'transposition_notifier': "{}",
-          'instrument_notes': "{}",
-          'manual_notes': "{}",
-          // 'selected_instrument': "Guitar",
-          'is_note_changed': 0,
-          'is_reset_visible': "{}"
+          'device_id': deviceId,
         },
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
     }
+
+    print('Settings saved');
   }
 
+  Future<void> insertOrUpdateAll(Map<String, int> transpositionNotify, Map<String, List<String>> instrumentNotesMap, Map<String, List<String>> manualNotesMap, bool isNoteChanged, Map<String, bool> isResetVisible, String deviceId) async {
+    final db = await database;
+
+    String transpositionNotifyJson = jsonEncode(transpositionNotify);
+    String instrumentNotesJson = jsonEncode(instrumentNotesMap);
+    String manualNotesJson = jsonEncode(manualNotesMap);
+    String isResetVisibleJson = jsonEncode(isResetVisible);
+
+    // Check if a row already exists
+    var existingRows = await db.query('settings');
+    if (existingRows.isNotEmpty) {
+      // If settings exist, update the row
+      await db.update(
+        'settings',
+        {
+          'is_note_changed': isNoteChanged ? 1 : 0,
+          'is_reset_visible': isResetVisibleJson,
+          'transposition_notifier': transpositionNotifyJson,
+          'instrument_notes': instrumentNotesJson,
+          'manual_notes': manualNotesJson,
+          'device_id': deviceId
+        },
+      );
+    } else {
+      // Insert new row if no settings exist
+      await db.insert(
+        'settings',
+        {
+          'is_note_changed': isNoteChanged ? 1 : 0,
+          'is_reset_visible': isResetVisibleJson,
+          'transposition_notifier': transpositionNotifyJson,
+          'instrument_notes': instrumentNotesJson,
+          'manual_notes': manualNotesJson,
+          'device_id': deviceId
+        },
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+    }
+
+    print('Reset all settings');
+  }
 
   // Get Settings
   Future<Map<dynamic, dynamic>?> getSettings() async {
@@ -182,11 +219,5 @@ class DatabaseHelper {
       return settings;
     }
     return null;
-  }
-
-  // Clear Settings (for resetting)
-  Future<void> clearSettings() async {
-    final db = await database;
-    await db.delete('settings');
   }
 }

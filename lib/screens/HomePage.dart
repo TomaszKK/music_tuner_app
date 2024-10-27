@@ -33,6 +33,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   String _selectedInstrument = 'Guitar';
   BluetoothConnectorWidget bluetoothConnectorWidget = BluetoothConnectorWidget();
+  String espDeviceId = '';
 
   @override
   void initState() {
@@ -54,7 +55,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         HomePage.isNoteChanged.value = settings['is_note_changed'] == 1;
         String isResetVisibleJson = settings['is_reset_visible'];
         HomePage.isResetVisible.value = Map<String, bool>.from(jsonDecode(isResetVisibleJson));
-
+        espDeviceId = settings['device_id'] ?? '';
       });
     }
   }
@@ -267,6 +268,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     BluetoothEnable.enableBluetooth.then((result) {
       if (result == "true") {
         bluetoothConnectorWidget.showBluetoothConnectorWidget(context);
+        espDeviceId = '';
       }
     });
   }

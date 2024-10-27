@@ -1,5 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+import 'package:music_tuner/widgets/BluetoothConnectorWidget.dart';
+import '../providers/InstrumentProvider.dart';
+import '../providers/noteInstrumentProvider.dart';
 import '../widgets/DatabaseHelper.dart';
+import '../widgets/InstrumentWidget.dart';
+import '../widgets/TranspositionWidget.dart';
+import 'HomePage.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key, required this.title});
@@ -11,10 +18,31 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  void _resetDatabase() async {
-    final dbHelper = DatabaseHelper();
-    await dbHelper.resetDatabaseToDefault();
+  Future<void> _saveAppState() async {
+    await DatabaseHelper().insertOrUpdateAll(
+        TranspositionWidget.transpositionNotifier.value,
+        instrumentNotesMap,
+        manualNotesMap,
+        HomePage.isNoteChanged.value,
+        HomePage.isResetVisible.value,
+        BluetoothConnectorWidget().deviceId,
+    );
   }
+
+  Future<void> _resetDatabase() async {
+    TranspositionWidget.transpositionNotifier.value = {
+      for (var instrument in InstrumentProvider.values) instrument.name: 0,
+    };
+    HomePage.isNoteChanged.value = true;
+    HomePage.isResetVisible.value = {
+      for (var instrument in InstrumentProvider.values) instrument.name: false,
+    };
+    instrumentNotesMap = Map<String, List<String>>.from(noteInstrumentDefaultProvider);
+    manualNotesMap = Map<String, List<String>>.from(noteInstrumentDefaultProvider);
+    BluetoothConnectorWidget().deviceId = '';
+    _saveAppState();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -44,25 +72,59 @@ class _SettingsPageState extends State<SettingsPage> {
         ),
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _resetDatabase,
-              style: ElevatedButton.styleFrom(
-                // padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                primary: Theme.of(context).colorScheme.primaryContainer,
-                textStyle: TextStyle(
-                  color: Theme.of(context).colorScheme.onPrimaryContainer,
-                  fontFamily: 'Poppins',
-                ),
-              ),
-              child: const Text('Reset all instruments'),
-            ),
-          ],
+        child: Container(
+          padding: const EdgeInsets.all(20),
+          // color: Theme.of(context).colorScheme.primaryContainer,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              const SizedBox(height: 20),
+              _buildSettingRow("Reset to default", "Reset", "all"),
+              _buildSettingRow("Reset connected device", "Reset", "ble"),
+            ],
+          ),
         ),
       ),
+    );
+  }
+
+  Row _buildSettingRow(String settingName, String settingValue, String itemKey) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Text(
+          settingName,
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.onPrimaryContainer,
+            fontFamily: 'Poppins',
+          ),
+        ),
+        ElevatedButton(
+          onPressed: () {
+            if (itemKey == "all") {
+              _resetDatabase();
+              setState(() {
+              });
+            } else if (itemKey == "ble") {
+              // Reset the connected device
+              final dbHelper = DatabaseHelper();
+              dbHelper.insertOrUpdateBLE('');
+
+            }
+          },
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
+            // padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          ),
+          child: Text(
+            settingValue,
+            style: const TextStyle(
+              color: Colors.black,
+              fontFamily: 'Poppins',
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
