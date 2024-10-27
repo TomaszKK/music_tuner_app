@@ -6,6 +6,8 @@ import 'package:permission_handler/permission_handler.dart';
 import 'dart:typed_data';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
+import 'DatabaseHelper.dart';
+
 typedef FloatValueCallback = void Function(double floatValue);
 
 class BluetoothConnectorWidget {
@@ -14,6 +16,7 @@ class BluetoothConnectorWidget {
   LocalPlatform platform = const LocalPlatform();
   ValueNotifier<bool> isBluetoothConnected = ValueNotifier<bool>(false);
   ValueNotifier<bool> isConnecting = ValueNotifier<bool>(false); // Added ValueNotifier for connecting state
+  String deviceId = '';
   int takeThree = 0;
   double freqTemp = 0;
   double freqLast = 0;
@@ -26,7 +29,21 @@ class BluetoothConnectorWidget {
   ValueNotifier<List<ScanResult>> scanResults = ValueNotifier<List<ScanResult>>([]);
   Completer<void>? _scanCompleter;
 
+  Future<void> _loadAppState() async {
+    var settings = await DatabaseHelper().getSettings();
+    if (settings != null) {
+      // setState(() {
+        deviceId = settings['device_id'] ?? '';
+      // });
+    }
+  }
+
+  Future<void> _saveAppState() async {
+    await DatabaseHelper().insertOrUpdateBLE(deviceId);
+  }
+
   void showBluetoothConnectorWidget(BuildContext context) {
+    _loadAppState();
     if (!isDeviceConnected) {
       launchBluetooth(context);
       showModalBottomSheet(
@@ -168,7 +185,7 @@ class BluetoothConnectorWidget {
     FlutterBluePlus.adapterState.listen((BluetoothAdapterState state) async {
       if (state == BluetoothAdapterState.on) {
         print("Bluetooth is on");
-        await scanForDevices();  // Ensure scanning is awaited
+        await scanForDevices(context);  // Ensure scanning is awaited
       } else if (state == BluetoothAdapterState.off) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Bluetooth is not enabled')),
@@ -181,7 +198,7 @@ class BluetoothConnectorWidget {
     }
   }
 
-  Future<void> scanForDevices() async {
+  Future<void> scanForDevices(BuildContext context) async {
     print("Starting scan for devices...");
     isScanning.value = true;  // Show loader
     scanResults.value = [];  // Clear previous results
@@ -197,7 +214,13 @@ class BluetoothConnectorWidget {
     FlutterBluePlus.scanResults.listen((results) {
       if (results.isNotEmpty && !_scanCompleter!.isCompleted) {
         scanResults.value = results;
-        _scanCompleter!.complete();  // Complete the scan if devices are found
+        _scanCompleter!.complete();
+        for(var result in results){
+          if(result.device.remoteId.toString() == deviceId){
+            connectToDevice(result.device, context);
+            break;
+          }
+        }
       }
     });
 
@@ -209,7 +232,7 @@ class BluetoothConnectorWidget {
 
     // Stop scanning
     FlutterBluePlus.stopScan();
-    print("Scan completed");
+    // print("Scan completed");
     isScanning.value = false;  // Hide loader
   }
 
@@ -227,6 +250,8 @@ class BluetoothConnectorWidget {
       isDeviceConnected = true;
       isBluetoothConnected.value = true;
       connectedDevice = device;
+      deviceId = device.remoteId.toString();
+      _saveAppState();
       Navigator.pop(context);
 
       // Listen for connection state changes to detect disconnection
