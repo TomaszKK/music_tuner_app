@@ -20,6 +20,8 @@ Future<void> main() async {
       child: const MyApp(),
     ),
   );
+
+  FlutterNativeSplash.remove();
 }
 
 class MyApp extends StatelessWidget {
@@ -29,8 +31,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final themeManager = Provider.of<ThemeManager>(context);
 
-    // Remove the splash screen and allow screen rotation
-    FlutterNativeSplash.remove();
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,

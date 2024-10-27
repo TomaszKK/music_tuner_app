@@ -17,7 +17,7 @@ import 'instrumentWidgetsDir/SaxophoneWidget.dart';
 import 'instrumentWidgetsDir/TrumpetWidget.dart';
 
 class InstrumentWidget extends StatefulWidget {
-  const InstrumentWidget({Key? key, required this.title, required this.selectedInstrument}) : super(key: key);
+  const InstrumentWidget({super.key, required this.title, required this.selectedInstrument});
 
   final String title;
   final String selectedInstrument;
@@ -43,9 +43,12 @@ class _InstrumentWidgetState extends State<InstrumentWidget> with WidgetsBinding
   @override
   void initState() {
     super.initState();
-    _loadAppState();
-    _loadNoteListForInstrument(widget.selectedInstrument);
-    WidgetsBinding.instance.addObserver(this);
+    Future.delayed(Duration.zero, ()
+    {
+      _loadAppState();
+      _loadNoteListForInstrument(widget.selectedInstrument);
+      WidgetsBinding.instance.addObserver(this);
+    });
   }
 
 
