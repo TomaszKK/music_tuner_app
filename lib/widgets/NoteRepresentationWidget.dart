@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:music_tuner/providers/ThemeManager.dart';
 
 class NoteRepresentationWidget extends StatelessWidget {
-  NoteRepresentationWidget({Key? key, required this.noteString, required this.fontSize}) : super(key: key){
+  NoteRepresentationWidget({super.key, required this.noteString, required this.fontSize}){
     parseNoteString();
   }
 

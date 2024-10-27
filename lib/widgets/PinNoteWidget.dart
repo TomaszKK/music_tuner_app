@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:music_tuner/providers/ThemeManager.dart';
-import 'package:music_tuner/providers/noteAdditionalProvider.dart';
 import 'package:music_tuner/widgets/NoteRepresentationWidget.dart';
 import 'NoteSrollerWidget.dart';
 import 'TunerWidget.dart';
 
 class PinNoteWidget extends StatefulWidget {
   PinNoteWidget({
-    Key? key,
+    super.key,
     required this.defaultNote,
     required this.currentNote,
     required this.circleSize,
     required this.currentInstrument,
     required this.onNoteChanged,
-  }) : super(key: key);
+  });
 
   String defaultNote;
   String currentNote;

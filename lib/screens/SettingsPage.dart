@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:music_tuner/widgets/BluetoothConnectorWidget.dart';
 import '../providers/InstrumentProvider.dart';
 import '../providers/noteInstrumentProvider.dart';
 import '../widgets/DatabaseHelper.dart';
-import '../widgets/InstrumentWidget.dart';
 import '../widgets/TranspositionWidget.dart';
 import 'HomePage.dart';
 

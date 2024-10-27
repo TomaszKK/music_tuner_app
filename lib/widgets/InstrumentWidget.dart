@@ -7,7 +7,6 @@ import 'package:music_tuner/widgets/instrumentWidgetsDir/GuitarWidget.dart';
 import 'package:music_tuner/widgets/instrumentWidgetsDir/BassWidget.dart';
 import 'package:music_tuner/widgets/instrumentWidgetsDir/TenorhornWidget.dart';
 
-import '../models/noteModel.dart';
 import '../providers/InstrumentProvider.dart';
 import '../providers/noteAdditionalProvider.dart';
 import '../screens/HomePage.dart';
@@ -18,7 +17,7 @@ import 'instrumentWidgetsDir/SaxophoneWidget.dart';
 import 'instrumentWidgetsDir/TrumpetWidget.dart';
 
 class InstrumentWidget extends StatefulWidget {
-  const InstrumentWidget({Key? key, required this.title, required this.selectedInstrument}) : super(key: key);
+  const InstrumentWidget({super.key, required this.title, required this.selectedInstrument});
 
   final String title;
   final String selectedInstrument;
@@ -44,9 +43,12 @@ class _InstrumentWidgetState extends State<InstrumentWidget> with WidgetsBinding
   @override
   void initState() {
     super.initState();
-    _loadAppState();
-    _loadNoteListForInstrument(widget.selectedInstrument);
-    WidgetsBinding.instance.addObserver(this);
+    Future.delayed(Duration.zero, ()
+    {
+      _loadAppState();
+      _loadNoteListForInstrument(widget.selectedInstrument);
+      WidgetsBinding.instance.addObserver(this);
+    });
   }
 
 
@@ -137,8 +139,6 @@ class _InstrumentWidgetState extends State<InstrumentWidget> with WidgetsBinding
 
   List<String> _handleInstrumentNotes(String instrument, bool isNoteChanged) {
     if (isNoteChanged) {
-      // Reset the transposition and load default notes
-      final String defaultInstrument = instrument.toLowerCase();
       TranspositionWidget.transpositionNotifier.value[instrument] = 0;
       instrumentNotesMap[instrument] = List<String>.from(noteInstrumentDefaultProvider[instrument]!);
       manualNotesMap[instrument] = List<String>.from(noteInstrumentDefaultProvider[instrument]!);
