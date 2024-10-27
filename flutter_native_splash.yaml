@@ -1,0 +1,7 @@
+flutter_native_splash:
+  android: true
+
+#  color: "322C2C"
+  background_image: "lib/assets/loading_app_screen_2.png"
+
+
