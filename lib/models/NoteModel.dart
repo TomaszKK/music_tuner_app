@@ -46,7 +46,6 @@ Future<List<Note>> loadNotes(String selectedInstrument) async {
         .map((entry) => Note.fromJson(entry))
         .toList(growable: false);
   } catch (e) {
-    print('Error reading or parsing the file: $e');
     return [];
   }
 }

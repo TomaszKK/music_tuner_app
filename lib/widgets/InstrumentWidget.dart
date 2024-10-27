@@ -7,7 +7,6 @@ import 'package:music_tuner/widgets/instrumentWidgetsDir/GuitarWidget.dart';
 import 'package:music_tuner/widgets/instrumentWidgetsDir/BassWidget.dart';
 import 'package:music_tuner/widgets/instrumentWidgetsDir/TenorhornWidget.dart';
 
-import '../models/noteModel.dart';
 import '../providers/InstrumentProvider.dart';
 import '../providers/noteAdditionalProvider.dart';
 import '../screens/HomePage.dart';
@@ -137,8 +136,6 @@ class _InstrumentWidgetState extends State<InstrumentWidget> with WidgetsBinding
 
   List<String> _handleInstrumentNotes(String instrument, bool isNoteChanged) {
     if (isNoteChanged) {
-      // Reset the transposition and load default notes
-      final String defaultInstrument = instrument.toLowerCase();
       TranspositionWidget.transpositionNotifier.value[instrument] = 0;
       instrumentNotesMap[instrument] = List<String>.from(noteInstrumentDefaultProvider[instrument]!);
       manualNotesMap[instrument] = List<String>.from(noteInstrumentDefaultProvider[instrument]!);

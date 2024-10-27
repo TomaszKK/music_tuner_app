@@ -3,7 +3,7 @@ import 'package:music_tuner/providers/ThemeManager.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 
 import 'BluetoothConnectorWidget.dart';
-import 'package:music_tuner/models/noteModel.dart';
+import 'package:music_tuner/models/NoteModel.dart';
 
 import 'NoteRepresentationWidget.dart';
 
@@ -52,8 +52,6 @@ class _TunerWidgetState extends State<TunerWidget> {
           builder: (BuildContext context, BoxConstraints constraints) {
 
             double availableHeight = constraints.maxHeight;
-            double availableWidth = constraints.maxWidth;
-
             double baseFontSize = availableHeight * 0.05;
 
             return Column(

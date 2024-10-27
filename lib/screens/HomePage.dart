@@ -3,8 +3,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:provider/provider.dart';
-import 'package:music_tuner/providers/ThemeManager.dart';
 import 'package:music_tuner/screens/SettingsPage.dart';
 import 'package:music_tuner/widgets/TunerWidget.dart';
 import 'package:music_tuner/widgets/instrumentWidget.dart';
@@ -14,7 +12,6 @@ import 'package:music_tuner/widgets/TranspositionWidget.dart';
 import 'package:bluetooth_enable_fork/bluetooth_enable_fork.dart';
 
 import '../providers/InstrumentProvider.dart';
-import '../providers/noteInstrumentProvider.dart';
 import '../widgets/DatabaseHelper.dart';
 
 class HomePage extends StatefulWidget {
@@ -298,7 +295,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   }
 
   String _getPickedInstrument() {
-    return _selectedInstrument ?? 'Guitar';
+    return _selectedInstrument;
   }
 
 }

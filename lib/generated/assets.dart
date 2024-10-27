@@ -34,7 +34,7 @@ class Assets {
   static const String libAssetsTranspositionLogo = 'lib/assets/Transposition_logo.svg';
   static const String libAssetsTrumpet = 'lib/assets/Trumpet.svg';
   static const String libMain = 'lib/main.dart';
-  static const String modelsNoteModel = 'lib/models/noteModel.dart';
+  static const String modelsNoteModel = 'lib/models/NoteModel.dart';
   static const String providersInstrumentProvider = 'lib/providers/InstrumentProvider.dart';
   static const String providersNoteAdditionalProvider = 'lib/providers/noteAdditionalProvider.dart';
   static const String providersNoteInstrumentProvider = 'lib/providers/noteInstrumentProvider.dart';
