@@ -32,7 +32,7 @@ class DatabaseHelper {
 
     return await openDatabase(
       path,
-      version: 3,  // Increment the version to trigger migration
+      version: 4,  // Increment the version to trigger migration
       onCreate: (db, version) async {
         // Create tables
         await db.execute(''' 
@@ -44,7 +44,8 @@ class DatabaseHelper {
         transposition_notifier TEXT,
         instrument_notes TEXT,
         manual_notes TEXT,
-        device_id TEXT
+        device_id TEXT,
+        frequency REAL
       )
       ''');
       },
@@ -61,6 +62,11 @@ class DatabaseHelper {
         if (oldVersion < 3) {
           await db.execute(''' 
           ALTER TABLE settings ADD COLUMN device_id TEXT; 
+        ''');
+        }
+        if (oldVersion < 4) {
+          await db.execute(''' 
+          ALTER TABLE settings ADD COLUMN frequency REAL; 
         ''');
         }
       },
@@ -161,6 +167,31 @@ class DatabaseHelper {
     }
   }
 
+  Future<void> insertOrUpdateTunerWidget(double frequency) async {
+    final db = await database;
+
+    // Check if a row already exists
+    var existingRows = await db.query('settings');
+    if (existingRows.isNotEmpty) {
+      // If settings exist, update the row
+      await db.update(
+        'settings',
+        {
+          'frequency': frequency,
+        },
+      );
+    } else {
+      // Insert new row if no settings exist
+      await db.insert(
+        'settings',
+        {
+          'frequency': frequency,
+        },
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+    }
+  }
+
   Future<void> insertOrUpdateAll(Map<String, int> transpositionNotify, Map<String, List<String>> instrumentNotesMap, Map<String, List<String>> manualNotesMap, bool isNoteChanged, Map<String, bool> isResetVisible, String deviceId) async {
     final db = await database;
 
@@ -181,7 +212,8 @@ class DatabaseHelper {
           'transposition_notifier': transpositionNotifyJson,
           'instrument_notes': instrumentNotesJson,
           'manual_notes': manualNotesJson,
-          'device_id': deviceId
+          'device_id': deviceId,
+          'frequency': '440.0'
         },
       );
     } else {
@@ -194,7 +226,8 @@ class DatabaseHelper {
           'transposition_notifier': transpositionNotifyJson,
           'instrument_notes': instrumentNotesJson,
           'manual_notes': manualNotesJson,
-          'device_id': deviceId
+          'device_id': deviceId,
+          'frequency': '440.0'
         },
         conflictAlgorithm: ConflictAlgorithm.replace,
       );

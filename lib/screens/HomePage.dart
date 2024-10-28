@@ -142,11 +142,21 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               color: Theme.of(context).colorScheme.onPrimaryContainer,
               size: 30,
             ),
-            onPressed: () {
-              Navigator.push(
+            onPressed: () async {
+              // Navigate to the SettingsPage and wait for a result
+              final resetOccurred = await Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const SettingsPage(title: 'Settings')),
+                MaterialPageRoute(
+                  builder: (context) => SettingsPage(title: "Settings"),
+                ),
               );
+
+              // If the reset occurred, reload the state
+              if (resetOccurred == true) {
+                setState(() {
+                  _loadAppState();
+                });
+              }
             },
           ),
         ],

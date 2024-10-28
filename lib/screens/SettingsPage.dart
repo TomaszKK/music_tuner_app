@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:music_tuner/widgets/BluetoothConnectorWidget.dart';
+import 'package:music_tuner/widgets/TunerWidget.dart';
 import '../providers/InstrumentProvider.dart';
 import '../providers/noteInstrumentProvider.dart';
 import '../widgets/DatabaseHelper.dart';
@@ -38,7 +39,9 @@ class _SettingsPageState extends State<SettingsPage> {
     instrumentNotesMap = Map<String, List<String>>.from(noteInstrumentDefaultProvider);
     manualNotesMap = Map<String, List<String>>.from(noteInstrumentDefaultProvider);
     BluetoothConnectorWidget().deviceId = '';
+
     _saveAppState();
+    Navigator.pop(context, true);
   }
 
 
@@ -107,7 +110,7 @@ class _SettingsPageState extends State<SettingsPage> {
               // Reset the connected device
               final dbHelper = DatabaseHelper();
               dbHelper.insertOrUpdateBLE('');
-
+              Navigator.pop(context, true);
             }
           },
           style: ButtonStyle(

@@ -5,6 +5,7 @@ import 'package:syncfusion_flutter_gauges/gauges.dart';
 import 'BluetoothConnectorWidget.dart';
 import 'package:music_tuner/models/NoteModel.dart';
 
+import 'DatabaseHelper.dart';
 import 'FrequencyButtonWidget.dart';
 import 'NoteRepresentationWidget.dart';
 
@@ -13,6 +14,7 @@ class TunerWidget extends StatefulWidget {
 
   final String title;
   final String selectedInstrument;
+  double initialFrequency = 440.0;
 
   static ValueNotifier<String> currentNoteNotifier = ValueNotifier<String>('');
   static ValueNotifier<String> blockedNoteNotifier = ValueNotifier<String>('');
@@ -25,7 +27,32 @@ class _TunerWidgetState extends State<TunerWidget> {
   String frequencyText = '0.0';
   String currentNote = '';
   String textUnderNote = '';
-  double initialFrequency = 440.0;
+
+
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(Duration.zero, () {
+      _loadAppState();
+    });
+  }
+
+  Future<void> _loadAppState() async {
+    var settings = await DatabaseHelper().getSettings();
+    if (settings != null) {
+      // setState(() {
+      widget.initialFrequency = settings['frequency'] ?? 0;
+      // });
+    }
+  }
+
+  Future<void> _saveAppState() async {
+    await DatabaseHelper().insertOrUpdateTunerWidget(widget.initialFrequency);
+  }
+
+  Future<void> _loadCurrentState() async {
+    _loadAppState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +76,7 @@ class _TunerWidgetState extends State<TunerWidget> {
 
         // Get the list of notes once it's loaded
         List<Note> notes = snapshot.data ?? [];
-        print("here");
+
         for(Note note in notes){
           note.freq = calculateFrequency(note.freq);
         }
@@ -146,11 +173,12 @@ class _TunerWidgetState extends State<TunerWidget> {
                             maxHeight: constraints.maxHeight,
                           ),
                           child: FrequencyButtonWidget(
-                            initialFrequency: initialFrequency,
+                            initialFrequency: widget.initialFrequency,
                             onFrequencyChanged: (newFrequency) {
                               if(mounted) {
                                 setState(() {
-                                  initialFrequency = newFrequency;
+                                  widget.initialFrequency = newFrequency;
+                                  _saveAppState();
                                 });
                               }
                             },
@@ -340,6 +368,6 @@ class _TunerWidgetState extends State<TunerWidget> {
   }
 
   double calculateFrequency(double frequency) {
-    return frequency * initialFrequency/440.0;
+    return frequency * widget.initialFrequency/440.0;
   }
 }
