@@ -49,6 +49,10 @@ class _TunerWidgetState extends State<TunerWidget> {
 
         // Get the list of notes once it's loaded
         List<Note> notes = snapshot.data ?? [];
+        print("here");
+        for(Note note in notes){
+          note.freq = calculateFrequency(note.freq);
+        }
 
         return LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraints) {
@@ -97,6 +101,7 @@ class _TunerWidgetState extends State<TunerWidget> {
                                 valueListenable: BluetoothConnectorWidget.frequencyNotifier,
                                 builder: (context, frequency, child) {
                                   String noteToDisplay = '';
+
 
                                   if (blockedNote.isNotEmpty) {
                                     noteToDisplay = blockedNote;
@@ -319,8 +324,6 @@ class _TunerWidgetState extends State<TunerWidget> {
     }
   }
 
-
-
   String setTextUnderNote(Note note, double frequency) {
     String text = '';
     double threshold = 0.1;
@@ -334,5 +337,9 @@ class _TunerWidgetState extends State<TunerWidget> {
       text = 'Perfect';
     }
     return text;
+  }
+
+  double calculateFrequency(double frequency) {
+    return frequency * initialFrequency/440.0;
   }
 }

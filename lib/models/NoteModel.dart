@@ -6,9 +6,9 @@ import '../providers/noteInstrumentProvider.dart';
 // Note class to hold name and frequency
 class Note {
   final String name;
-  final double freq;
+  double freq;
 
-  const Note({
+  Note({
     required this.name,
     required this.freq,
   });

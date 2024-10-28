@@ -34,18 +34,18 @@ class _FrequencyButtonWidgetState extends State<FrequencyButtonWidget> {
 
   void _resetFrequency() {
       selectedFrequency = 440.0;
-      integerPart = selectedFrequency.floor();
-      decimalPart = ((selectedFrequency - integerPart) * 10).round();
+      // integerPart = selectedFrequency.floor();
+      // decimalPart = ((selectedFrequency - integerPart) * 10).round();
 
-      integerController.shiftTo(index: integerPart - 390);
-      decimalController.shiftTo(index: decimalPart);
+      // integerController.shiftTo(index: integerPart - 390);
+      // decimalController.shiftTo(index: decimalPart);
   }
 
 
   void _openFrequencyPicker(BuildContext context) {
     showModalBottomSheet(
       context: context,
-      // isScrollControlled: true, // Allow scrolling if needed
+      isScrollControlled: true, // Allow scrolling if needed
       builder: (BuildContext context) {
         return LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraints) {
@@ -133,6 +133,8 @@ class _FrequencyButtonWidgetState extends State<FrequencyButtonWidget> {
                       ElevatedButton(
                         onPressed: () {
                           _resetFrequency();
+                          widget.onFrequencyChanged(selectedFrequency);
+                          Navigator.of(context).pop();
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.transparent,
@@ -196,7 +198,7 @@ class _FrequencyButtonWidgetState extends State<FrequencyButtonWidget> {
           maxHeight: MediaQuery.of(context).size.height,
         ),
         child: Text(
-          '${selectedFrequency.toStringAsFixed(1)} Hz',
+          '${widget.initialFrequency.toStringAsFixed(1)} Hz',
           style: TextStyle(
             color: ThemeManager().currentTheme.colorScheme.secondary,
             fontSize: 20,
