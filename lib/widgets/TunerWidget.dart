@@ -14,7 +14,7 @@ class TunerWidget extends StatefulWidget {
 
   final String title;
   final String selectedInstrument;
-  double initialFrequency = 440.0;
+
 
   static ValueNotifier<String> currentNoteNotifier = ValueNotifier<String>('');
   static ValueNotifier<String> blockedNoteNotifier = ValueNotifier<String>('');
@@ -27,31 +27,27 @@ class _TunerWidgetState extends State<TunerWidget> {
   String frequencyText = '0.0';
   String currentNote = '';
   String textUnderNote = '';
-
+  double initialFrequency = 440.0;
 
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration.zero, () {
+    // Future.delayed(Duration.zero, () {
       _loadAppState();
-    });
+    // });
   }
 
   Future<void> _loadAppState() async {
     var settings = await DatabaseHelper().getSettings();
     if (settings != null) {
       // setState(() {
-      widget.initialFrequency = settings['frequency'] ?? 0;
+      initialFrequency = settings['frequency'] ?? 0;
       // });
     }
   }
 
   Future<void> _saveAppState() async {
-    await DatabaseHelper().insertOrUpdateTunerWidget(widget.initialFrequency);
-  }
-
-  Future<void> _loadCurrentState() async {
-    _loadAppState();
+    await DatabaseHelper().insertOrUpdateTunerWidget(initialFrequency);
   }
 
   @override
@@ -173,11 +169,11 @@ class _TunerWidgetState extends State<TunerWidget> {
                             maxHeight: constraints.maxHeight,
                           ),
                           child: FrequencyButtonWidget(
-                            initialFrequency: widget.initialFrequency,
+                            initialFrequency: initialFrequency,
                             onFrequencyChanged: (newFrequency) {
                               if(mounted) {
                                 setState(() {
-                                  widget.initialFrequency = newFrequency;
+                                  initialFrequency = newFrequency;
                                   _saveAppState();
                                 });
                               }
@@ -368,6 +364,6 @@ class _TunerWidgetState extends State<TunerWidget> {
   }
 
   double calculateFrequency(double frequency) {
-    return frequency * widget.initialFrequency/440.0;
+    return frequency * initialFrequency/440.0;
   }
 }
