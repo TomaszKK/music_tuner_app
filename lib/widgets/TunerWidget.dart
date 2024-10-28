@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:music_tuner/providers/ThemeManager.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 
+import '../screens/SettingsPage.dart';
 import 'BluetoothConnectorWidget.dart';
 import 'package:music_tuner/models/NoteModel.dart';
 
@@ -162,24 +163,34 @@ class _TunerWidgetState extends State<TunerWidget> {
                           ),
                         ),
                       ),
-                      Expanded(
-                        child: Container(
-                          alignment: Alignment.center,
-                          constraints: BoxConstraints(
-                            maxHeight: constraints.maxHeight,
-                          ),
-                          child: FrequencyButtonWidget(
-                            initialFrequency: initialFrequency,
-                            onFrequencyChanged: (newFrequency) {
-                              if(mounted) {
-                                setState(() {
-                                  initialFrequency = newFrequency;
-                                  _saveAppState();
-                                });
-                              }
-                            },
-                          ),
-                        ),
+                      ValueListenableBuilder(
+                        valueListenable: SettingsPage.isReset,
+                        builder: (context, isReset, child) {
+                          if(isReset){
+                            initialFrequency = 440.0;
+                            SettingsPage.isReset.value = false;
+                          }
+
+                          return Expanded(
+                            child: Container(
+                              alignment: Alignment.center,
+                              constraints: BoxConstraints(
+                                maxHeight: constraints.maxHeight,
+                              ),
+                              child: FrequencyButtonWidget(
+                                initialFrequency: initialFrequency,
+                                onFrequencyChanged: (newFrequency) {
+                                  if(mounted) {
+                                    setState(() {
+                                      initialFrequency = newFrequency;
+                                      _saveAppState();
+                                    });
+                                  }
+                                },
+                              ),
+                            ),
+                          );
+                        },
                       ),
                     ],
                   ),
