@@ -5,6 +5,8 @@ import 'package:syncfusion_flutter_gauges/gauges.dart';
 import 'BluetoothConnectorWidget.dart';
 import 'package:music_tuner/models/NoteModel.dart';
 
+import 'DatabaseHelper.dart';
+import 'FrequencyButtonWidget.dart';
 import 'NoteRepresentationWidget.dart';
 
 class TunerWidget extends StatefulWidget {
@@ -12,6 +14,7 @@ class TunerWidget extends StatefulWidget {
 
   final String title;
   final String selectedInstrument;
+
 
   static ValueNotifier<String> currentNoteNotifier = ValueNotifier<String>('');
   static ValueNotifier<String> blockedNoteNotifier = ValueNotifier<String>('');
@@ -24,6 +27,28 @@ class _TunerWidgetState extends State<TunerWidget> {
   String frequencyText = '0.0';
   String currentNote = '';
   String textUnderNote = '';
+  double initialFrequency = 440.0;
+
+  @override
+  void initState() {
+    super.initState();
+    // Future.delayed(Duration.zero, () {
+      _loadAppState();
+    // });
+  }
+
+  Future<void> _loadAppState() async {
+    var settings = await DatabaseHelper().getSettings();
+    if (settings != null) {
+      // setState(() {
+      initialFrequency = settings['frequency'] ?? 0;
+      // });
+    }
+  }
+
+  Future<void> _saveAppState() async {
+    await DatabaseHelper().insertOrUpdateTunerWidget(initialFrequency);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +72,10 @@ class _TunerWidgetState extends State<TunerWidget> {
 
         // Get the list of notes once it's loaded
         List<Note> notes = snapshot.data ?? [];
+
+        for(Note note in notes){
+          note.freq = calculateFrequency(note.freq);
+        }
 
         return LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraints) {
@@ -96,6 +125,7 @@ class _TunerWidgetState extends State<TunerWidget> {
                                 builder: (context, frequency, child) {
                                   String noteToDisplay = '';
 
+
                                   if (blockedNote.isNotEmpty) {
                                     noteToDisplay = blockedNote;
                                   } else {
@@ -138,12 +168,16 @@ class _TunerWidgetState extends State<TunerWidget> {
                           constraints: BoxConstraints(
                             maxHeight: constraints.maxHeight,
                           ),
-                          child: Text(
-                            '440 Hz',
-                            style: TextStyle(
-                              color: ThemeManager().currentTheme.colorScheme.secondary,
-                              fontSize: baseFontSize,
-                            ),
+                          child: FrequencyButtonWidget(
+                            initialFrequency: initialFrequency,
+                            onFrequencyChanged: (newFrequency) {
+                              if(mounted) {
+                                setState(() {
+                                  initialFrequency = newFrequency;
+                                  _saveAppState();
+                                });
+                              }
+                            },
                           ),
                         ),
                       ),
@@ -314,8 +348,6 @@ class _TunerWidgetState extends State<TunerWidget> {
     }
   }
 
-
-
   String setTextUnderNote(Note note, double frequency) {
     String text = '';
     double threshold = 0.1;
@@ -329,5 +361,9 @@ class _TunerWidgetState extends State<TunerWidget> {
       text = 'Perfect';
     }
     return text;
+  }
+
+  double calculateFrequency(double frequency) {
+    return frequency * initialFrequency/440.0;
   }
 }
