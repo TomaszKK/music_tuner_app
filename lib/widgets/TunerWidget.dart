@@ -5,6 +5,7 @@ import 'package:syncfusion_flutter_gauges/gauges.dart';
 import 'BluetoothConnectorWidget.dart';
 import 'package:music_tuner/models/NoteModel.dart';
 
+import 'FrequencyButtonWidget.dart';
 import 'NoteRepresentationWidget.dart';
 
 class TunerWidget extends StatefulWidget {
@@ -24,6 +25,7 @@ class _TunerWidgetState extends State<TunerWidget> {
   String frequencyText = '0.0';
   String currentNote = '';
   String textUnderNote = '';
+  double initialFrequency = 440.0;
 
   @override
   Widget build(BuildContext context) {
@@ -138,12 +140,15 @@ class _TunerWidgetState extends State<TunerWidget> {
                           constraints: BoxConstraints(
                             maxHeight: constraints.maxHeight,
                           ),
-                          child: Text(
-                            '440 Hz',
-                            style: TextStyle(
-                              color: ThemeManager().currentTheme.colorScheme.secondary,
-                              fontSize: baseFontSize,
-                            ),
+                          child: FrequencyButtonWidget(
+                            initialFrequency: initialFrequency,
+                            onFrequencyChanged: (newFrequency) {
+                              if(mounted) {
+                                setState(() {
+                                  initialFrequency = newFrequency;
+                                });
+                              }
+                            },
                           ),
                         ),
                       ),

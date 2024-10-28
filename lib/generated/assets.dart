@@ -24,6 +24,7 @@ class Assets {
   static const String instrumentWidgetsDirTrumpetWidget = 'lib/widgets/instrumentWidgetsDir/TrumpetWidget.dart';
   static const String libAssetsBass = 'lib/assets/Bass.svg';
   static const String libAssetsGuitar = 'lib/assets/Guitar.svg';
+  static const String libAssetsLogo = 'lib/assets/logo.png';
   static const String libAssetsNotes = 'lib/assets/notes.json';
   static const String libAssetsNotesSaxophone = 'lib/assets/notes-saxophone.json';
   static const String libAssetsNotesTenor = 'lib/assets/notes-tenor.json';
@@ -45,6 +46,7 @@ class Assets {
   static const String screensSplashScreen = 'lib/screens/SplashScreen.dart';
   static const String widgetsBluetoothConnectorWidget = 'lib/widgets/BluetoothConnectorWidget.dart';
   static const String widgetsDatabaseHelper = 'lib/widgets/DatabaseHelper.dart';
+  static const String widgetsFrequencyButtonWidget = 'lib/widgets/FrequencyButtonWidget.dart';
   static const String widgetsInstrumentSelectionWidget = 'lib/widgets/InstrumentSelectionWidget.dart';
   static const String widgetsInstrumentWidget = 'lib/widgets/InstrumentWidget.dart';
   static const String widgetsNoteRepresentationWidget = 'lib/widgets/NoteRepresentationWidget.dart';
