@@ -11,6 +11,7 @@ class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key, required this.title});
 
   final String title;
+  static ValueNotifier<bool> isReset = ValueNotifier<bool>(false);
 
   @override
   State<SettingsPage> createState() => _SettingsPageState();
@@ -39,7 +40,7 @@ class _SettingsPageState extends State<SettingsPage> {
     instrumentNotesMap = Map<String, List<String>>.from(noteInstrumentDefaultProvider);
     manualNotesMap = Map<String, List<String>>.from(noteInstrumentDefaultProvider);
     BluetoothConnectorWidget().deviceId = '';
-
+    SettingsPage.isReset.value = true;
     _saveAppState();
     Navigator.pop(context, true);
   }
