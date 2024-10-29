@@ -179,6 +179,7 @@ class _TunerWidgetState extends State<TunerWidget> {
                               ),
                               child: FrequencyButtonWidget(
                                 initialFrequency: initialFrequency,
+                                fontSize: baseFontSize,
                                 onFrequencyChanged: (newFrequency) {
                                   if(mounted) {
                                     setState(() {

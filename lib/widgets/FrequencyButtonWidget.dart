@@ -5,8 +5,9 @@ import 'package:wheel_picker/wheel_picker.dart';
 class FrequencyButtonWidget extends StatefulWidget {
   final double initialFrequency;
   final ValueChanged<double> onFrequencyChanged;
+  final double fontSize;
 
-  const FrequencyButtonWidget({super.key, required this.initialFrequency, required this.onFrequencyChanged});
+  const FrequencyButtonWidget({super.key, required this.initialFrequency, required this.fontSize, required this.onFrequencyChanged});
 
   @override
   _FrequencyButtonWidgetState createState() => _FrequencyButtonWidgetState();
@@ -201,7 +202,7 @@ class _FrequencyButtonWidgetState extends State<FrequencyButtonWidget> {
           '${widget.initialFrequency.toStringAsFixed(1)} Hz',
           style: TextStyle(
             color: ThemeManager().currentTheme.colorScheme.secondary,
-            fontSize: 20,
+            fontSize: widget.fontSize,
           ),
         ),
       ),
