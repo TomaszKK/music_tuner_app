@@ -140,7 +140,7 @@ class _SettingsPageState extends State<SettingsPage> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          _buildVersionRow("Description:","IOT Tuner with ESP32 board for reading the frequency of the instrument and display it on the screen"),
+          _buildVersionRow("Description:","IOT Mobile Tuner with ESP32 board for reading the frequency of the instrument and display it on the screen."),
           _buildVersionRow("Author", "Tomasz Kubik"),
           _buildVersionRow("Version", "1.0.0"),
         ],
@@ -159,6 +159,7 @@ class _SettingsPageState extends State<SettingsPage> {
             style: TextStyle(
               color: Theme.of(context).colorScheme.onPrimaryContainer,
               fontFamily: 'Poppins',
+              fontSize: 10
             ),
           ),
         ),
@@ -169,6 +170,7 @@ class _SettingsPageState extends State<SettingsPage> {
             style: TextStyle(
               color: Theme.of(context).colorScheme.onPrimaryContainer,
               fontFamily: 'Poppins',
+              fontSize: 10
             ),
             softWrap: true,
             overflow: TextOverflow.visible,
