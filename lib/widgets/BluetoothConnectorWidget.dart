@@ -263,6 +263,10 @@ class BluetoothConnectorWidget {
 
       // Discover services after connection
       await discoverServices(device);
+      // device.requestConnectionPriority(connectionPriorityRequest: ConnectionPriority.high);
+
+      int mtu = await device.requestMtu(128);
+
     } catch (e) {
       print("Error connecting to device: $e");
     } finally {
