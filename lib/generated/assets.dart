@@ -35,7 +35,7 @@ class Assets {
   static const String libAssetsTranspositionLogo = 'lib/assets/Transposition_logo.svg';
   static const String libAssetsTrumpet = 'lib/assets/Trumpet.svg';
   static const String libMain = 'lib/main.dart';
-  static const String modelsNoteModel = 'lib/models/NoteModel.dart';
+  static const String modelsNoteModel = 'lib/models/noteModel.dart';
   static const String providersInstrumentProvider = 'lib/providers/InstrumentProvider.dart';
   static const String providersNoteAdditionalProvider = 'lib/providers/noteAdditionalProvider.dart';
   static const String providersNoteInstrumentProvider = 'lib/providers/noteInstrumentProvider.dart';
@@ -46,7 +46,6 @@ class Assets {
   static const String screensSplashScreen = 'lib/screens/SplashScreen.dart';
   static const String widgetsBluetoothConnectorWidget = 'lib/widgets/BluetoothConnectorWidget.dart';
   static const String widgetsDatabaseHelper = 'lib/widgets/DatabaseHelper.dart';
-  static const String widgetsFrequencyButtonWidget = 'lib/widgets/FrequencyButtonWidget.dart';
   static const String widgetsInstrumentSelectionWidget = 'lib/widgets/InstrumentSelectionWidget.dart';
   static const String widgetsInstrumentWidget = 'lib/widgets/InstrumentWidget.dart';
   static const String widgetsNoteRepresentationWidget = 'lib/widgets/NoteRepresentationWidget.dart';
