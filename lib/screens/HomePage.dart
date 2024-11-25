@@ -270,12 +270,12 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
 
   Future<void> customEnableBT(BuildContext context) async {
-    BluetoothEnable.enableBluetooth.then((result) {
-      if (result == "true") {
+    // BluetoothEnable.enableBluetooth.then((result) {
+    //   if (result == "true") {
         bluetoothConnectorWidget.showBluetoothConnectorWidget(context);
         espDeviceId = '';
-      }
-    });
+      // }
+    // });
   }
 
   void _showInstrumentSelection() async{
