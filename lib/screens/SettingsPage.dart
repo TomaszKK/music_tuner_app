@@ -142,7 +142,7 @@ class _SettingsPageState extends State<SettingsPage> {
         children: <Widget>[
           _buildVersionRow("Description:","IOT Mobile Tuner with ESP32 board for reading the frequency of the instrument and display it on the screen."),
           _buildVersionRow("Author", "Tomasz Kubik"),
-          _buildVersionRow("Version", "1.0.0"),
+          _buildVersionRow("Version", "1.0.2"),
         ],
       ),
     );

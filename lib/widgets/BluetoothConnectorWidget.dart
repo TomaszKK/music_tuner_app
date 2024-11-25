@@ -2,7 +2,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:platform/platform.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:permission_handler/permission_handler.dart' as permission_handler;
+import 'package:location/location.dart' as location_handler;
 import 'dart:typed_data';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
@@ -33,7 +34,7 @@ class BluetoothConnectorWidget {
     var settings = await DatabaseHelper().getSettings();
     if (settings != null) {
       // setState(() {
-        deviceId = settings['device_id'] ?? '';
+      deviceId = settings['device_id'] ?? '';
       // });
     }
   }
@@ -42,90 +43,146 @@ class BluetoothConnectorWidget {
     await DatabaseHelper().insertOrUpdateBLE(deviceId);
   }
 
-  void showBluetoothConnectorWidget(BuildContext context) {
-    _loadAppState();
-    if (!isDeviceConnected) {
-      launchBluetooth(context);
-      showModalBottomSheet(
-        context: context,
-        isScrollControlled: true,
-        builder: (BuildContext context) {
-          return ValueListenableBuilder<bool>(
-            valueListenable: isScanning,
-            builder: (context, scanning, child) {
-              return Container(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    const Text(
-                      'Select device to connect to:',
+  void showBluetoothConnectorWidget(BuildContext context) async {
+    // Step 1: Ensure all permissions and services are enabled
+    bool allServicesEnabled = await checkAndRequestServices(context);
+
+    if (allServicesEnabled) {
+      // Step 2: If all services are enabled, load app state and start scanning
+      await _loadAppState();
+      if (!isDeviceConnected) {
+        scanForDevices(context);
+
+        showModalBottomSheet(
+          context: context,
+          isScrollControlled: true,
+          builder: (BuildContext context) {
+            return ValueListenableBuilder<bool>(
+              valueListenable: isScanning,
+              builder: (context, scanning, child) {
+                return Container(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      const Text(
+                        'Select device to connect to:',
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Poppins',
+                        ),
+                      ),
+                      scanning
+                          ? Center(
+                        child: LoadingAnimationWidget.staggeredDotsWave(
+                          color: Colors.green,
+                          size: 20.0,
+                        ),
+                      )
+                          : ValueListenableBuilder<List<ScanResult>>(
+                        valueListenable: scanResults,
+                        builder: (context, results, child) {
+                          if (results.isNotEmpty) {
+                            return ListView(
+                              shrinkWrap: true,
+                              children: results.map((r) {
+                                return ListTile(
+                                  title: Text(
+                                    r.device.platformName,
+                                    style: const TextStyle(
+                                      color: Colors.green,
+                                    ),
+                                  ),
+                                  onTap: () {
+                                    isConnecting.value = true;
+                                    connectToDevice(r.device, context);
+                                  },
+                                );
+                              }).toList(),
+                            );
+                          } else {
+                            return const Center(
+                              child: Text(
+                                'No devices found. Please try again.',
+                                style: TextStyle(
+                                  fontSize: 16.0,
+                                  color: Colors.red,
+                                ),
+                              ),
+                            );
+                          }
+                        },
+                      ),
+                      ValueListenableBuilder<bool>(
+                        valueListenable: isConnecting,
+                        builder: (context, connecting, child) {
+                          return connecting
+                              ? Center(
+                            child: LoadingAnimationWidget.staggeredDotsWave(
+                              color: Colors.green,
+                              size: 30.0,
+                            ),
+                          )
+                              : const SizedBox.shrink();
+                        },
+                      ),
+                    ],
+                  ),
+                );
+              },
+            );
+          },
+        );
+      }
+      else{
+        showModalBottomSheet(
+          context: context,
+          builder: (BuildContext context) {
+            return Container(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  const Text(
+                    'Device already connected.',
+                    style: TextStyle(
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'Poppins',
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      if (connectedDevice != null) {
+                        disconnectDevice(connectedDevice!, context);
+                        Navigator.pop(context);
+                      } else {
+                        print("No device connected");
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.transparent,
+                      shadowColor: Colors.red,
+                    ),
+                    child: const Text(
+                      'Disconnect',
                       style: TextStyle(
-                        fontSize: 20.0,
+                        fontSize: 18.0, // Slightly smaller font size for landscape
                         fontWeight: FontWeight.bold,
                         fontFamily: 'Poppins',
+                        color: Colors.red,
                       ),
                     ),
-                    scanning ? Center(
-                      child: LoadingAnimationWidget.staggeredDotsWave(
-                        color: Colors.green,
-                        size: 20.0,
-                      ),
-                    ) : ValueListenableBuilder<List<ScanResult>>(
-                      valueListenable: scanResults,
-                      builder: (context, results, child) {
-                        if (results.isNotEmpty) {
-                          return ListView(
-                            shrinkWrap: true,
-                            children: results.map((r) {
-                              return ListTile(
-                                title: Text(
-                                  r.device.platformName,
-                                  style: const TextStyle(
-                                    color: Colors.green,
-                                  ),
-                                ),
-                                onTap: () {
-                                  // Show loading animation while connecting
-                                  isConnecting.value = true;
-                                  connectToDevice(r.device, context);
-                                },
-                              );
-                            }).toList(),
-                          );
-                        } else {
-                          return const Center(
-                            child: Text(
-                              'No devices found. Please try again.',
-                              style: TextStyle(
-                                fontSize: 16.0,
-                                color: Colors.red,
-                              ),
-                            ),
-                          );
-                        }
-                      },
-                    ),
-                    // Display a loading animation while connecting
-                    ValueListenableBuilder<bool>(
-                      valueListenable: isConnecting,
-                      builder: (context, connecting, child) {
-                        return connecting ? Center(
-                          child: LoadingAnimationWidget.staggeredDotsWave(
-                            color: Colors.green,
-                            size: 30.0,
-                          ),
-                        ) : const SizedBox.shrink();
-                      },
-                    ),
-                  ],
-                ),
-              );
-            },
-          );
-        },
-      );
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      }
     } else {
+      // Step 3: Show modal with error message if any service is disabled
       showModalBottomSheet(
         context: context,
         builder: (BuildContext context) {
@@ -135,32 +192,28 @@ class BluetoothConnectorWidget {
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 const Text(
-                  'Device already connected.',
+                  'Error',
                   style: TextStyle(
                     fontSize: 20.0,
                     fontWeight: FontWeight.bold,
                     fontFamily: 'Poppins',
                   ),
                 ),
+                const Text(
+                  'Please enable Bluetooth and Location Services to continue.',
+                  style: TextStyle(
+                    fontSize: 16.0,
+                    color: Colors.red,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
                 ElevatedButton(
                   onPressed: () {
-                    if (connectedDevice != null) {
-                      disconnectDevice(connectedDevice!, context);
-                      Navigator.pop(context);
-                    } else {
-                      print("No device connected");
-                    }
+                    Navigator.pop(context);
                   },
-                  style: ButtonStyle(
-                    backgroundColor:
-                    MaterialStateProperty.all<Color>(Colors.red),
-                  ),
                   child: const Text(
-                    'Disconnect',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontFamily: 'Poppins',
-                    ),
+                    'Close',
+                    style: TextStyle(fontFamily: 'Poppins'),
                   ),
                 ),
               ],
@@ -171,30 +224,57 @@ class BluetoothConnectorWidget {
     }
   }
 
-  void launchBluetooth(BuildContext context) async {
-    await requestPermissions();
+  Future<bool> checkAndRequestServices(BuildContext context) async {
+    location_handler.Location location = location_handler.Location();
+    bool _serviceEnabled = await location.serviceEnabled();
+    bool bluetoothEnabled = (await FlutterBluePlus.adapterState.first ==
+        BluetoothAdapterState.on);
+    location_handler.PermissionStatus _permissionGranted =
+    await location.hasPermission();
 
-    if (await FlutterBluePlus.isSupported == false) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content: Text('Bluetooth is not supported by this device')),
-      );
-      return;
-    }
-
-    FlutterBluePlus.adapterState.listen((BluetoothAdapterState state) async {
-      if (state == BluetoothAdapterState.on) {
-        await scanForDevices(context);  // Ensure scanning is awaited
-      } else if (state == BluetoothAdapterState.off) {
+    // Check and request Location Services
+    if (!_serviceEnabled) {
+      _serviceEnabled = await location.requestService();
+      if (!_serviceEnabled) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Bluetooth is not enabled')),
+          const SnackBar(content: Text('Location must be enabled')),
         );
+        return false;
       }
-    });
-
-    if (platform.isAndroid) {
-      await FlutterBluePlus.turnOn();
     }
+
+    // Check and request Location Permission
+    if (_permissionGranted == location_handler.PermissionStatus.denied) {
+      _permissionGranted = await location.requestPermission();
+      if (_permissionGranted != location_handler.PermissionStatus.granted) {
+        // ScaffoldMessenger.of(context).showSnackBar(
+        //   const SnackBar(content: Text('Location permission is required')),
+        // );
+        return false;
+      }
+    }
+
+    // Check and enable Bluetooth
+    if (!bluetoothEnabled) {
+      try {
+        await FlutterBluePlus.turnOn();
+        bluetoothEnabled = (await FlutterBluePlus.adapterState.first ==
+            BluetoothAdapterState.on);
+        if (!bluetoothEnabled) {
+          // ScaffoldMessenger.of(context).showSnackBar(
+          //   const SnackBar(content: Text('Bluetooth must be enabled')),
+          // );
+          return false;
+        }
+      } catch (e) {
+        // ScaffoldMessenger.of(context).showSnackBar(
+        //   const SnackBar(content: Text('Failed to enable Bluetooth')),
+        // );
+        return false;
+      }
+    }
+
+    return true;
   }
 
   Future<void> scanForDevices(BuildContext context) async {
@@ -204,8 +284,8 @@ class BluetoothConnectorWidget {
     _scanCompleter = Completer<void>();
 
     FlutterBluePlus.startScan(
-      timeout: const Duration(seconds: 10),
-      withNames: ['TUNER IOT'],
+      timeout: const Duration(seconds: 15),
+      withNames: ['TUNER HRT-1'],
       // withServices: [Guid('4fafc201-1fb5-459e-8fcc-c5c9c331914b')]
     );
 
@@ -319,10 +399,10 @@ class BluetoothConnectorWidget {
 
   Future<void> requestPermissions() async {
     await [
-      Permission.bluetoothScan,
-      Permission.bluetoothConnect,
-      Permission.bluetoothAdvertise,
-      Permission.location,
+      permission_handler.Permission.bluetoothScan,
+      permission_handler.Permission.bluetoothConnect,
+      permission_handler.Permission.bluetoothAdvertise,
+      permission_handler.Permission.location,
     ].request();
   }
 }
