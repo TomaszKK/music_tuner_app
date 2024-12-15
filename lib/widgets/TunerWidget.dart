@@ -271,7 +271,6 @@ class _TunerWidgetState extends State<TunerWidget> {
                                   ),
                                 ),
                                 Container(
-                                  // padding: EdgeInsets.symmetric(horizontal: 16.0),
                                   constraints: BoxConstraints(
                                     maxWidth: constraints.maxWidth,
                                   ),
@@ -279,35 +278,17 @@ class _TunerWidgetState extends State<TunerWidget> {
 
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      // Text(
-                                      //   minFrequency == 0
-                                      //       ? ' '
-                                      //       : minFrequency.toStringAsFixed(1) + ' Hz',
-                                      //   style: TextStyle(
-                                      //     color: ThemeManager().currentTheme.colorScheme.secondary,
-                                      //     fontSize: baseFontSize * 0.8,  // Smaller font for the range
-                                      //   ),
-                                      // ),
                                       const Spacer(),
                                       Text(
                                         minFrequency == 0
                                             ? ' '
-                                            : currentNote.freq.toStringAsFixed(1) + ' Hz',
+                                            : '${currentNote.freq.toStringAsFixed(1)} Hz',
                                         style: TextStyle(
                                           color: ThemeManager().currentTheme.colorScheme.secondary,
                                           fontSize: baseFontSize * 0.95,  // Smaller font for the range
                                         ),
                                       ),
                                       const Spacer(),
-                                      // Text(
-                                      //   minFrequency == 0
-                                      //       ? ' '
-                                      //       : maxFrequency.toStringAsFixed(1) + ' Hz',
-                                      //   style: TextStyle(
-                                      //     color: ThemeManager().currentTheme.colorScheme.secondary,
-                                      //     fontSize: baseFontSize * 0.8,  // Smaller font for the range
-                                      //   ),
-                                      // ),
                                     ],
                                   ),
                                 ),
@@ -328,34 +309,21 @@ class _TunerWidgetState extends State<TunerWidget> {
     );
   }
 
-  // double mapFrequencyToGaugeRange(
-  //     double frequency, double minFreq, double maxFreq, double gaugeMin, double gaugeMax) {
-  //   return ((frequency - minFreq) / (maxFreq - minFreq)) * (gaugeMax - gaugeMin) + gaugeMin;
-  // }
-
   double mapFrequencyToGaugeRange(
-      double frequency, double minFreq, double targetFreq, double maxFreq, double gaugeMin, double gaugeMax) {
-
-    // Apply small tolerance to treat very small frequency deviations as zero deviation
+    double frequency, double minFreq, double targetFreq, double maxFreq, double gaugeMin, double gaugeMax) {
     const double tolerance = 0.05;
 
-    // Calculate the exact midpoint for the current note
-
     if (frequency == 0) {
-      return gaugeMin; // Position at the left
+      return gaugeMin;
     }
 
-    // If the frequency is within the tolerance range, return the center of the gauge (0)
     if ((frequency - targetFreq).abs() <= tolerance) {
-      return 0.0; // Center position on the gauge
+      return 0.0;
     }
 
-    // Map the frequency relative to the midpoint (targetFreq)
     if (frequency < targetFreq) {
-      // Frequency is less than midpoint, move pointer to the left (negative range)
       return ((frequency - minFreq) / (targetFreq - minFreq)) * (0 - gaugeMin) + gaugeMin;
     } else {
-      // Frequency is greater than midpoint, move pointer to the right (positive range)
       return ((frequency - targetFreq) / (maxFreq - targetFreq)) * (gaugeMax - 0);
     }
   }

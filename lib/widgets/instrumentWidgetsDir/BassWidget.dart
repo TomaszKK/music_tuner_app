@@ -23,8 +23,6 @@ class _BassWidgetState extends State<BassWidget> {
     setState(() {
       widget.noteList[index] = newNote;
     });
-
-    // Notify parent about the updated notes
     widget.onNotesChanged(widget.noteList);
   }
 
@@ -32,7 +30,7 @@ class _BassWidgetState extends State<BassWidget> {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
-        double imgWidth = constraints.maxHeight * 225 / 402;            //original size of the image
+        double imgWidth = constraints.maxHeight * 225 / 402;
         double topPositionScale = 1;
         double topPosition = constraints.maxHeight * 0.05;
         double imgHeight = constraints.maxHeight;
@@ -58,7 +56,7 @@ class _BassWidgetState extends State<BassWidget> {
                   currentNote: widget.noteList[0],
                   circleSize: circleSize,
                   currentInstrument: 'Bass',
-                  onNoteChanged: (newNote) => onNoteChanged(0, newNote),  // Callback for the first pin
+                  onNoteChanged: (newNote) => onNoteChanged(0, newNote),
                 ),
                 SizedBox(height: circleSpaceScale),
                 PinNoteWidget(
@@ -66,7 +64,7 @@ class _BassWidgetState extends State<BassWidget> {
                   currentNote: widget.noteList[1],
                   circleSize: circleSize,
                   currentInstrument: 'Bass',
-                  onNoteChanged: (newNote) => onNoteChanged(1, newNote),  // Callback for the first pin
+                  onNoteChanged: (newNote) => onNoteChanged(1, newNote),
                 ),
                 SizedBox(height: circleSpaceScale),
                 PinNoteWidget(
@@ -74,7 +72,7 @@ class _BassWidgetState extends State<BassWidget> {
                   currentNote: widget.noteList[2],
                   circleSize: circleSize,
                   currentInstrument: 'Bass',
-                  onNoteChanged: (newNote) => onNoteChanged(2, newNote),  // Callback for the first pin
+                  onNoteChanged: (newNote) => onNoteChanged(2, newNote),
                 ),
                 SizedBox(height: circleSpaceScale),
                 PinNoteWidget(
@@ -82,7 +80,7 @@ class _BassWidgetState extends State<BassWidget> {
                   currentNote: widget.noteList[3],
                   circleSize: circleSize,
                   currentInstrument: 'Bass',
-                  onNoteChanged: (newNote) => onNoteChanged(3, newNote),  // Callback for the first pin
+                  onNoteChanged: (newNote) => onNoteChanged(3, newNote),
                 ),
               ]
             ),
@@ -100,22 +98,6 @@ class _BassWidgetState extends State<BassWidget> {
           ],
         );
       },
-    );
-  }
-
-  Widget _buildCircle(){
-    return Container(
-      alignment: Alignment.center,
-      height: circleSize,
-      width: circleSize,
-      decoration: BoxDecoration(
-        color: Colors.transparent,
-        shape: BoxShape.circle,
-        border: Border.all(
-          color: ThemeManager().currentTheme.colorScheme.secondaryContainer,
-          width: 3,
-        ),
-      ),
     );
   }
 }

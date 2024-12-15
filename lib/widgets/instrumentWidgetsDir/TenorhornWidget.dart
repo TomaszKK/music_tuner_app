@@ -24,8 +24,6 @@ class _TenorhornWidgetState extends State<TenorhornWidget> {
     setState(() {
       widget.noteList[index] = newNote;
     });
-
-    // Notify parent about the updated notes
     widget.onNotesChanged(widget.noteList);
   }
 
@@ -63,7 +61,7 @@ class _TenorhornWidgetState extends State<TenorhornWidget> {
               currentNote: widget.noteList[0],
               circleSize: circleSize,
               currentInstrument: 'Tenorhorn',
-              onNoteChanged: (newNote) => onNoteChanged(0, newNote),  // Callback for the first pin
+              onNoteChanged: (newNote) => onNoteChanged(0, newNote),
             ),
             SizedBox(width: sidePadding),
           ],

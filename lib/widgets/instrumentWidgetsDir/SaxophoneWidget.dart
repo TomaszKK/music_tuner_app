@@ -24,8 +24,6 @@ class _SaxophoneWidgetState extends State<SaxophoneWidget> {
     setState(() {
       widget.noteList[index] = newNote;
     });
-
-    // Notify parent about the updated notes
     widget.onNotesChanged(widget.noteList);
   }
 
@@ -63,7 +61,7 @@ class _SaxophoneWidgetState extends State<SaxophoneWidget> {
               currentNote: widget.noteList[0],
               circleSize: circleSize,
               currentInstrument: 'Saxophone',
-              onNoteChanged: (newNote) => onNoteChanged(0, newNote),  // Callback for the first pin
+              onNoteChanged: (newNote) => onNoteChanged(0, newNote),
             ),
             SizedBox(width: sidePadding),
           ],

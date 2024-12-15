@@ -29,8 +29,6 @@ class HomePageState extends State<HomePage> with WidgetsBindingObserver {
   BluetoothConnectorWidget bluetoothConnectorWidget = BluetoothConnectorWidget();
   String espDeviceId = '';
 
-
-
   @override
   void initState() {
     super.initState();

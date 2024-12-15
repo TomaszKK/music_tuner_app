@@ -24,8 +24,6 @@ class _TrumpetWidgetState extends State<TrumpetWidget> {
     setState(() {
       widget.noteList[index] = newNote;
     });
-
-    // Notify parent about the updated notes
     widget.onNotesChanged(widget.noteList);
   }
 
@@ -63,7 +61,7 @@ class _TrumpetWidgetState extends State<TrumpetWidget> {
               currentNote: widget.noteList[0],
               circleSize: circleSize,
               currentInstrument: 'Trumpet',
-              onNoteChanged: (newNote) => onNoteChanged(0, newNote),  // Callback for the first pin
+              onNoteChanged: (newNote) => onNoteChanged(0, newNote),
             ),
             SizedBox(width: sidePadding),
           ],
