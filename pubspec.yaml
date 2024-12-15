@@ -116,6 +116,7 @@ flutter:
     - lib/assets/notes-saxophone.json
     - lib/assets/notes-trumpet.json
     - lib/assets/logo.png
+    - lib/widgets/TopBar/
 
 flutter_icons:
   image_path: "lib/assets/logo.png"

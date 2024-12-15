@@ -16,6 +16,9 @@ class Assets {
   static const String assetsTranspLogo = 'lib/assets/Transp_logo.svg';
   static const String assetsTranspositionLogo = 'lib/assets/Transposition_logo.svg';
   static const String assetsTrumpet = 'lib/assets/Trumpet.svg';
+  static const String bodyHeaderRowWidget = 'lib/widgets/body/HeaderRowWidget.dart';
+  static const String bodyLandscapeLayoutWidget = 'lib/widgets/body/LandscapeLayoutWidget.dart';
+  static const String bodyPortraitLayoutWidget = 'lib/widgets/body/PortraitLayoutWidget.dart';
   static const String generatedAssets = 'lib/generated/assets.dart';
   static const String instrumentWidgetsDirBassWidget = 'lib/widgets/instrumentWidgetsDir/BassWidget.dart';
   static const String instrumentWidgetsDirGuitarWidget = 'lib/widgets/instrumentWidgetsDir/GuitarWidget.dart';
@@ -35,7 +38,7 @@ class Assets {
   static const String libAssetsTranspositionLogo = 'lib/assets/Transposition_logo.svg';
   static const String libAssetsTrumpet = 'lib/assets/Trumpet.svg';
   static const String libMain = 'lib/main.dart';
-  static const String modelsNoteModel = 'lib/models/noteModel.dart';
+  static const String modelsNoteModel = 'lib/models/NoteModel.dart';
   static const String providersInstrumentProvider = 'lib/providers/InstrumentProvider.dart';
   static const String providersNoteAdditionalProvider = 'lib/providers/noteAdditionalProvider.dart';
   static const String providersNoteInstrumentProvider = 'lib/providers/noteInstrumentProvider.dart';
@@ -44,8 +47,12 @@ class Assets {
   static const String screensLoginPage = 'lib/screens/LoginPage.dart';
   static const String screensSettingsPage = 'lib/screens/SettingsPage.dart';
   static const String screensSplashScreen = 'lib/screens/SplashScreen.dart';
+  static const String topBarBluetoothButton = 'lib/widgets/TopBar/BluetoothButton.dart';
+  static const String topBarSettingButton = 'lib/widgets/TopBar/SettingsButton.dart';
+  static const String topBarTranspositionButton = 'lib/widgets/TopBar/TranspositionButton.dart';
   static const String widgetsBluetoothConnectorWidget = 'lib/widgets/BluetoothConnectorWidget.dart';
   static const String widgetsDatabaseHelper = 'lib/widgets/DatabaseHelper.dart';
+  static const String widgetsFrequencyButtonWidget = 'lib/widgets/FrequencyButtonWidget.dart';
   static const String widgetsInstrumentSelectionWidget = 'lib/widgets/InstrumentSelectionWidget.dart';
   static const String widgetsInstrumentWidget = 'lib/widgets/InstrumentWidget.dart';
   static const String widgetsNoteRepresentationWidget = 'lib/widgets/NoteRepresentationWidget.dart';
