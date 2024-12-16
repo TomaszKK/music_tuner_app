@@ -113,17 +113,31 @@ class HomePageState extends State<HomePage> with WidgetsBindingObserver {
   AppBar _buildAppBar(BuildContext context){
     return AppBar(
       backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-      toolbarHeight: 80,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-      ),
-      titleSpacing: 20,
-      title: Text(
-        widget.title,
-        style: TextStyle(
-          color: Theme.of(context).colorScheme.onPrimaryContainer,
-          fontFamily: 'Poppins',
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(20), // Round bottom-left corner
+          bottomRight: Radius.circular(20), // Round bottom-right corner
         ),
+      ),
+      // titleSpacing: 20,
+      title: Stack(
+        children: [
+          // Black outline (slightly larger text)
+          Text(
+            widget.title,
+            style: TextStyle(
+              fontFamily: 'Poppins',
+              fontWeight: FontWeight.w200,
+              fontSize: 20, // Adjust font size
+              // color: Theme.of(context).colorScheme.onPrimaryContainer,
+              letterSpacing: 2,
+              foreground: Paint()
+                ..style = PaintingStyle.stroke
+                ..strokeWidth = 2 // Outline thickness
+                ..color = Theme.of(context).colorScheme.onPrimaryContainer,
+            ),
+          ),
+        ],
       ),
       actions: [
         TranspositionButton(selectedInstrument: _selectedInstrument),

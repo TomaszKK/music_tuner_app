@@ -22,6 +22,7 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   String _appVersion = "";
+  String theme = "dark";
 
   @override
   void initState() {
@@ -44,6 +45,7 @@ class _SettingsPageState extends State<SettingsPage> {
         HomePage.isNoteChanged.value,
         HomePage.isResetVisible.value,
         BluetoothConnectorWidget().deviceId,
+        theme
     );
   }
 
@@ -71,9 +73,11 @@ class _SettingsPageState extends State<SettingsPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-        toolbarHeight: 80,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(20), // Round bottom-left corner
+            bottomRight: Radius.circular(20), // Round bottom-right corner
+          ),
         ),
         title: Text(
           widget.title,
@@ -118,7 +122,7 @@ class _SettingsPageState extends State<SettingsPage> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
         Text(
-          "Switch Theme",
+          "Switch Theme: $theme",
           style: TextStyle(
             color: Theme.of(context).colorScheme.onPrimaryContainer,
             fontFamily: 'Poppins',
@@ -128,6 +132,8 @@ class _SettingsPageState extends State<SettingsPage> {
           value: themeManager.isDark, // Check the current theme mode
           onChanged: (value) {
             themeManager.switchTheme(); // Toggle the theme
+            theme = value ? "dark" : "light";
+            _saveAppState();
           },
           activeColor: Theme.of(context).colorScheme.secondary,
         ),

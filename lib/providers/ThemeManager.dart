@@ -5,6 +5,10 @@ import 'package:music_tuner/utils/font_manager.dart';
 class ThemeManager with ChangeNotifier {
   bool _isDark = true; // Theme state
 
+  ThemeManager({required bool initialThemeMode}) {
+    _isDark = initialThemeMode;
+  }
+
   // Light Theme
   ThemeData get lightTheme => ThemeData.light().copyWith(
     colorScheme: ColorScheme.fromSeed(

@@ -29,7 +29,7 @@ class DatabaseHelper {
 
     return await openDatabase(
       path,
-      version: 4,  // Increment the version to trigger migration
+      version: 5,  // Increment the version to trigger migration
       onCreate: (db, version) async {
         // Create tables
         await db.execute(''' 
@@ -43,6 +43,7 @@ class DatabaseHelper {
         manual_notes TEXT,
         device_id TEXT,
         frequency REAL
+        theme_mode TEXT
       )
       ''');
       },
@@ -64,6 +65,11 @@ class DatabaseHelper {
         if (oldVersion < 4) {
           await db.execute(''' 
           ALTER TABLE settings ADD COLUMN frequency REAL; 
+        ''');
+        }
+        if (oldVersion < 5) {
+          await db.execute(''' 
+          ALTER TABLE settings ADD COLUMN theme_mode TEXT; 
         ''');
         }
       },
@@ -189,7 +195,7 @@ class DatabaseHelper {
     }
   }
 
-  Future<void> insertOrUpdateAll(Map<String, int> transpositionNotify, Map<String, List<String>> instrumentNotesMap, Map<String, List<String>> manualNotesMap, bool isNoteChanged, Map<String, bool> isResetVisible, String deviceId) async {
+  Future<void> insertOrUpdateAll(Map<String, int> transpositionNotify, Map<String, List<String>> instrumentNotesMap, Map<String, List<String>> manualNotesMap, bool isNoteChanged, Map<String, bool> isResetVisible, String deviceId, String theme) async {
     final db = await database;
 
     String transpositionNotifyJson = jsonEncode(transpositionNotify);
@@ -210,7 +216,8 @@ class DatabaseHelper {
           'instrument_notes': instrumentNotesJson,
           'manual_notes': manualNotesJson,
           'device_id': deviceId,
-          'frequency': '440.0'
+          'frequency': '440.0',
+          'theme_mode': theme
         },
       );
     } else {
@@ -224,7 +231,8 @@ class DatabaseHelper {
           'instrument_notes': instrumentNotesJson,
           'manual_notes': manualNotesJson,
           'device_id': deviceId,
-          'frequency': '440.0'
+          'frequency': '440.0',
+          'theme_mode': theme
         },
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
