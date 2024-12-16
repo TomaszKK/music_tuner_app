@@ -1,60 +1,65 @@
 import 'package:flutter/material.dart';
-
-enum AppThemeType { light, dark }
-
-class FontManager {
-  static const String poppins = 'Poppins';
-  static const String roboto = 'Roboto';
-}
+import 'package:music_tuner/utils/color_schemes.dart';
+import 'package:music_tuner/utils/font_manager.dart';
 
 class ThemeManager with ChangeNotifier {
-  ThemeData lightTheme = ThemeData.light().copyWith(
+  bool _isDark = true; // Theme state
+
+  // Light Theme
+  ThemeData get lightTheme => ThemeData.light().copyWith(
     colorScheme: ColorScheme.fromSeed(
-      seedColor: const Color(0xFFE5E5E5),
+      seedColor: AppColors.lightPrimary,
       brightness: Brightness.light,
     ).copyWith(
-      primary: const Color(0xFFE5E5E5),
-      primaryContainer: const Color(0xFFE5E5E5),
-      onPrimaryContainer: const Color(0xFFE5E5E5),
-      secondary: const Color(0xFFE5E5E5),
-      secondaryContainer: const Color(0xFFE5E5E5),
-      onSecondaryContainer: const Color(0xFFE5E5E5),
-      background: const Color(0xFFE5E5E5),
-      surface: const Color(0xFFE5E5E5),
-      error: const Color(0xFFE5E5E5),
-      onPrimary: const Color(0xFFE5E5E5),
-      onSecondary: const Color(0xFFE5E5E5),
-      onBackground: const Color(0xFFE5E5E5),
-      onSurface: const Color(0xFFE5E5E5),
-      onError: const Color(0xFFE5E5E5),
+      primary: AppColors.lightPrimary,
+      primaryContainer: AppColors.lightPrimaryContainer,
+      onPrimaryContainer: AppColors.lightOnPrimaryContainer,
+      secondary: AppColors.lightSecondary,
+      secondaryContainer: AppColors.lightSecondaryContainer,
+      onSecondaryContainer: AppColors.lightOnSecondaryContainer,
+      background: AppColors.lightBackground,
+      surface: AppColors.lightSurface,
+      error: AppColors.lightError,
+      onPrimary: AppColors.lightOnPrimary,
+      onSecondary: AppColors.lightOnSecondary,
+      onBackground: AppColors.lightOnBackground,
+      onSurface: AppColors.lightOnSurface,
+      onError: AppColors.lightOnError,
     ),
-    scaffoldBackgroundColor: const Color(0xFFCEB1B1),
+    scaffoldBackgroundColor: AppColors.lightBackground,
+    textTheme: const TextTheme(
+      headlineLarge: FontManager.headingStyle,
+      bodyLarge: FontManager.bodyStyle,
+    ),
   );
 
-  ThemeData darkTheme = ThemeData.dark().copyWith(
+  // Dark Theme
+  ThemeData get darkTheme => ThemeData.dark().copyWith(
     colorScheme: ColorScheme.fromSeed(
-      seedColor: const Color(0xFF1E1E1E),
+      seedColor: AppColors.darkPrimary,
       brightness: Brightness.dark,
     ).copyWith(
-      primary: const Color(0xFF736B6B),
-      onPrimary: const Color(0xFF081A02), //none
-      primaryContainer: const Color(0xFF3C3535),
-      onPrimaryContainer: const Color(0xFFFFFFFF),
-      secondary: const Color(0xFF0AEF05),
-      onSecondary: const Color(0xFFFE8C22),
-      secondaryContainer: const Color(0xFFC03BFF),
-      onSecondaryContainer: const Color(0xFFD177FF),
-      background: const Color(0xFF322C2C),
-      surface: const Color(0xFF1E1E1E),
-      error: const Color(0xFF1E1E1E),
-      onBackground: const Color(0xFF1E1E1E),
-      onSurface: const Color(0xFF1E1E1E),
-      onError: const Color(0xFF1E1E1E),
+      primary: AppColors.darkPrimary,
+      onPrimary: AppColors.darkOnPrimary,
+      primaryContainer: AppColors.darkPrimaryContainer,
+      onPrimaryContainer: AppColors.darkOnPrimaryContainer,
+      secondary: AppColors.darkSecondary,
+      onSecondary: AppColors.darkOnSecondary,
+      secondaryContainer: AppColors.darkSecondaryContainer,
+      onSecondaryContainer: AppColors.darkOnSecondaryContainer,
+      background: AppColors.darkBackground,
+      surface: AppColors.darkSurface,
+      error: AppColors.darkError,
+      onBackground: AppColors.darkOnBackground,
+      onSurface: AppColors.darkOnSurface,
+      onError: AppColors.darkOnError,
     ),
-    scaffoldBackgroundColor: const Color(0xFF322C2C),
+    scaffoldBackgroundColor: AppColors.darkBackground,
+    textTheme: const TextTheme(
+      headlineLarge: FontManager.headingStyle,
+      bodyLarge: FontManager.bodyStyle,
+    ),
   );
-
-  bool _isDark = true;
 
   ThemeData get currentTheme => _isDark ? darkTheme : lightTheme;
 
@@ -62,4 +67,7 @@ class ThemeManager with ChangeNotifier {
     _isDark = !_isDark;
     notifyListeners();
   }
+
+  bool get isDark => _isDark;
 }
+

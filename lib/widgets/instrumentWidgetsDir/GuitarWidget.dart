@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:music_tuner/providers/ThemeManager.dart';
 import 'package:music_tuner/providers/noteInstrumentProvider.dart';
 import 'package:music_tuner/widgets/PinNoteWidget.dart';
+import 'package:provider/provider.dart';
 
 class GuitarWidget extends StatefulWidget {
   GuitarWidget({super.key, required this.title, required this.noteList, required this.onNotesChanged});
@@ -65,7 +66,7 @@ class _GuitarWidgetState extends State<GuitarWidget> {
                   currentNote: widget.noteList[0],
                   circleSize: circleSize,
                   currentInstrument: 'Guitar',
-                  onNoteChanged: (newNote) => onNoteChanged(0, newNote),  // Callback for the first pin
+                  onNoteChanged: (newNote) => onNoteChanged(0, newNote),
                 ),
                 SizedBox(height: max(65 * imgHeight / 1000 * circleSpaceScale, 0)),
                 PinNoteWidget(
@@ -73,7 +74,7 @@ class _GuitarWidgetState extends State<GuitarWidget> {
                   currentNote: widget.noteList[1],
                   circleSize: circleSize,
                   currentInstrument: 'Guitar',
-                  onNoteChanged: (newNote) => onNoteChanged(1, newNote),  // Callback for the second pin
+                  onNoteChanged: (newNote) => onNoteChanged(1, newNote),
                 ),
                 SizedBox(height: max(65 * imgHeight / 1000 * circleSpaceScale, 0)),
                 PinNoteWidget(
@@ -81,7 +82,7 @@ class _GuitarWidgetState extends State<GuitarWidget> {
                   currentNote: widget.noteList[2],
                   circleSize: circleSize,
                   currentInstrument: 'Guitar',
-                  onNoteChanged: (newNote) => onNoteChanged(2, newNote),  // Callback for the third pin
+                  onNoteChanged: (newNote) => onNoteChanged(2, newNote),
                 ),
               ],
             ),
@@ -91,7 +92,10 @@ class _GuitarWidgetState extends State<GuitarWidget> {
                 child: SvgPicture.asset(
                   'lib/assets/Guitar.svg',
                   fit: BoxFit.fitHeight,
-                  color: ThemeManager().currentTheme.colorScheme.onSecondary,
+                  colorFilter: ColorFilter.mode(
+                    Provider.of<ThemeManager>(context).currentTheme.colorScheme.onSecondary,
+                    BlendMode.srcIn,
+                  ),
                 ),
               ),
             ),
@@ -103,7 +107,7 @@ class _GuitarWidgetState extends State<GuitarWidget> {
                   currentNote: widget.noteList[3],
                   circleSize: circleSize,
                   currentInstrument: 'Guitar',
-                  onNoteChanged: (newNote) => onNoteChanged(3, newNote),  // Callback for the fourth pin
+                  onNoteChanged: (newNote) => onNoteChanged(3, newNote),
                 ),
                 SizedBox(height: max(65 * imgHeight / 1000 * circleSpaceScale, 0)),
                 PinNoteWidget(
@@ -111,7 +115,7 @@ class _GuitarWidgetState extends State<GuitarWidget> {
                   currentNote: widget.noteList[4],
                   circleSize: circleSize,
                   currentInstrument: 'Guitar',
-                  onNoteChanged: (newNote) => onNoteChanged(4, newNote),  // Callback for the fifth pin
+                  onNoteChanged: (newNote) => onNoteChanged(4, newNote),
                 ),
                 SizedBox(height: max(65 * imgHeight / 1000 * circleSpaceScale, 0)),
                 PinNoteWidget(
@@ -119,7 +123,7 @@ class _GuitarWidgetState extends State<GuitarWidget> {
                   currentNote: widget.noteList[5],
                   circleSize: circleSize,
                   currentInstrument: 'Guitar',
-                  onNoteChanged: (newNote) => onNoteChanged(5, newNote),  // Callback for the sixth pin
+                  onNoteChanged: (newNote) => onNoteChanged(5, newNote),
                 ),
               ],
             ),
