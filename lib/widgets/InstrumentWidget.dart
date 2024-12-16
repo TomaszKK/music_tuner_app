@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:music_tuner/providers/NoteProvider.dart';
 import 'package:music_tuner/widgets/TranspositionWidget.dart';
 import 'package:music_tuner/widgets/TunerWidget.dart';
 import 'package:music_tuner/widgets/instrumentWidgetsDir/GuitarWidget.dart';
@@ -115,11 +116,8 @@ class _InstrumentWidgetState extends State<InstrumentWidget> with WidgetsBinding
   }
 
   Future<void> _loadNoteListForInstrument(String instrument) async {
-    String notePath = instrumentNoteFiles[instrument] ?? 'lib/assets/notes.json';
-    String jsonString = await rootBundle.loadString(notePath);
-    Map<String, dynamic> jsonMap = json.decode(jsonString);
     setState(() {
-      noteFrequencyMap = jsonMap.map((key, value) => MapEntry(key, value.toDouble()));
+      noteFrequencyMap = NoteProvider().getNotes(instrument);
       selectedInstrumentNotesMap = noteFrequencyMap;
     });
   }

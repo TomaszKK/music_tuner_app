@@ -1,5 +1,6 @@
 import 'dart:convert';  // For JSON decoding
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:music_tuner/providers/NoteProvider.dart';
 
 import '../providers/noteInstrumentProvider.dart';
 
@@ -38,11 +39,9 @@ class Note {
 // Function to read JSON file and parse it into a list of Note objects
 Future<List<Note>> loadNotes(String selectedInstrument) async {
   try {
-    final String fileContents = await rootBundle.loadString(instrumentNoteFiles[selectedInstrument] ?? 'lib/assets/notes.json');
+      final Map<String, dynamic> map = NoteProvider().getNotes(selectedInstrument);
 
-    final Map<String, dynamic> jsonMap = jsonDecode(fileContents);
-
-    return jsonMap.entries
+    return map.entries
         .map((entry) => Note.fromJson(entry))
         .toList(growable: false);
   } catch (e) {

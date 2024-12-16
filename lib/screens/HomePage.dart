@@ -1,8 +1,6 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:music_tuner/widgets/BluetoothConnectorWidget.dart';
-
 import '../providers/InstrumentProvider.dart';
 import '../widgets/DatabaseHelper.dart';
 import '../widgets/body/LandscapeLayoutWidget.dart';

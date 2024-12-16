@@ -12,13 +12,13 @@ Map<String, List<String>> noteInstrumentDefaultProvider = {
   'Trumpet': ['B1'],
 };
 
-final Map<String, String> instrumentNoteFiles = {
-  'Guitar': 'lib/assets/notes.json',
-  'Bass': 'lib/assets/notes.json',
-  'Tenorhorn': 'lib/assets/notes-tenor.json',
-  'Saxophone': 'lib/assets/notes-saxophone.json',
-  'Trumpet': 'lib/assets/notes-trumpet.json',
-};
+// final Map<String, String> instrumentNoteFiles = {
+//   'Guitar': 'lib/assets/notes.dart',
+//   'Bass': 'lib/assets/notes.dart',
+//   'Tenorhorn': 'lib/assets/notes_tenor.dart',
+//   'Saxophone': 'lib/assets/notes_saxophone.dart',
+//   'Trumpet': 'lib/assets/notes_trumpet.dart',
+// };
 
 Map<String, List<String>> instrumentNotesMap = Map<String, List<String>>.from(noteInstrumentDefaultProvider);
 Map<String, List<String>> manualNotesMap = Map<String, List<String>>.from(noteInstrumentDefaultProvider);
