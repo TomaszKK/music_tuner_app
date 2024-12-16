@@ -31,7 +31,4 @@ class AppColors {
   static const Color darkOnBackground = Color(0xFF1E1E1E);
   static const Color darkOnSurface = Color(0xFF1E1E1E);
   static const Color darkOnError = Color(0xFF1E1E1E);
-
-
-
 }

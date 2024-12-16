@@ -29,18 +29,22 @@ class HomePageState extends State<HomePage> with WidgetsBindingObserver {
   BluetoothConnectorWidget bluetoothConnectorWidget = BluetoothConnectorWidget();
   String espDeviceId = '';
 
+  late VoidCallback bluetoothListener;
+
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration.zero, _initializeState);
+    _initializeState();
     WidgetsBinding.instance.addObserver(this);
+    bluetoothListener = () {
+      setState(() {});
+    };
+    bluetoothConnectorWidget.isBluetoothConnected.addListener(bluetoothListener);
+
   }
 
   Future<void> _initializeState() async {
     await _loadAppState();
-    bluetoothConnectorWidget.isBluetoothConnected.addListener(() {
-      setState(() {});
-    });
   }
 
   Future<void> _loadAppState() async {
@@ -82,6 +86,7 @@ class HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
   @override
   void dispose() {
+    bluetoothConnectorWidget.isBluetoothConnected.removeListener(bluetoothListener);
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }

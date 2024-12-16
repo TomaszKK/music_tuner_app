@@ -43,12 +43,9 @@ class _InstrumentWidgetState extends State<InstrumentWidget> with WidgetsBinding
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration.zero, ()
-    {
-      _loadAppState();
-      _loadNoteListForInstrument(widget.selectedInstrument);
-      WidgetsBinding.instance.addObserver(this);
-    });
+    _loadAppState();
+    _loadNoteListForInstrument(widget.selectedInstrument);
+    WidgetsBinding.instance.addObserver(this);
   }
 
 
