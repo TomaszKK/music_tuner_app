@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:music_tuner/widgets/BluetoothConnectorWidget.dart';
 import 'package:music_tuner/widgets/ThemeSwitchButton.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
 import '../providers/InstrumentProvider.dart';
 import '../providers/ThemeManager.dart';
@@ -20,6 +21,21 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
+  String _appVersion = "";
+
+  @override
+  void initState() {
+    super.initState();
+    _loadAppVersion();
+  }
+
+  Future<void> _loadAppVersion() async {
+    final packageInfo = await PackageInfo.fromPlatform();
+    setState(() {
+      _appVersion = packageInfo.version;
+    });
+  }
+
   Future<void> _saveAppState() async {
     await DatabaseHelper().insertOrUpdateAll(
         TranspositionWidget.transpositionNotifier.value,
@@ -169,7 +185,7 @@ class _SettingsPageState extends State<SettingsPage> {
         children: <Widget>[
           _buildVersionRow("Description:","IOT Mobile Tuner with ESP32 board for reading the frequency of the instrument and display it on the screen."),
           _buildVersionRow("Author", "Tomasz Kubik"),
-          _buildVersionRow("Version", "1.0.2"),
+          _buildVersionRow("Version", _appVersion),
         ],
       ),
     );
