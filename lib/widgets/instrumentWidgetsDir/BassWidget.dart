@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:music_tuner/providers/ThemeManager.dart';
 import 'package:music_tuner/providers/noteInstrumentProvider.dart';
+import 'package:provider/provider.dart';
 
 import '../PinNoteWidget.dart';
 
@@ -90,7 +91,10 @@ class _BassWidgetState extends State<BassWidget> {
                 child: SvgPicture.asset(
                   'lib/assets/Bass.svg',
                   fit: BoxFit.fitHeight,
-                  color: ThemeManager().currentTheme.colorScheme.onSecondary,
+                  colorFilter: ColorFilter.mode(
+                    Provider.of<ThemeManager>(context).currentTheme.colorScheme.onSecondary,
+                    BlendMode.srcIn,
+                  ),
                 ),
               ),
             ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:music_tuner/providers/ThemeManager.dart';
+import 'package:provider/provider.dart';
 import 'package:wheel_picker/wheel_picker.dart';
 
 class FrequencyButtonWidget extends StatefulWidget {
@@ -201,7 +202,7 @@ class _FrequencyButtonWidgetState extends State<FrequencyButtonWidget> {
         child: Text(
           '${widget.initialFrequency.toStringAsFixed(1)} Hz',
           style: TextStyle(
-            color: ThemeManager().currentTheme.colorScheme.secondary,
+            color: Provider.of<ThemeManager>(context).currentTheme.colorScheme.secondary,
             fontSize: widget.fontSize,
           ),
         ),

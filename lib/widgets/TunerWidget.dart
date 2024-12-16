@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:music_tuner/providers/ThemeManager.dart';
+import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 
 import '../screens/SettingsPage.dart';
@@ -65,7 +66,7 @@ class _TunerWidgetState extends State<TunerWidget> {
             child: Text(
               'Error loading notes: ${snapshot.error}',
               style: TextStyle(
-                color: ThemeManager().currentTheme.colorScheme.secondary,
+                color: Provider.of<ThemeManager>(context).currentTheme.colorScheme.secondary,
               ),
             ),
           );
@@ -104,7 +105,7 @@ class _TunerWidgetState extends State<TunerWidget> {
                               return Text(
                                 frequency.toStringAsFixed(1),
                                 style: TextStyle(
-                                  color: ThemeManager().currentTheme.colorScheme.secondary,
+                                  color: Provider.of<ThemeManager>(context).currentTheme.colorScheme.secondary,
                                   fontSize: baseFontSize,
                                 ),
                               );
@@ -151,7 +152,7 @@ class _TunerWidgetState extends State<TunerWidget> {
                                       Text(
                                         textUnderNote,
                                         style: TextStyle(
-                                          color: ThemeManager().currentTheme.colorScheme.secondary,
+                                          color: Provider.of<ThemeManager>(context).currentTheme.colorScheme.secondary,
                                           fontSize: baseFontSize * 0.8,
                                         ),
                                       ),
@@ -239,12 +240,12 @@ class _TunerWidgetState extends State<TunerWidget> {
                                     showLabels: false,
                                     majorTickStyle: LinearTickStyle(
                                       length: 80,
-                                      color: ThemeManager().currentTheme.colorScheme.secondary,
+                                      color: Provider.of<ThemeManager>(context).currentTheme.colorScheme.secondary,
                                       thickness: 2,
                                     ),
                                     minorTickStyle: LinearTickStyle(
                                       length: 30,
-                                      color: ThemeManager().currentTheme.colorScheme.secondary,
+                                      color: Provider.of<ThemeManager>(context).currentTheme.colorScheme.secondary,
                                       thickness: 1,
                                     ),
                                     tickPosition: LinearElementPosition.cross,
@@ -252,7 +253,7 @@ class _TunerWidgetState extends State<TunerWidget> {
                                       LinearGaugeRange(
                                         startValue: -1,
                                         endValue: 1,
-                                        color: ThemeManager().currentTheme.colorScheme.secondary,
+                                        color: Provider.of<ThemeManager>(context).currentTheme.colorScheme.secondary,
                                         startWidth: 120,
                                         endWidth: 120,
                                         position: LinearElementPosition.cross,
@@ -284,7 +285,7 @@ class _TunerWidgetState extends State<TunerWidget> {
                                             ? ' '
                                             : '${currentNote.freq.toStringAsFixed(1)} Hz',
                                         style: TextStyle(
-                                          color: ThemeManager().currentTheme.colorScheme.secondary,
+                                          color: Provider.of<ThemeManager>(context).currentTheme.colorScheme.secondary,
                                           fontSize: baseFontSize * 0.95,  // Smaller font for the range
                                         ),
                                       ),
