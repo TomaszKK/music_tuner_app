@@ -111,6 +111,7 @@ class HomePageState extends State<HomePage> with WidgetsBindingObserver {
     );
   }
 
+
   AppBar _buildAppBar(BuildContext context){
     return AppBar(
       backgroundColor: Theme.of(context).colorScheme.primaryContainer,
