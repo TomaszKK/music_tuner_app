@@ -1,7 +1,7 @@
-import 'package:music_tuner/assets/notes.dart';
-import 'package:music_tuner/assets/notes_saxophone.dart';
-import 'package:music_tuner/assets/notes_tenor.dart';
-import '../assets/notes_trumpet.dart';
+import 'package:music_tuner/assets/Notes_Freq/notes.dart';
+import 'package:music_tuner/assets/Notes_Freq/notes_saxophone.dart';
+import 'package:music_tuner/assets/Notes_Freq/notes_tenor.dart';
+import '../assets/Notes_Freq/notes_trumpet.dart';
 
 class NoteProvider {
   Map<String, double> standardNotes = standard_notes;

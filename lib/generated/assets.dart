@@ -7,10 +7,6 @@ class Assets {
   static const String assetsLoadingAppScreen = 'lib/assets/loading_app_screen.png';
   static const String assetsLoadingAppScreen2 = 'lib/assets/loading_app_screen_2.png';
   static const String assetsLogo = 'lib/assets/logo.png';
-  static const String assetsNotes = 'lib/assets/notes.dart';
-  static const String assetsNotesSaxophone = 'lib/assets/notes_saxophone.dart';
-  static const String assetsNotesTenor = 'lib/assets/notes_tenor.dart';
-  static const String assetsNotesTrumpet = 'lib/assets/notes_trumpet.dart';
   static const String assetsSaxophone = 'lib/assets/Saxophone.svg';
   static const String assetsTenorhorn = 'lib/assets/Tenorhorn.svg';
   static const String assetsTranspLogo = 'lib/assets/Transp_logo.svg';
@@ -28,10 +24,6 @@ class Assets {
   static const String libAssetsBass = 'lib/assets/Bass.svg';
   static const String libAssetsGuitar = 'lib/assets/Guitar.svg';
   static const String libAssetsLogo = 'lib/assets/logo.png';
-  static const String libAssetsNotes = 'lib/assets/notes.dart';
-  static const String libAssetsNotesSaxophone = 'lib/assets/notes_saxophone.dart';
-  static const String libAssetsNotesTenor = 'lib/assets/notes_tenor.dart';
-  static const String libAssetsNotesTrumpet = 'lib/assets/notes_trumpet.dart';
   static const String libAssetsSaxophone = 'lib/assets/Saxophone.svg';
   static const String libAssetsTenorhorn = 'lib/assets/Tenorhorn.svg';
   static const String libAssetsTranspLogo = 'lib/assets/Transp_logo.svg';
@@ -39,6 +31,10 @@ class Assets {
   static const String libAssetsTrumpet = 'lib/assets/Trumpet.svg';
   static const String libMain = 'lib/main.dart';
   static const String modelsNoteModel = 'lib/models/NoteModel.dart';
+  static const String notesFreqNotes = 'lib/assets/Notes_Freq/notes.dart';
+  static const String notesFreqNotesSaxophone = 'lib/assets/Notes_Freq/notes_saxophone.dart';
+  static const String notesFreqNotesTenor = 'lib/assets/Notes_Freq/notes_tenor.dart';
+  static const String notesFreqNotesTrumpet = 'lib/assets/Notes_Freq/notes_trumpet.dart';
   static const String providersInstrumentProvider = 'lib/providers/InstrumentProvider.dart';
   static const String providersNoteAdditionalProvider = 'lib/providers/noteAdditionalProvider.dart';
   static const String providersNoteInstrumentProvider = 'lib/providers/noteInstrumentProvider.dart';
