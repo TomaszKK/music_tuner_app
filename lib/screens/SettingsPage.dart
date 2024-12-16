@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:music_tuner/widgets/BluetoothConnectorWidget.dart';
-import 'package:music_tuner/widgets/TunerWidget.dart';
+import 'package:music_tuner/widgets/ThemeSwitchButton.dart';
+import 'package:provider/provider.dart';
 import '../providers/InstrumentProvider.dart';
+import '../providers/ThemeManager.dart';
 import '../providers/noteInstrumentProvider.dart';
 import '../widgets/DatabaseHelper.dart';
 import '../widgets/TranspositionWidget.dart';
@@ -48,6 +50,8 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final themeManager = Provider.of<ThemeManager>(context);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.primaryContainer,
@@ -83,12 +87,35 @@ class _SettingsPageState extends State<SettingsPage> {
               const SizedBox(height: 20),
               _buildSettingRow("Reset to default", "Reset", "all"),
               _buildSettingRow("Reset connected device", "Reset", "ble"),
+              _buildThemeSwitchButton(themeManager), // Added ThemeSwitchButton
               Spacer(),
               _buildVersionContainer(),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Row _buildThemeSwitchButton(ThemeManager themeManager) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Text(
+          "Switch Theme",
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.onPrimaryContainer,
+            fontFamily: 'Poppins',
+          ),
+        ),
+        Switch(
+          value: themeManager.isDark, // Check the current theme mode
+          onChanged: (value) {
+            themeManager.switchTheme(); // Toggle the theme
+          },
+          activeColor: Theme.of(context).colorScheme.secondary,
+        ),
+      ],
     );
   }
 
