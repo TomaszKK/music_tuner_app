@@ -42,7 +42,7 @@ class NoteRepresentationWidget extends StatelessWidget {
       return Text(
         note,
         style: TextStyle(
-          color: ThemeManager().currentTheme.colorScheme.secondary,
+          color: Provider.of<ThemeManager>(context).currentTheme.colorScheme.secondary,
           fontSize: fontSize,
           fontWeight: FontWeight.bold
         ),

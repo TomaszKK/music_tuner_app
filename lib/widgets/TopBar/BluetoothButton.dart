@@ -8,16 +8,19 @@ class BluetoothButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return IconButton(
-      icon: Icon(
-        Icons.bluetooth_connected,
-        color: bluetoothConnectorWidget.isBluetoothConnected.value
-            ? Colors.green
-            : Theme.of(context).colorScheme.onPrimaryContainer,
-        size: 30,
-      ),
-      onPressed: () {
-        bluetoothConnectorWidget.showBluetoothConnectorWidget(context);
+    return ValueListenableBuilder<bool>(
+      valueListenable: bluetoothConnectorWidget.isBluetoothConnected,
+      builder: (context, isConnected, child) {
+        return IconButton(
+          icon: Icon(
+            Icons.bluetooth_connected,
+            color: isConnected ? Colors.green : Theme.of(context).colorScheme.onPrimaryContainer,
+            size: 30,
+          ),
+          onPressed: () {
+            bluetoothConnectorWidget.showBluetoothConnectorWidget(context);
+          },
+        );
       },
     );
   }

@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:music_tuner/providers/noteAdditionalProvider.dart';
 import 'package:music_tuner/providers/noteInstrumentProvider.dart';
+import 'package:provider/provider.dart';
 import 'package:wheel_picker/wheel_picker.dart';
+
+import '../providers/ThemeManager.dart';
+import 'ResetDoneButtonsWidget.dart';
 
 class NoteScrollerWidget extends StatelessWidget {
   NoteScrollerWidget({super.key});
@@ -100,6 +104,7 @@ class NoteScrollerWidget extends StatelessWidget {
 
     returnNote = await showModalBottomSheet<String>(
       context: context,
+      backgroundColor: Provider.of<ThemeManager>(context, listen: false).currentTheme.colorScheme.background,
       builder: (BuildContext context) {
         return Container(
           padding: const EdgeInsets.all(15),
@@ -111,57 +116,22 @@ class NoteScrollerWidget extends StatelessWidget {
               Expanded(
                 child: buildPickerContent(context, noteIndex, chromaticIndex, octaveIndex),
               ),
-              Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  const Spacer(),
-                  ElevatedButton(
-                    onPressed: () {
-                      parseNoteString(defaultNote);
-                      Navigator.of(context).pop(defaultNote);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.transparent,
-                      shadowColor: Colors.red,
-                    ),
-                    child: const Text(
-                      'Reset',
-                      style: TextStyle(
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Poppins',
-                        color: Colors.red,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 20),
-                  ElevatedButton(
-                    onPressed: () {
-                      if(chromatic == ' '){
-                        chromatic = '';
-                      }
-                      returnNote = note + chromatic + octave;
-                      returnNote = resolveEnharmonic(returnNote!);
-                      Navigator.of(context).pop(returnNote);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.transparent,
-                      shadowColor: Colors.green,
-                    ),
-                    child: const Text(
-                      'Done',
-                      style: TextStyle(
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Poppins',
-                        color: Colors.green,
-                      ),
-                    ),
-                  ),
-                  const Spacer()
-                ]
-              )
+              ResetDoneButtons(
+                onReset: () {
+                  parseNoteString(defaultNote);
+                  Navigator.of(context).pop(defaultNote);
+                },
+                onDone: () {
+                  if (chromatic == ' ') {
+                    chromatic = '';
+                  }
+                  returnNote = note + chromatic + octave;
+                  returnNote = resolveEnharmonic(returnNote!);
+                  Navigator.of(context).pop(returnNote);
+                },
+                resetColor: Provider.of<ThemeManager>(context, listen: false).currentTheme.colorScheme.error,
+                doneColor: Provider.of<ThemeManager>(context, listen: false).currentTheme.colorScheme.secondary,
+              ),
             ],
           ),
         );
@@ -176,16 +146,17 @@ class NoteScrollerWidget extends StatelessWidget {
     final chromaticsWheel = WheelPickerController(initialIndex: chromaticIndex, itemCount: chromatics.length);
     final octavesWheel = WheelPickerController(initialIndex: octaveIndex, itemCount: octaves.length);
 
-    const heading2TextStyle = TextStyle(
+    TextStyle heading2TextStyle = TextStyle(
       fontSize: 20.0,
       fontWeight: FontWeight.bold,
       fontFamily: 'Poppins',
-      color: Colors.white,
+      color: Provider.of<ThemeManager>(context, listen: false).currentTheme.colorScheme.onPrimaryContainer,
     );
-    const wheelTextStyle = TextStyle(
-        fontFamily: 'Poppins',
-        fontSize: 30.0,
-        height: 1.5
+    TextStyle wheelTextStyle = TextStyle(
+      fontFamily: 'Poppins',
+      fontSize: 30.0,
+      height: 1.5,
+      color: Provider.of<ThemeManager>(context, listen: false).currentTheme.colorScheme.onPrimaryContainer,
     );
 
     return Row(
@@ -194,7 +165,7 @@ class NoteScrollerWidget extends StatelessWidget {
         Expanded(
           child: Column(
             children: [
-              const Text(
+              Text(
                 'Note',
                 style: heading2TextStyle,
               ),
@@ -224,7 +195,7 @@ class NoteScrollerWidget extends StatelessWidget {
         Expanded(
           child: Column(
             children: [
-              const Text(
+              Text(
                 'Octave',
                 style: heading2TextStyle,
               ),
@@ -253,7 +224,7 @@ class NoteScrollerWidget extends StatelessWidget {
         Expanded(
           child: Column(
             children: [
-              const Text(
+              Text(
                 'Chromatic',
                 style: heading2TextStyle,
               ),

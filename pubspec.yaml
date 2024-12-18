@@ -113,10 +113,6 @@ flutter:
     - lib/assets/Trumpet.svg
     - lib/assets/Transposition_logo.svg
     - lib/assets/Transp_logo.svg
-    - lib/assets/notes.json
-    - lib/assets/notes-tenor.json
-    - lib/assets/notes-saxophone.json
-    - lib/assets/notes-trumpet.json
     - lib/assets/logo.png
     - lib/widgets/TopBar/
 

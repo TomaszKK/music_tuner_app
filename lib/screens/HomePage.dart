@@ -1,8 +1,6 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:music_tuner/widgets/BluetoothConnectorWidget.dart';
-
 import '../providers/InstrumentProvider.dart';
 import '../widgets/DatabaseHelper.dart';
 import '../widgets/body/LandscapeLayoutWidget.dart';
@@ -29,18 +27,22 @@ class HomePageState extends State<HomePage> with WidgetsBindingObserver {
   BluetoothConnectorWidget bluetoothConnectorWidget = BluetoothConnectorWidget();
   String espDeviceId = '';
 
+  late VoidCallback bluetoothListener;
+
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration.zero, _initializeState);
+    _initializeState();
     WidgetsBinding.instance.addObserver(this);
+    bluetoothListener = () {
+      setState(() {});
+    };
+    bluetoothConnectorWidget.isBluetoothConnected.addListener(bluetoothListener);
+
   }
 
   Future<void> _initializeState() async {
     await _loadAppState();
-    bluetoothConnectorWidget.isBluetoothConnected.addListener(() {
-      setState(() {});
-    });
   }
 
   Future<void> _loadAppState() async {
@@ -82,6 +84,7 @@ class HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
   @override
   void dispose() {
+    bluetoothConnectorWidget.isBluetoothConnected.removeListener(bluetoothListener);
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
@@ -106,20 +109,35 @@ class HomePageState extends State<HomePage> with WidgetsBindingObserver {
     );
   }
 
+
   AppBar _buildAppBar(BuildContext context){
     return AppBar(
       backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-      toolbarHeight: 80,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-      ),
-      titleSpacing: 20,
-      title: Text(
-        widget.title,
-        style: TextStyle(
-          color: Theme.of(context).colorScheme.onPrimaryContainer,
-          fontFamily: 'Poppins',
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(20), // Round bottom-left corner
+          bottomRight: Radius.circular(20), // Round bottom-right corner
         ),
+      ),
+      // titleSpacing: 20,
+      title: Stack(
+        children: [
+          // Black outline (slightly larger text)
+          Text(
+            widget.title,
+            style: TextStyle(
+              fontFamily: 'Poppins',
+              fontWeight: FontWeight.w200,
+              fontSize: 20, // Adjust font size
+              // color: Theme.of(context).colorScheme.onPrimaryContainer,
+              letterSpacing: 2,
+              foreground: Paint()
+                ..style = PaintingStyle.stroke
+                ..strokeWidth = 2 // Outline thickness
+                ..color = Theme.of(context).colorScheme.onPrimaryContainer,
+            ),
+          ),
+        ],
       ),
       actions: [
         TranspositionButton(selectedInstrument: _selectedInstrument),

@@ -3,6 +3,8 @@ import 'package:music_tuner/providers/ThemeManager.dart';
 import 'package:provider/provider.dart';
 import 'package:wheel_picker/wheel_picker.dart';
 
+import 'ResetDoneButtonsWidget.dart';
+
 class FrequencyButtonWidget extends StatefulWidget {
   final double initialFrequency;
   final ValueChanged<double> onFrequencyChanged;
@@ -36,18 +38,14 @@ class _FrequencyButtonWidgetState extends State<FrequencyButtonWidget> {
 
   void _resetFrequency() {
       selectedFrequency = 440.0;
-      // integerPart = selectedFrequency.floor();
-      // decimalPart = ((selectedFrequency - integerPart) * 10).round();
-
-      // integerController.shiftTo(index: integerPart - 390);
-      // decimalController.shiftTo(index: decimalPart);
   }
 
 
   void _openFrequencyPicker(BuildContext context) {
     showModalBottomSheet(
       context: context,
-      isScrollControlled: true, // Allow scrolling if needed
+      isScrollControlled: true,
+      backgroundColor: Provider.of<ThemeManager>(context, listen: false).currentTheme.colorScheme.background,
       builder: (BuildContext context) {
         return LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraints) {
@@ -64,6 +62,7 @@ class _FrequencyButtonWidgetState extends State<FrequencyButtonWidget> {
                       fontSize: 20.0,
                       fontWeight: FontWeight.bold,
                       fontFamily: 'Poppins',
+                      color: Provider.of<ThemeManager>(context).currentTheme.colorScheme.onPrimaryContainer,
                     ),
                   ),
                   Expanded(
@@ -75,7 +74,10 @@ class _FrequencyButtonWidgetState extends State<FrequencyButtonWidget> {
                           child: WheelPicker(
                             builder: (context, index) => Text(
                               (390 + index).toString(),
-                              style: TextStyle(fontSize: 20),
+                              style: TextStyle(
+                                fontSize: 20,
+                                color: Provider.of<ThemeManager>(context, listen: false).currentTheme.colorScheme.onPrimaryContainer,
+                              ),
                             ),
                             controller: integerController,
                             onIndexChanged: (index) {
@@ -103,7 +105,10 @@ class _FrequencyButtonWidgetState extends State<FrequencyButtonWidget> {
                           child: WheelPicker(
                             builder: (context, index) => Text(
                               index.toString(),
-                              style: TextStyle(fontSize: 20),
+                              style: TextStyle(
+                                fontSize: 20,
+                                color: Provider.of<ThemeManager>(context, listen: false).currentTheme.colorScheme.onPrimaryContainer,
+                              ),
                             ),
                             controller: decimalController,
                             onIndexChanged: (index) {
@@ -128,51 +133,18 @@ class _FrequencyButtonWidgetState extends State<FrequencyButtonWidget> {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      ElevatedButton(
-                        onPressed: () {
-                          _resetFrequency();
-                          widget.onFrequencyChanged(selectedFrequency);
-                          Navigator.of(context).pop();
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.transparent,
-                          shadowColor: Colors.red,
-                        ),
-                        child: const Text(
-                          'Reset',
-                          style: TextStyle(
-                            fontSize: 18.0, // Slightly smaller font size for landscape
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'Poppins',
-                            color: Colors.red,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 20),
-                      ElevatedButton(
-                        onPressed: () {
-                          widget.onFrequencyChanged(selectedFrequency);
-                          Navigator.of(context).pop();
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.transparent,
-                          shadowColor: Colors.green,
-                        ),
-                        child: const Text(
-                          'Done',
-                          style: TextStyle(
-                            fontSize: 18.0, // Slightly smaller font size for landscape
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'Poppins',
-                            color: Colors.green,
-                          ),
-                        ),
-                      ),
-                    ],
+                  ResetDoneButtons(
+                    onReset: () {
+                      _resetFrequency();
+                      widget.onFrequencyChanged(selectedFrequency);
+                      Navigator.of(context).pop();
+                    },
+                    onDone: () {
+                      widget.onFrequencyChanged(selectedFrequency);
+                      Navigator.of(context).pop();
+                    },
+                    resetColor: Provider.of<ThemeManager>(context).currentTheme.colorScheme.error,
+                    doneColor: Provider.of<ThemeManager>(context).currentTheme.colorScheme.secondary,
                   ),
                 ],
               ),
