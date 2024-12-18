@@ -135,7 +135,9 @@ class _SettingsPageState extends State<SettingsPage> {
             theme = value ? "dark" : "light";
             _saveAppState();
           },
-          activeColor: Theme.of(context).colorScheme.secondary,
+          activeColor: Theme.of(context).colorScheme.onPrimary,
+          activeTrackColor: Theme.of(context).colorScheme.primaryContainer,
+          trackOutlineColor: WidgetStatePropertyAll(Theme.of(context).colorScheme.onPrimary),
         ),
       ],
     );
@@ -165,14 +167,15 @@ class _SettingsPageState extends State<SettingsPage> {
               Navigator.pop(context, true);
             }
           },
-          style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
-            // padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          style: ElevatedButton.styleFrom(
+            foregroundColor: Provider.of<ThemeManager>(context, listen: false).currentTheme.colorScheme.error,
+            backgroundColor: Provider.of<ThemeManager>(context, listen: false).currentTheme.colorScheme.error,
+            shadowColor: Provider.of<ThemeManager>(context, listen: false).currentTheme.colorScheme.onPrimaryContainer,
           ),
           child: Text(
             settingValue,
-            style: const TextStyle(
-              color: Colors.black,
+            style: TextStyle(
+              color: Provider.of<ThemeManager>(context, listen: false).currentTheme.colorScheme.onPrimaryContainer,
               fontFamily: 'Poppins',
             ),
           ),

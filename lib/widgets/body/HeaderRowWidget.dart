@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:music_tuner/widgets/InstrumentSelectionWidget.dart';
 import 'package:music_tuner/screens/HomePage.dart';
+import 'package:provider/provider.dart';
+
+import '../../providers/ThemeManager.dart';
 
 class HeaderRow extends StatelessWidget {
   final String selectedInstrument;
@@ -58,16 +61,16 @@ class _SelectedInstrumentButton extends StatelessWidget {
         final newInstrument = await showDialog<String>(
           context: context,
           builder: (context) {
-            return const Dialog(
+            return Dialog(
               backgroundColor: Colors.transparent,
               elevation: 5,
               shadowColor: Colors.white,
               surfaceTintColor: Colors.black,
-              shape: RoundedRectangleBorder(
+              shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(20)),
               ),
-              insetPadding: EdgeInsets.symmetric(horizontal: 40, vertical: 80),
-              child: InstrumentSelectionWidget(title: 'Select Instrument'),
+              insetPadding: const EdgeInsets.symmetric(horizontal: 40, vertical: 80),
+              child: InstrumentSelectionWidget(title: 'Select Instrument', selectedInstrument: selectedInstrument),
             );
           },
         );
@@ -105,7 +108,7 @@ class _ResetButton extends StatelessWidget {
           },
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.transparent,
-            shadowColor: Colors.red,
+            shadowColor: Provider.of<ThemeManager>(context).currentTheme.colorScheme.error,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(40),
             ),
@@ -117,7 +120,7 @@ class _ResetButton extends StatelessWidget {
             style: TextStyle(
               fontSize: 15.0,
               fontFamily: 'Poppins',
-              color: Theme.of(context).colorScheme.onPrimaryContainer.withOpacity(0.7),
+              color: Provider.of<ThemeManager>(context).currentTheme.colorScheme.error,
             ),
           ),
         )

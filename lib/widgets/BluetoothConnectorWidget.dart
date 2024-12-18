@@ -6,7 +6,9 @@ import 'package:permission_handler/permission_handler.dart' as permission_handle
 import 'package:location/location.dart' as location_handler;
 import 'dart:typed_data';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:provider/provider.dart';
 
+import '../providers/ThemeManager.dart';
 import 'DatabaseHelper.dart';
 
 typedef FloatValueCallback = void Function(double floatValue);
@@ -56,6 +58,7 @@ class BluetoothConnectorWidget {
         showModalBottomSheet(
           context: context,
           isScrollControlled: true,
+          backgroundColor: Provider.of<ThemeManager>(context, listen: false).currentTheme.colorScheme.background,
           builder: (BuildContext context) {
             return ValueListenableBuilder<bool>(
               valueListenable: isScanning,
@@ -65,18 +68,19 @@ class BluetoothConnectorWidget {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      const Text(
+                      Text(
                         'Select device to connect to:',
                         style: TextStyle(
                           fontSize: 20.0,
                           fontWeight: FontWeight.bold,
                           fontFamily: 'Poppins',
+                          color: Provider.of<ThemeManager>(context, listen: false).currentTheme.colorScheme.onPrimaryContainer,
                         ),
                       ),
                       scanning
                           ? Center(
                         child: LoadingAnimationWidget.staggeredDotsWave(
-                          color: Colors.green,
+                          color: Provider.of<ThemeManager>(context, listen: false).currentTheme.colorScheme.secondary,
                           size: 20.0,
                         ),
                       )
@@ -90,8 +94,8 @@ class BluetoothConnectorWidget {
                                 return ListTile(
                                   title: Text(
                                     r.device.platformName,
-                                    style: const TextStyle(
-                                      color: Colors.green,
+                                    style: TextStyle(
+                                      color: Provider.of<ThemeManager>(context, listen: false).currentTheme.colorScheme.secondary,
                                     ),
                                   ),
                                   onTap: () {
@@ -102,12 +106,12 @@ class BluetoothConnectorWidget {
                               }).toList(),
                             );
                           } else {
-                            return const Center(
+                            return Center(
                               child: Text(
                                 'No devices found. Please try again.',
                                 style: TextStyle(
                                   fontSize: 16.0,
-                                  color: Colors.red,
+                                  color: Provider.of<ThemeManager>(context, listen: false).currentTheme.colorScheme.error,
                                 ),
                               ),
                             );
@@ -120,7 +124,7 @@ class BluetoothConnectorWidget {
                           return connecting
                               ? Center(
                             child: LoadingAnimationWidget.staggeredDotsWave(
-                              color: Colors.green,
+                              color: Provider.of<ThemeManager>(context, listen: false).currentTheme.colorScheme.secondary,
                               size: 30.0,
                             ),
                           )
@@ -138,18 +142,20 @@ class BluetoothConnectorWidget {
       else{
         showModalBottomSheet(
           context: context,
+          backgroundColor: Provider.of<ThemeManager>(context, listen: false).currentTheme.colorScheme.background,
           builder: (BuildContext context) {
             return Container(
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  const Text(
+                  Text(
                     'Device already connected.',
                     style: TextStyle(
                       fontSize: 20.0,
                       fontWeight: FontWeight.bold,
                       fontFamily: 'Poppins',
+                      color: Provider.of<ThemeManager>(context, listen: false).currentTheme.colorScheme.onPrimaryContainer,
                     ),
                   ),
                   ElevatedButton(
@@ -158,20 +164,20 @@ class BluetoothConnectorWidget {
                         disconnectDevice(connectedDevice!, context);
                         Navigator.pop(context);
                       } else {
-                        print("No device connected");
+                        // print('No connected device to disconnect');
                       }
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.transparent,
-                      shadowColor: Colors.red,
+                      shadowColor: Provider.of<ThemeManager>(context, listen: false).currentTheme.colorScheme.error,
                     ),
-                    child: const Text(
+                    child: Text(
                       'Disconnect',
                       style: TextStyle(
                         fontSize: 18.0, // Slightly smaller font size for landscape
                         fontWeight: FontWeight.bold,
                         fontFamily: 'Poppins',
-                        color: Colors.red,
+                        color: Provider.of<ThemeManager>(context, listen: false).currentTheme.colorScheme.error,
                       ),
                     ),
                   ),
@@ -185,25 +191,27 @@ class BluetoothConnectorWidget {
       // Step 3: Show modal with error message if any service is disabled
       showModalBottomSheet(
         context: context,
+        backgroundColor: Provider.of<ThemeManager>(context, listen: false).currentTheme.colorScheme.background,
         builder: (BuildContext context) {
           return Container(
             padding: const EdgeInsets.all(16.0),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                const Text(
+                Text(
                   'Error',
                   style: TextStyle(
                     fontSize: 20.0,
                     fontWeight: FontWeight.bold,
                     fontFamily: 'Poppins',
+                    color: Provider.of<ThemeManager>(context, listen: false).currentTheme.colorScheme.onPrimaryContainer,
                   ),
                 ),
-                const Text(
+                Text(
                   'Please enable Bluetooth and Location Services to continue.',
                   style: TextStyle(
                     fontSize: 16.0,
-                    color: Colors.red,
+                    color: Provider.of<ThemeManager>(context, listen: false).currentTheme.colorScheme.error,
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -211,9 +219,17 @@ class BluetoothConnectorWidget {
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  child: const Text(
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Provider.of<ThemeManager>(context, listen: false).currentTheme.colorScheme.surface,
+                    backgroundColor: Provider.of<ThemeManager>(context, listen: false).currentTheme.colorScheme.surface,
+                    shadowColor: Provider.of<ThemeManager>(context, listen: false).currentTheme.colorScheme.onPrimaryContainer,
+                  ),
+                  child: Text(
                     'Close',
-                    style: TextStyle(fontFamily: 'Poppins'),
+                    style: TextStyle(
+                      fontFamily: 'Poppins',
+                      color: Provider.of<ThemeManager>(context, listen: false).currentTheme.colorScheme.onPrimaryContainer,
+                    ),
                   ),
                 ),
               ],

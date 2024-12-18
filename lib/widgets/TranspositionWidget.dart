@@ -6,6 +6,7 @@ import '../providers/InstrumentProvider.dart';
 import '../providers/ThemeManager.dart';
 import '../providers/noteInstrumentProvider.dart';
 import '../screens/HomePage.dart';
+import 'ResetDoneButtonsWidget.dart';
 
 class TranspositionWidget {
   static ValueNotifier<Map<String, int>> transpositionNotifier = ValueNotifier<Map<String, int>>({
@@ -61,7 +62,9 @@ class TranspositionWidget {
                                     }
                                   },
                                   style: ElevatedButton.styleFrom(
-                                    shadowColor: Provider.of<ThemeManager>(context, listen: false).currentTheme.colorScheme.surface,
+                                    foregroundColor: Provider.of<ThemeManager>(context, listen: false).currentTheme.colorScheme.surface,
+                                    backgroundColor: Provider.of<ThemeManager>(context, listen: false).currentTheme.colorScheme.surface,
+                                    shadowColor: Provider.of<ThemeManager>(context, listen: false).currentTheme.colorScheme.onPrimaryContainer,
                                   ),
                                   child: Text(
                                     '- 0.5',
@@ -92,7 +95,9 @@ class TranspositionWidget {
                                     }
                                   },
                                   style: ElevatedButton.styleFrom(
-                                    shadowColor: Provider.of<ThemeManager>(context, listen: false).currentTheme.colorScheme.surface,
+                                    foregroundColor: Provider.of<ThemeManager>(context, listen: false).currentTheme.colorScheme.surface,
+                                    backgroundColor: Provider.of<ThemeManager>(context, listen: false).currentTheme.colorScheme.surface,
+                                    shadowColor: Provider.of<ThemeManager>(context, listen: false).currentTheme.colorScheme.onPrimaryContainer,
                                   ),
                                   child: Text(
                                     '+ 0.5',
@@ -109,55 +114,22 @@ class TranspositionWidget {
                           ],
                         ),
                         const SizedBox(height: 16),
-                        Row(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            ElevatedButton(
-                              onPressed: () {
-                                // Reset the transposition value for the selected instrument
-                                transpositionNotifier.value[selectedInstrument] = 0;
+                        ResetDoneButtons(
+                          onReset: () {
+                            // Reset the transposition value for the selected instrument
+                            transpositionNotifier.value[selectedInstrument] = 0;
 
-                                // Restore notes from the manual changes map
-                                instrumentNotesMap[selectedInstrument] = List<String>.from(manualNotesMap[selectedInstrument]!);
+                            // Restore notes from the manual changes map
+                            instrumentNotesMap[selectedInstrument] = List<String>.from(manualNotesMap[selectedInstrument]!);
 
-                                // Update the transpositionNotifier to trigger rebuilds
-                                transpositionNotifier.value = Map.from(transpositionNotifier.value);
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.transparent,
-                                shadowColor: Provider.of<ThemeManager>(context).currentTheme.colorScheme.error.withOpacity(0.5),
-                              ),
-                              child: Text(
-                                'Reset',
-                                style: TextStyle(
-                                  fontSize: 18.0, // Slightly smaller font size for landscape
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: 'Poppins',
-                                  color: Provider.of<ThemeManager>(context).currentTheme.colorScheme.error,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 20),
-                            ElevatedButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.transparent,
-                                shadowColor: Provider.of<ThemeManager>(context).currentTheme.colorScheme.secondary.withOpacity(0.5),
-                              ),
-                              child: Text(
-                                'Done',
-                                style: TextStyle(
-                                  fontSize: 18.0, // Slightly smaller font size for landscape
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: 'Poppins',
-                                  color: Provider.of<ThemeManager>(context).currentTheme.colorScheme.secondary
-                                ),
-                              ),
-                            ),
-                          ],
+                            // Update the transpositionNotifier to trigger rebuilds
+                            transpositionNotifier.value = Map.from(transpositionNotifier.value);
+                          },
+                          onDone: () {
+                            Navigator.of(context).pop();
+                          },
+                          resetColor: Provider.of<ThemeManager>(context).currentTheme.colorScheme.error,
+                          doneColor: Provider.of<ThemeManager>(context).currentTheme.colorScheme.secondary,
                         ),
                       ],
                     ),

@@ -57,6 +57,7 @@ class Assets {
   static const String widgetsNoteRepresentationWidget = 'lib/widgets/NoteRepresentationWidget.dart';
   static const String widgetsNoteSrollerWidget = 'lib/widgets/NoteSrollerWidget.dart';
   static const String widgetsPinNoteWidget = 'lib/widgets/PinNoteWidget.dart';
+  static const String widgetsResetDoneButtonsWidget = 'lib/widgets/ResetDoneButtonsWidget.dart';
   static const String widgetsThemeSwitchButton = 'lib/widgets/ThemeSwitchButton.dart';
   static const String widgetsTranspositionWidget = 'lib/widgets/TranspositionWidget.dart';
   static const String widgetsTunerWidget = 'lib/widgets/TunerWidget.dart';
