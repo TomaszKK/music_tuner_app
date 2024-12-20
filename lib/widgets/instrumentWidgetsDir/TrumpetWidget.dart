@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:music_tuner/providers/ThemeManager.dart';
 import 'package:music_tuner/providers/noteInstrumentProvider.dart';
 import 'package:music_tuner/widgets/PinNoteWidget.dart';
+import 'package:provider/provider.dart';
 
 class TrumpetWidget extends StatefulWidget {
   TrumpetWidget({super.key, required this.title, required this.noteList, required this.onNotesChanged});
@@ -24,8 +25,6 @@ class _TrumpetWidgetState extends State<TrumpetWidget> {
     setState(() {
       widget.noteList[index] = newNote;
     });
-
-    // Notify parent about the updated notes
     widget.onNotesChanged(widget.noteList);
   }
 
@@ -54,7 +53,10 @@ class _TrumpetWidgetState extends State<TrumpetWidget> {
                 child: SvgPicture.asset(
                   'lib/assets/Trumpet.svg',
                   fit: BoxFit.contain,
-                  color: ThemeManager().currentTheme.colorScheme.onSecondary,
+                  colorFilter: ColorFilter.mode(
+                    Provider.of<ThemeManager>(context).currentTheme.colorScheme.onSecondary,
+                    BlendMode.srcIn,
+                  ),
                 ),
               ),
             ),
@@ -63,7 +65,7 @@ class _TrumpetWidgetState extends State<TrumpetWidget> {
               currentNote: widget.noteList[0],
               circleSize: circleSize,
               currentInstrument: 'Trumpet',
-              onNoteChanged: (newNote) => onNoteChanged(0, newNote),  // Callback for the first pin
+              onNoteChanged: (newNote) => onNoteChanged(0, newNote),
             ),
             SizedBox(width: sidePadding),
           ],

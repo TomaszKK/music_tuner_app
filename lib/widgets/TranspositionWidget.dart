@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:music_tuner/widgets/InstrumentWidget.dart';
+import 'package:provider/provider.dart';
 
 import '../providers/InstrumentProvider.dart';
+import '../providers/ThemeManager.dart';
 import '../providers/noteInstrumentProvider.dart';
 import '../screens/HomePage.dart';
+import 'ResetDoneButtonsWidget.dart';
 
 class TranspositionWidget {
   static ValueNotifier<Map<String, int>> transpositionNotifier = ValueNotifier<Map<String, int>>({
@@ -13,7 +16,8 @@ class TranspositionWidget {
   static void showTranspositionWidget(BuildContext context, String selectedInstrument) {
     showModalBottomSheet(
       context: context,
-      isScrollControlled: true, // Allow scrolling if needed
+      isScrollControlled: true,
+      backgroundColor: Provider.of<ThemeManager>(context, listen: false).currentTheme.colorScheme.background,
       builder: (BuildContext context) {
         return LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraints) {
@@ -29,9 +33,10 @@ class TranspositionWidget {
                     child: Column(
                       mainAxisSize: MainAxisSize.min, // Size column to its children
                       children: <Widget>[
-                        const Text(
+                        Text(
                           'Change Notes Transposition',
                           style: TextStyle(
+                            color: Provider.of<ThemeManager>(context, listen: false).currentTheme.colorScheme.onPrimaryContainer,
                             fontSize: 20.0,
                             fontWeight: FontWeight.bold,
                             fontFamily: 'Poppins',
@@ -56,9 +61,15 @@ class TranspositionWidget {
                                       }
                                     }
                                   },
-                                  child: const Text(
+                                  style: ElevatedButton.styleFrom(
+                                    foregroundColor: Provider.of<ThemeManager>(context, listen: false).currentTheme.colorScheme.surface,
+                                    backgroundColor: Provider.of<ThemeManager>(context, listen: false).currentTheme.colorScheme.surface,
+                                    shadowColor: Provider.of<ThemeManager>(context, listen: false).currentTheme.colorScheme.onPrimaryContainer,
+                                  ),
+                                  child: Text(
                                     '- 0.5',
                                     style: TextStyle(
+                                      color: Provider.of<ThemeManager>(context, listen: false).currentTheme.colorScheme.onPrimaryContainer.withOpacity(0.7),
                                       fontSize: 24, // Reduced font size for landscape
                                       fontWeight: FontWeight.bold,
                                       fontFamily: 'Poppins',
@@ -83,9 +94,15 @@ class TranspositionWidget {
                                       }
                                     }
                                   },
-                                  child: const Text(
+                                  style: ElevatedButton.styleFrom(
+                                    foregroundColor: Provider.of<ThemeManager>(context, listen: false).currentTheme.colorScheme.surface,
+                                    backgroundColor: Provider.of<ThemeManager>(context, listen: false).currentTheme.colorScheme.surface,
+                                    shadowColor: Provider.of<ThemeManager>(context, listen: false).currentTheme.colorScheme.onPrimaryContainer,
+                                  ),
+                                  child: Text(
                                     '+ 0.5',
                                     style: TextStyle(
+                                      color: Provider.of<ThemeManager>(context).currentTheme.colorScheme.onPrimaryContainer.withOpacity(0.7),
                                       fontSize: 24, // Reduced font size for landscape
                                       fontWeight: FontWeight.bold,
                                       fontFamily: 'Poppins',
@@ -97,55 +114,22 @@ class TranspositionWidget {
                           ],
                         ),
                         const SizedBox(height: 16),
-                        Row(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            ElevatedButton(
-                              onPressed: () {
-                                // Reset the transposition value for the selected instrument
-                                transpositionNotifier.value[selectedInstrument] = 0;
+                        ResetDoneButtons(
+                          onReset: () {
+                            // Reset the transposition value for the selected instrument
+                            transpositionNotifier.value[selectedInstrument] = 0;
 
-                                // Restore notes from the manual changes map
-                                instrumentNotesMap[selectedInstrument] = List<String>.from(manualNotesMap[selectedInstrument]!);
+                            // Restore notes from the manual changes map
+                            instrumentNotesMap[selectedInstrument] = List<String>.from(manualNotesMap[selectedInstrument]!);
 
-                                // Update the transpositionNotifier to trigger rebuilds
-                                transpositionNotifier.value = Map.from(transpositionNotifier.value);
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.transparent,
-                                shadowColor: Colors.red,
-                              ),
-                              child: const Text(
-                                'Reset',
-                                style: TextStyle(
-                                  fontSize: 18.0, // Slightly smaller font size for landscape
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: 'Poppins',
-                                  color: Colors.red,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 20),
-                            ElevatedButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.transparent,
-                                shadowColor: Colors.green,
-                              ),
-                              child: const Text(
-                                'Done',
-                                style: TextStyle(
-                                  fontSize: 18.0, // Slightly smaller font size for landscape
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: 'Poppins',
-                                  color: Colors.green,
-                                ),
-                              ),
-                            ),
-                          ],
+                            // Update the transpositionNotifier to trigger rebuilds
+                            transpositionNotifier.value = Map.from(transpositionNotifier.value);
+                          },
+                          onDone: () {
+                            Navigator.of(context).pop();
+                          },
+                          resetColor: Provider.of<ThemeManager>(context).currentTheme.colorScheme.error,
+                          doneColor: Provider.of<ThemeManager>(context).currentTheme.colorScheme.secondary,
                         ),
                       ],
                     ),

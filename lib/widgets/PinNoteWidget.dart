@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:music_tuner/providers/ThemeManager.dart';
 import 'package:music_tuner/widgets/NoteRepresentationWidget.dart';
+import 'package:provider/provider.dart';
 import 'NoteSrollerWidget.dart';
 import 'TunerWidget.dart';
 
@@ -51,9 +52,9 @@ class _PinNoteWidgetState extends State<PinNoteWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final themeColor = ThemeManager().currentTheme.colorScheme
+    final themeColor = Provider.of<ThemeManager>(context).currentTheme.colorScheme
         .secondaryContainer;
-    final currentNoteColor = ThemeManager().currentTheme.colorScheme
+    final currentNoteColor = Provider.of<ThemeManager>(context).currentTheme.colorScheme
         .onSecondaryContainer;
     final NoteScrollerWidget noteScrollerWidget = NoteScrollerWidget();
 
@@ -103,14 +104,12 @@ class _PinNoteWidgetState extends State<PinNoteWidget> {
                     color: Colors.transparent,
                     shape: BoxShape.circle,
                     border: Border.all(
-                      color: ThemeManager().currentTheme.colorScheme
-                          .secondaryContainer,
+                      color: Provider.of<ThemeManager>(context).currentTheme.colorScheme.secondaryContainer,
                       width: 2,
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color: ThemeManager().currentTheme.colorScheme
-                          .secondaryContainer,
+                        color:  Provider.of<ThemeManager>(context).currentTheme.colorScheme.secondaryContainer,
                         blurRadius: 15.0,
                         // spreadRadius: 3.0,
                         blurStyle: BlurStyle.outer,

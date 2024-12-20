@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:music_tuner/providers/ThemeManager.dart';
+import 'package:provider/provider.dart';
 
 class NoteRepresentationWidget extends StatelessWidget {
   NoteRepresentationWidget({super.key, required this.noteString, required this.fontSize}){
@@ -41,7 +42,7 @@ class NoteRepresentationWidget extends StatelessWidget {
       return Text(
         note,
         style: TextStyle(
-          color: ThemeManager().currentTheme.colorScheme.secondary,
+          color: Provider.of<ThemeManager>(context).currentTheme.colorScheme.secondary,
           fontSize: fontSize,
           fontWeight: FontWeight.bold
         ),
@@ -55,7 +56,7 @@ class NoteRepresentationWidget extends StatelessWidget {
           Text(
             note,
             style: TextStyle(
-              color: ThemeManager().currentTheme.colorScheme.secondary,
+              color: Provider.of<ThemeManager>(context).currentTheme.colorScheme.secondary,
               fontSize: fontSize,
               fontWeight: FontWeight.bold
             ),
@@ -66,7 +67,7 @@ class NoteRepresentationWidget extends StatelessWidget {
                 Text(
                   chromatic,
                   style: TextStyle(
-                    color: ThemeManager().currentTheme.colorScheme.secondary,
+                    color: Provider.of<ThemeManager>(context).currentTheme.colorScheme.secondary,
                     fontSize: fontSize * 0.6,
                     fontWeight: FontWeight.bold
                   ),
@@ -74,7 +75,7 @@ class NoteRepresentationWidget extends StatelessWidget {
                 Text(
                   octave,
                   style: TextStyle(
-                    color: ThemeManager().currentTheme.colorScheme.secondary,
+                    color: Provider.of<ThemeManager>(context).currentTheme.colorScheme.secondary,
                     fontSize: fontSize * 0.6,
                     fontWeight: FontWeight.bold
                   ),

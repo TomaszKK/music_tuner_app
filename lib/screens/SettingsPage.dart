@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:music_tuner/widgets/BluetoothConnectorWidget.dart';
-import 'package:music_tuner/widgets/TunerWidget.dart';
+import 'package:music_tuner/widgets/ThemeSwitchButton.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+import 'package:provider/provider.dart';
 import '../providers/InstrumentProvider.dart';
+import '../providers/ThemeManager.dart';
 import '../providers/noteInstrumentProvider.dart';
 import '../widgets/DatabaseHelper.dart';
 import '../widgets/TranspositionWidget.dart';
@@ -18,6 +21,22 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
+  String _appVersion = "";
+  String theme = "dark";
+
+  @override
+  void initState() {
+    super.initState();
+    _loadAppVersion();
+  }
+
+  Future<void> _loadAppVersion() async {
+    final packageInfo = await PackageInfo.fromPlatform();
+    setState(() {
+      _appVersion = packageInfo.version;
+    });
+  }
+
   Future<void> _saveAppState() async {
     await DatabaseHelper().insertOrUpdateAll(
         TranspositionWidget.transpositionNotifier.value,
@@ -26,6 +45,7 @@ class _SettingsPageState extends State<SettingsPage> {
         HomePage.isNoteChanged.value,
         HomePage.isResetVisible.value,
         BluetoothConnectorWidget().deviceId,
+        theme
     );
   }
 
@@ -48,12 +68,16 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final themeManager = Provider.of<ThemeManager>(context);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-        toolbarHeight: 80,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(20), // Round bottom-left corner
+            bottomRight: Radius.circular(20), // Round bottom-right corner
+          ),
         ),
         title: Text(
           widget.title,
@@ -83,12 +107,39 @@ class _SettingsPageState extends State<SettingsPage> {
               const SizedBox(height: 20),
               _buildSettingRow("Reset to default", "Reset", "all"),
               _buildSettingRow("Reset connected device", "Reset", "ble"),
+              _buildThemeSwitchButton(themeManager), // Added ThemeSwitchButton
               Spacer(),
               _buildVersionContainer(),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Row _buildThemeSwitchButton(ThemeManager themeManager) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Text(
+          "Switch Theme: $theme",
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.onPrimaryContainer,
+            fontFamily: 'Poppins',
+          ),
+        ),
+        Switch(
+          value: themeManager.isDark, // Check the current theme mode
+          onChanged: (value) {
+            themeManager.switchTheme(); // Toggle the theme
+            theme = value ? "dark" : "light";
+            _saveAppState();
+          },
+          activeColor: Theme.of(context).colorScheme.onPrimary,
+          activeTrackColor: Theme.of(context).colorScheme.primaryContainer,
+          trackOutlineColor: WidgetStatePropertyAll(Theme.of(context).colorScheme.onPrimary),
+        ),
+      ],
     );
   }
 
@@ -116,14 +167,15 @@ class _SettingsPageState extends State<SettingsPage> {
               Navigator.pop(context, true);
             }
           },
-          style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
-            // padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          style: ElevatedButton.styleFrom(
+            foregroundColor: Provider.of<ThemeManager>(context, listen: false).currentTheme.colorScheme.error,
+            backgroundColor: Provider.of<ThemeManager>(context, listen: false).currentTheme.colorScheme.error,
+            shadowColor: Provider.of<ThemeManager>(context, listen: false).currentTheme.colorScheme.onPrimaryContainer,
           ),
           child: Text(
             settingValue,
-            style: const TextStyle(
-              color: Colors.black,
+            style: TextStyle(
+              color: Provider.of<ThemeManager>(context, listen: false).currentTheme.colorScheme.onPrimaryContainer,
               fontFamily: 'Poppins',
             ),
           ),
@@ -142,7 +194,7 @@ class _SettingsPageState extends State<SettingsPage> {
         children: <Widget>[
           _buildVersionRow("Description:","IOT Mobile Tuner with ESP32 board for reading the frequency of the instrument and display it on the screen."),
           _buildVersionRow("Author", "Tomasz Kubik"),
-          _buildVersionRow("Version", "1.0.2"),
+          _buildVersionRow("Version", _appVersion),
         ],
       ),
     );

@@ -1,27 +1,40 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart'; // Import to control system settings
+import 'package:flutter/services.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:music_tuner/widgets/DatabaseHelper.dart';
 import 'package:provider/provider.dart';
 import 'package:music_tuner/providers/ThemeManager.dart';
 import 'package:music_tuner/screens/HomePage.dart';
 
 Future<void> main() async {
-  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  // WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  // FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
-  // Lock the orientation to portrait during launch
-  await SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-  ]);
+  final themeMode = await fetchInitialThemeMode();
 
   runApp(
     ChangeNotifierProvider(
-      create: (context) => ThemeManager(),
+      create: (context) => ThemeManager(initialThemeMode: themeMode),
       child: const MyApp(),
     ),
   );
 
-  FlutterNativeSplash.remove();
+  // FlutterNativeSplash.remove();
+}
+
+Future<bool> fetchInitialThemeMode() async {
+  final dbHelper = DatabaseHelper();
+  final settings = await dbHelper.getSettings();
+
+  if (settings != null && settings['theme_mode'] != null) {
+    final themeMode = settings['theme_mode'];
+    if (themeMode == 'light') return false;
+    if (themeMode == 'dark') return true;
+  }
+
+  return true;
+  // Default theme mode
+  // return ThemeMode.system;
 }
 
 class MyApp extends StatelessWidget {
@@ -39,9 +52,9 @@ class MyApp extends StatelessWidget {
     ]);
 
     return MaterialApp(
-      title: 'Instrument Tuner',
+      title: 'Tuner',
       theme: themeManager.currentTheme,
-      home: HomePage(title: 'Instrument Tuner'),
+      home: HomePage(title: 'Tuner.'),
     );
   }
 }
