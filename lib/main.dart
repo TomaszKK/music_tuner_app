@@ -7,8 +7,8 @@ import 'package:music_tuner/providers/ThemeManager.dart';
 import 'package:music_tuner/screens/HomePage.dart';
 
 Future<void> main() async {
-  // WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-  // FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
   final themeMode = await fetchInitialThemeMode();
 
@@ -19,7 +19,7 @@ Future<void> main() async {
     ),
   );
 
-  // FlutterNativeSplash.remove();
+  FlutterNativeSplash.remove();
 }
 
 Future<bool> fetchInitialThemeMode() async {
