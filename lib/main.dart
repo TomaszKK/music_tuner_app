@@ -8,7 +8,7 @@ import 'package:music_tuner/screens/HomePage.dart';
 
 Future<void> main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-  FlutterNativeSplash.preserve(widgetsBinding: widgetsBindingitg);
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
   final themeMode = await fetchInitialThemeMode();
 
