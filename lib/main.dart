@@ -7,13 +7,8 @@ import 'package:music_tuner/providers/ThemeManager.dart';
 import 'package:music_tuner/screens/HomePage.dart';
 
 Future<void> main() async {
-  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
-
-  // Lock the orientation to portrait during launch
-  // await SystemChrome.setPreferredOrientations([
-  //   DeviceOrientation.portraitUp,
-  // ]);
+  // WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  // FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
   final themeMode = await fetchInitialThemeMode();
 
@@ -24,7 +19,7 @@ Future<void> main() async {
     ),
   );
 
-  FlutterNativeSplash.remove();
+  // FlutterNativeSplash.remove();
 }
 
 Future<bool> fetchInitialThemeMode() async {
@@ -57,9 +52,9 @@ class MyApp extends StatelessWidget {
     ]);
 
     return MaterialApp(
-      title: 'Instrument Tuner',
+      title: 'Tuner',
       theme: themeManager.currentTheme,
-      home: HomePage(title: 'Instrument Tuner'),
+      home: HomePage(title: 'Tuner.'),
     );
   }
 }
