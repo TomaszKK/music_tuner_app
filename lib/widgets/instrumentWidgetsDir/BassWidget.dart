@@ -53,19 +53,11 @@ class _BassWidgetState extends State<BassWidget> {
               children: <Widget>[
                 SizedBox(height: topPosition * topPositionScale),
                 PinNoteWidget(
-                  defaultNote: noteInstrumentDefaultProvider['Bass']![0],
-                  currentNote: widget.noteList[0],
+                  defaultNote: noteInstrumentDefaultProvider['Bass']![3],
+                  currentNote: widget.noteList[3],
                   circleSize: circleSize,
                   currentInstrument: 'Bass',
-                  onNoteChanged: (newNote) => onNoteChanged(0, newNote),
-                ),
-                SizedBox(height: circleSpaceScale),
-                PinNoteWidget(
-                  defaultNote: noteInstrumentDefaultProvider['Bass']![1],
-                  currentNote: widget.noteList[1],
-                  circleSize: circleSize,
-                  currentInstrument: 'Bass',
-                  onNoteChanged: (newNote) => onNoteChanged(1, newNote),
+                  onNoteChanged: (newNote) => onNoteChanged(3, newNote),
                 ),
                 SizedBox(height: circleSpaceScale),
                 PinNoteWidget(
@@ -77,11 +69,19 @@ class _BassWidgetState extends State<BassWidget> {
                 ),
                 SizedBox(height: circleSpaceScale),
                 PinNoteWidget(
-                  defaultNote: noteInstrumentDefaultProvider['Bass']![3],
-                  currentNote: widget.noteList[3],
+                  defaultNote: noteInstrumentDefaultProvider['Bass']![1],
+                  currentNote: widget.noteList[1],
                   circleSize: circleSize,
                   currentInstrument: 'Bass',
-                  onNoteChanged: (newNote) => onNoteChanged(3, newNote),
+                  onNoteChanged: (newNote) => onNoteChanged(1, newNote),
+                ),
+                SizedBox(height: circleSpaceScale),
+                PinNoteWidget(
+                  defaultNote: noteInstrumentDefaultProvider['Bass']![0],
+                  currentNote: widget.noteList[0],
+                  circleSize: circleSize,
+                  currentInstrument: 'Bass',
+                  onNoteChanged: (newNote) => onNoteChanged(0, newNote),
                 ),
               ]
             ),
